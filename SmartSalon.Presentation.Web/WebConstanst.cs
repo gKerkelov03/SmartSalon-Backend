@@ -1,4 +1,4 @@
-namespace SmartSalon.Web;
+namespace SmartSalon.Presentation.Web;
 
 internal static class WebConstants
 {

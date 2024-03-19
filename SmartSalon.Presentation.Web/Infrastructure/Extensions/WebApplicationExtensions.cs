@@ -1,5 +1,5 @@
 
-namespace SmartSalon.Web.Infrastructure.Extensions;
+namespace SmartSalon.Presentation.Web.Infrastructure.Extensions;
 
 public static class WebApplicationExtensions
 {
