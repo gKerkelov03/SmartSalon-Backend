@@ -1,8 +1,7 @@
-﻿using SmartSalon.Data.Entities;
-using SmartSalon.Data.Entities.Users;
-using SmartSalon.Shared.Extensions;
+﻿using SmartSalon.Shared.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
+using SmartSalon.Application.Domain;
 
 namespace SmartSalon.Data.Seeding.Seeders;
 

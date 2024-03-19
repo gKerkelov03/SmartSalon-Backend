@@ -1,9 +1,12 @@
 ﻿
+using Microsoft.AspNetCore.Identity;
+
 namespace SmartSalon.Application.Domain;
 
-public class Role
+public class Role : IdentityRole<Id>
 {
-    public required string Name { get; set; }
+    public Role(string name) : base(name) { }
+
 
     public virtual IList<UserProfile>? Users { get; set; }
 }

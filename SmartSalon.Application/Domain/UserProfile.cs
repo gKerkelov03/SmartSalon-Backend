@@ -1,6 +1,9 @@
-﻿namespace SmartSalon.Application.Domain;
+﻿using Microsoft.AspNetCore.Identity;
+using SmartSalon.Application.Domain.Abstractions;
 
-public class UserProfile
+namespace SmartSalon.Application.Domain;
+
+public class UserProfile : IdentityUser<Id>, IBaseEntity<Id>
 {
     private const string blankProfilePictureUrl =
         "https://res.cloudinary.com/donhvedgr/image/upload/v1663345678/mkunrvxxbwrdovxkwtdm.webp";

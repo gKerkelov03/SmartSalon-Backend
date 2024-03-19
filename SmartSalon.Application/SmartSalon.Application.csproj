@@ -4,6 +4,11 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore"
+            Version="8.0.2" />
+    </ItemGroup>
+
+    <ItemGroup>
         <Using Include="SmartSalon.Shared.GlobalConstants" Static="True" />
         <Using Include="System.Guid" Alias="Id" />
     </ItemGroup>

@@ -1,18 +1,25 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using SmartSalon.Data.Entities.Users;
-using SmartSalon.Data.Entities.Bookings;
-using SmartSalon.Data.Entities.Subscriptions;
-using SmartSalon.Data.Entities.Salons;
+using SmartSalon.Application.Domain;
+using System.Reflection;
 using static SmartSalon.Data.DbContextHelpers;
+using SmartSalon.Application.Domain.Services;
 
 namespace SmartSalon.Data;
 
 public class SmartSalonDbContext : IdentityDbContext<UserProfile, Role, Id>
 {
-    public SmartSalonDbContext() { }
+    private readonly ICurrentUserAccessor currentUser;
 
-    public SmartSalonDbContext(DbContextOptions<SmartSalonDbContext> options) : base(options) { }
+    public SmartSalonDbContext()
+    {
+    }
+
+    public SmartSalonDbContext(
+        DbContextOptions<SmartSalonDbContext> options,
+        ICurrentUserAccessor currentUser
+    ) : base(options)
+        => this.currentUser = currentUser;
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
@@ -33,6 +40,7 @@ public class SmartSalonDbContext : IdentityDbContext<UserProfile, Role, Id>
             .Model
             .GetEntityTypes();
 
+        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         base.OnModelCreating(builder);
 
         SetDeleteBehaviorToRestrict(entityTypes);
@@ -41,7 +49,7 @@ public class SmartSalonDbContext : IdentityDbContext<UserProfile, Role, Id>
 
     public override int SaveChanges(bool acceptAllChangesOnSuccess)
     {
-        ApplyAuditInfoRules(this.ChangeTracker);
+        ApplyAuditInfoRules(this.ChangeTracker, currentUser.Id);
 
         var totalNumberOfChangesMade =
             base.SaveChanges(acceptAllChangesOnSuccess);
@@ -54,7 +62,7 @@ public class SmartSalonDbContext : IdentityDbContext<UserProfile, Role, Id>
         CancellationToken cancellationToken = default
     )
     {
-        ApplyAuditInfoRules(this.ChangeTracker);
+        ApplyAuditInfoRules(this.ChangeTracker, currentUser.Id);
 
         var totalNumberOfChangesMade =
             base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);

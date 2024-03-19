@@ -2,8 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata;
-using SmartSalon.Data.Base.Abstractions;
-using SmartSalon.Data.Entities.Users;
+using SmartSalon.Application.Domain.Abstractions;
 using SmartSalon.Shared.Extensions;
 
 namespace SmartSalon.Data;
@@ -50,22 +49,19 @@ internal static class DbContextHelpers
         );
     }
 
-    public static void ApplyAuditInfoRules(ChangeTracker changeTracker)
+    public static void ApplyAuditInfoRules(ChangeTracker changeTracker, Id currentUserId)
         => changeTracker
             .Entries()
             .ForEach(entry =>
             {
-                UserProfile? currentUser = null;
-
                 var isDeletableEntity = entry.Entity is IDeletableEntity<Id>;
                 var isInDeletedState = entry.State is EntityState.Deleted;
 
                 if (isDeletableEntity && isInDeletedState)
                 {
                     var deletableEntity = entry.Entity.CastTo<IDeletableEntity<Id>>();
-                    //TODO: Ask how to do this with least amount of coupling 
-                    deletableEntity.DeletedBy = currentUser.Id;
 
+                    deletableEntity.DeletedBy = currentUserId;
                     deletableEntity.DeletedOn = DateTime.UtcNow;
                     deletableEntity.IsDeleted = true;
 
