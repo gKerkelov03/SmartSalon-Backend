@@ -1,6 +1,6 @@
 ﻿using SmartSalon.Application.Domain.Abstractions;
 
-namespace SmartSalon.Application.Domain.Salons;
+namespace SmartSalon.Application.Domain;
 
 public class SalonSpecialty : BaseEntity
 {

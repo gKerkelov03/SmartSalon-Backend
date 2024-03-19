@@ -1,6 +1,5 @@
 ﻿
 using System.ComponentModel.DataAnnotations.Schema;
-using SmartSalon.Application.Domain.Users;
 
 namespace SmartSalon.Application.Domain.Abstractions;
 
