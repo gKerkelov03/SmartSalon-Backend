@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SmartSalon.Domain.Abstractions;
+namespace SmartSalon.Services.Domain.Abstractions;
 
 public abstract class BaseEntity : IBaseEntity<Id>
 {

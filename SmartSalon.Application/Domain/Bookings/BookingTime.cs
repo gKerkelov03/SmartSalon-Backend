@@ -1,6 +1,6 @@
-﻿using SmartSalon.Domain.Abstractions;
+﻿using SmartSalon.Services.Domain.Abstractions;
 
-namespace SmartSalon.Domain.Bookings;
+namespace SmartSalon.Services.Domain.Bookings;
 
 public class BookingTime : BaseEntity
 {

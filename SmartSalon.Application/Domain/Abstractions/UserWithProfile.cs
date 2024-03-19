@@ -1,8 +1,8 @@
 ﻿
 using System.ComponentModel.DataAnnotations.Schema;
-using SmartSalon.Domain.Users;
+using SmartSalon.Services.Domain.Users;
 
-namespace SmartSalon.Domain.Abstractions;
+namespace SmartSalon.Services.Domain.Abstractions;
 
 public abstract class UserWithProfile : BaseEntity
 {

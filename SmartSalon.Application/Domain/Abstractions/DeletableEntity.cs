@@ -1,5 +1,5 @@
 ﻿
-namespace SmartSalon.Domain.Abstractions;
+namespace SmartSalon.Services.Domain.Abstractions;
 
 public abstract class DeletableEntity : IDeletableEntity<Id>
 {

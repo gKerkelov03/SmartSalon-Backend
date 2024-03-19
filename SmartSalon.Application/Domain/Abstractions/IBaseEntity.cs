@@ -1,4 +1,4 @@
-﻿namespace SmartSalon.Domain.Abstractions;
+﻿namespace SmartSalon.Services.Domain.Abstractions;
 
 public interface IBaseEntity<TKey>
 {

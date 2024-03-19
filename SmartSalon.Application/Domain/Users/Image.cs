@@ -1,7 +1,7 @@
-﻿using SmartSalon.Domain.Abstractions;
-using SmartSalon.Domain.Salons;
+﻿using SmartSalon.Services.Domain.Abstractions;
+using SmartSalon.Services.Domain.Salons;
 
-namespace SmartSalon.Domain;
+namespace SmartSalon.Services.Domain.Users;
 
 public class Image : BaseEntity
 {

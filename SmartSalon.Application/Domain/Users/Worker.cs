@@ -1,9 +1,9 @@
 ﻿
-using SmartSalon.Domain.Abstractions;
-using SmartSalon.Domain.Bookings;
-using SmartSalon.Domain.Salons;
+using SmartSalon.Services.Domain.Abstractions;
+using SmartSalon.Services.Domain.Bookings;
+using SmartSalon.Services.Domain.Salons;
 
-namespace SmartSalon.Domain.Users;
+namespace SmartSalon.Services.Domain.Users;
 
 public class Worker : UserWithProfile
 {

@@ -1,7 +1,7 @@
-﻿using SmartSalon.Domain.Users;
-using SmartSalon.Domain.Abstractions;
+﻿using SmartSalon.Services.Domain.Users;
+using SmartSalon.Services.Domain.Abstractions;
 
-namespace SmartSalon.Domain.Salons;
+namespace SmartSalon.Services.Domain.Salons;
 
 public class Salon : BaseEntity
 {
