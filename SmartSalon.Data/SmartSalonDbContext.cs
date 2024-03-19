@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using SmartSalon.Application.Domain;
 using System.Reflection;
-using static SmartSalon.Data.DbContextHelpers;
 using SmartSalon.Application.Domain.Services;
+using static SmartSalon.Data.DbContextHelpers;
 
 namespace SmartSalon.Data;
 
