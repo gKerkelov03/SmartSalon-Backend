@@ -9,13 +9,13 @@ using Microsoft.OpenApi.Models;
 using SmartSalon.Application.Domain;
 using SmartSalon.Data;
 using SmartSalon.Data.Seeding;
-using SmartSalon.Infrastructure.Filters;
+using SmartSalon.Presentation.Web.Filters;
 using SmartSalon.Shared.ConventionalServices;
 using SmartSalon.Shared.Extensions;
 using SmartSalon.Shared.Mapping;
 using static SmartSalon.Presentation.Web.WebConstants;
 
-namespace SmartSalon.Presentation.Web.Infrastructure.Extensions;
+namespace SmartSalon.Presentation.Web.Extensions;
 
 public static class ServiceCollectionExtensions
 {

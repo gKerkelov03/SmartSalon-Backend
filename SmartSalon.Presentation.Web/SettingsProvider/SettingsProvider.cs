@@ -1,4 +1,4 @@
-namespace SmartSalon.Presentation.Web.Infrastructure.Settings;
+namespace SmartSalon.Presentation.Web.Settings;
 
 public class SettingsProvider : ISettingsProvider
 {

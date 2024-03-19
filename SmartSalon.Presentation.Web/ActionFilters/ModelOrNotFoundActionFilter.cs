@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace SmartSalon.Infrastructure.Filters;
+namespace SmartSalon.Presentation.Web.Filters;
 
 public class ModelOrNotFoundActionFilter : ActionFilterAttribute
 {

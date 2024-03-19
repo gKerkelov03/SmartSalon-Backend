@@ -1,7 +1,7 @@
 using SmartSalon.Presentation.Web;
 using SmartSalon.Data;
 using SmartSalon.Shared.Extensions;
-using SmartSalon.Presentation.Web.Infrastructure.Extensions;
+using SmartSalon.Presentation.Web.Extensions;
 using SmartSalon.Application;
 
 var builder = WebApplication.CreateBuilder(args);

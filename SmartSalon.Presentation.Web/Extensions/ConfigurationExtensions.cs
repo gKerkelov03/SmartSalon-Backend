@@ -1,7 +1,7 @@
-using SmartSalon.Presentation.Web.Infrastructure.Settings;
+using SmartSalon.Presentation.Web.Settings;
 using static SmartSalon.Presentation.Web.WebConstants;
 
-namespace SmartSalon.Presentation.Web.Infrastructure.Extensions;
+namespace SmartSalon.Presentation.Web.Extensions;
 
 public static class ConfigurationExtensions
 {
