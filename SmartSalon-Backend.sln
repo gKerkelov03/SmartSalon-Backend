@@ -7,11 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartSalon.Shared", "SmartS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartSalon.Web", "SmartSalon.Web\SmartSalon.Web.csproj", "{FDDE2D58-6D7F-4831-9D71-441600F2790C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartSalon.Services", "SmartSalon.Services\SmartSalon.Services.csproj", "{28EE9C52-1CA2-46D3-8827-3C014B9CCBE4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartSalon.Application", "SmartSalon.Application\SmartSalon.Application.csproj", "{28EE9C52-1CA2-46D3-8827-3C014B9CCBE4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartSalon.Data", "SmartSalon.Data\SmartSalon.Data.csproj", "{30416A58-78A1-41A5-AD19-2F989C4B24AB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartSalon.Tests", "SmartSalon.Tests\SmartSalon.Tests.csproj", "{94D5C4CD-584D-41D1-9B48-25BC568703A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartSalon.Integrations", "SmartSalon.Integrations\SmartSalon.Integrations.csproj", "{EF98B59D-6DF6-4AC3-BEE1-6C8481FDC172}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{94D5C4CD-584D-41D1-9B48-25BC568703A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94D5C4CD-584D-41D1-9B48-25BC568703A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{94D5C4CD-584D-41D1-9B48-25BC568703A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF98B59D-6DF6-4AC3-BEE1-6C8481FDC172}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF98B59D-6DF6-4AC3-BEE1-6C8481FDC172}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF98B59D-6DF6-4AC3-BEE1-6C8481FDC172}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF98B59D-6DF6-4AC3-BEE1-6C8481FDC172}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
