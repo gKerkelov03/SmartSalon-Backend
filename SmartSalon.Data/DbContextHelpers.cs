@@ -54,18 +54,20 @@ internal static class DbContextHelpers
             .Entries()
             .ForEach(entry =>
             {
-                var isDeletableEntity = entry.Entity is IDeletableEntity<Id>;
-                var isInDeletedState = entry.State is EntityState.Deleted;
+                var isNotDeletableEntity = entry.Entity is not IDeletableEntity<Id>;
+                var isNotInDeletedState = entry.State is not EntityState.Deleted;
 
-                if (isDeletableEntity && isInDeletedState)
+                if (isNotDeletableEntity || isNotInDeletedState)
                 {
-                    var deletableEntity = entry.Entity.CastTo<IDeletableEntity<Id>>();
-
-                    deletableEntity.DeletedBy = currentUserId;
-                    deletableEntity.DeletedOn = DateTime.UtcNow;
-                    deletableEntity.IsDeleted = true;
-
-                    entry.State = EntityState.Modified;
+                    return;
                 }
+
+                var deletableEntity = entry.Entity.CastTo<IDeletableEntity<Id>>();
+
+                deletableEntity.DeletedBy = currentUserId;
+                deletableEntity.DeletedOn = DateTime.UtcNow;
+                deletableEntity.IsDeleted = true;
+
+                entry.State = EntityState.Modified;
             });
 }
