@@ -1,8 +1,6 @@
-﻿using SmartSalon.Services.Domain.Abstractions;
-using SmartSalon.Services.Domain.Salons;
-using SmartSalon.Services.Domain.Users;
+﻿using SmartSalon.Application.Domain.Abstractions;
 
-namespace SmartSalon.Services.Domain.Bookings;
+namespace SmartSalon.Application.Domain;
 
 public class Booking : BaseEntity
 {

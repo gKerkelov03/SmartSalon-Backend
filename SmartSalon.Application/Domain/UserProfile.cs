@@ -1,4 +1,4 @@
-﻿namespace SmartSalon.Services.Domain.Users;
+﻿namespace SmartSalon.Application.Domain;
 
 public class UserProfile
 {

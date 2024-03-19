@@ -1,7 +1,6 @@
-﻿using SmartSalon.Services.Domain.Bookings;
-using SmartSalon.Services.Domain.Abstractions;
+﻿using SmartSalon.Application.Domain.Abstractions;
 
-namespace SmartSalon.Services.Domain.Subscriptions;
+namespace SmartSalon.Application.Domain;
 
 public class SpecialSlot : BaseEntity
 {

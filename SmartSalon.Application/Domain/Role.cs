@@ -1,7 +1,6 @@
 ﻿
-namespace SmartSalon.Services.Domain.Users;
+namespace SmartSalon.Application.Domain;
 
-//TODO: ask if it is fine for role to be located in this folder
 public class Role
 {
     public required string Name { get; set; }

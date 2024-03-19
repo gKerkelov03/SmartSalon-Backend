@@ -1,4 +1,4 @@
-namespace SmartSalon.Services;
+namespace SmartSalon.Application;
 
 public static class ApplicationConstants
 {

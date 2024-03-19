@@ -1,8 +1,6 @@
-﻿using SmartSalon.Services.Domain.Salons;
-using SmartSalon.Services.Domain.Users;
-using SmartSalon.Services.Domain.Abstractions;
+﻿using SmartSalon.Application.Domain.Abstractions;
 
-namespace SmartSalon.Services.Domain.Subscriptions;
+namespace SmartSalon.Application.Domain;
 
 public class Subscription : BaseEntity
 {

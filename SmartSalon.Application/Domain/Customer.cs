@@ -1,9 +1,7 @@
 ﻿
-using SmartSalon.Services.Domain.Abstractions;
-using SmartSalon.Services.Domain.Bookings;
-using SmartSalon.Services.Domain.Subscriptions;
+using SmartSalon.Application.Domain.Abstractions;
 
-namespace SmartSalon.Services.Domain.Users;
+namespace SmartSalon.Application.Domain;
 
 public class Customer : UserWithProfile
 {

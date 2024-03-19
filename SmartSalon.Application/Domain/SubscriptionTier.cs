@@ -1,4 +1,4 @@
-﻿namespace SmartSalon.Services.Domain.Subscriptions;
+﻿namespace SmartSalon.Application.Domain.Subscriptions;
 
 public enum SubscriptionTier
 {
