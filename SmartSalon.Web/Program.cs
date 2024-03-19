@@ -1,13 +1,13 @@
 using SmartSalon.Web;
 using SmartSalon.Data;
-using SmartSalon.Services;
 using SmartSalon.Shared.Extensions;
 using SmartSalon.Web.Infrastructure.Extensions;
+using SmartSalon.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var dataAssembly = typeof(SmartSalonDbContext).GetAssembly();
-var servicesAssembly = typeof(ServicesConstants).GetAssembly();
+var servicesAssembly = typeof(ApplicationConstants).GetAssembly();
 var webAssembly = typeof(WebConstants).GetAssembly();
 
 builder.SetupConfigurationFiles();
@@ -45,4 +45,3 @@ app.MapControllers();
 
 app.OpenSwaggerOnStartup();
 app.Run();
-

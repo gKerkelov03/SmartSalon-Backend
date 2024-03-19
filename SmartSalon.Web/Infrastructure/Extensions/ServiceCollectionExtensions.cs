@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using SmartSalon.Application.Domain;
 using SmartSalon.Data;
-using SmartSalon.Data.Entities.Users;
 using SmartSalon.Data.Seeding;
 using SmartSalon.Infrastructure.Filters;
 using SmartSalon.Shared.ConventionalServices;
@@ -16,7 +16,7 @@ using SmartSalon.Shared.Mapping;
 using static SmartSalon.Web.WebConstants;
 
 namespace SmartSalon.Web.Infrastructure.Extensions;
-//TODO: ask if this file is getting too big and if it needs refactoring
+
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection RegisterMappingsFrom(

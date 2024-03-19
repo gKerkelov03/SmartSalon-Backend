@@ -25,7 +25,7 @@
         <ProjectReference Include="..\SmartSalon.Shared\SmartSalon.Shared.csproj" />
         <ProjectReference Include="..\SmartSalon.Web\SmartSalon.Web.csproj" />
         <ProjectReference Include="..\SmartSalon.Data\SmartSalon.Data.csproj" />
-        <ProjectReference Include="..\SmartSalon.Services\SmartSalon.Services.csproj" />
+        <ProjectReference Include="..\SmartSalon.Application\SmartSalon.Application.csproj" />
     </ItemGroup>
 
     <ItemGroup>
