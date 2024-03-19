@@ -1,6 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <ItemGroup>
-        <ProjectReference Include="..\SmartSalon.Data\SmartSalon.Data.csproj" />
         <ProjectReference Include="..\SmartSalon.Shared\SmartSalon.Shared.csproj" />
     </ItemGroup>
 
