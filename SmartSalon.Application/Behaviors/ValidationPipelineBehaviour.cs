@@ -9,7 +9,7 @@ namespace SmartSalon.Application.Behaviors;
 public class ValidationPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>, ITransientLifetime
     where TRequest : IRequest<TResponse>
     //TODO debug why changing ResultBase to Result makes the PipelineBehaviour unreachable
-    where TResponse : ResultBase
+    where TResponse : ResultBase, new()
 {
     private readonly IEnumerable<IValidator<TRequest>> _validators;
 
@@ -38,22 +38,30 @@ public class ValidationPipelineBehavior<TRequest, TResponse> : IPipelineBehavior
     }
 
     private static TResult CreateFailedResult<TResult>(IEnumerable<IError> errors)
-        where TResult : ResultBase
+        where TResult : ResultBase, new()
     {
         var tResult = typeof(TResult);
         var nonGenericResult = typeof(Result);
         var genericResult = typeof(Result<>);
+        var enumerableOfError = typeof(IEnumerable<IError>);
+
+        var failedResultFactoryMethod = "WithErrors";
 
         if (tResult == nonGenericResult)
         {
             return new Result().WithErrors(errors).CastTo<TResult>();
         }
+        else if (tResult.IsGenericType && tResult.GetGenericTypeDefinition() == genericResult)
+        {
+            var genericArgumentType = tResult.GetGenericArguments()[0];
+            var constructedResultType = genericResult.MakeGenericType(genericArgumentType);
+            var method = constructedResultType.GetMethod(failedResultFactoryMethod, [enumerableOfError]);
+            var resultInstance = Activator.CreateInstance(constructedResultType);
 
-        return genericResult
-            .GetGenericTypeDefinition()
-            .MakeGenericType(tResult.GenericTypeArguments[0])
-            .GetMethod("WithErrors")!
-            .Invoke(null, errors.ToArray())!
-            .CastTo<TResult>();
+            //TODO: ask if you should remove the ! from below
+            return method!.Invoke(resultInstance, [errors.ToArray()])!.CastTo<TResult>();
+        }
+
+        throw new ArgumentException("TResult must be either Result or Result<T>.");
     }
 }
