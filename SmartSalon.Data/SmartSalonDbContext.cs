@@ -1,25 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using SmartSalon.Application.Domain;
+using Microsoft.EntityFrameworkCore.Metadata;
+using SmartSalon.Application.Domain.Abstractions;
+using SmartSalon.Shared.Extensions;
 using System.Reflection;
-using SmartSalon.Application.Domain.Services;
-using static SmartSalon.Data.DbContextHelpers;
 
 namespace SmartSalon.Data;
 
 public class SmartSalonDbContext : IdentityDbContext<UserProfile, Role, Id>
 {
-    private readonly ICurrentUserAccessor currentUser;
-
     public SmartSalonDbContext()
     {
     }
 
-    public SmartSalonDbContext(
-        DbContextOptions<SmartSalonDbContext> options,
-        ICurrentUserAccessor currentUser
-    ) : base(options)
-        => this.currentUser = currentUser;
+    public SmartSalonDbContext(DbContextOptions<SmartSalonDbContext> options) : base(options) { }
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
@@ -28,8 +23,7 @@ public class SmartSalonDbContext : IdentityDbContext<UserProfile, Role, Id>
             return;
         }
 
-        var connectionString =
-            "Server=.,1433;Database=WrongDatabaseName;TrustServerCertificate=True;User Id=sa;Password=P@ssw0rd123";
+        var connectionString = "Server=.,1433;Database=WrongDatabaseName;TrustServerCertificate=True;User Id=sa;Password=P@ssw0rd123";
 
         options.UseSqlServer(connectionString);
     }
@@ -40,34 +34,52 @@ public class SmartSalonDbContext : IdentityDbContext<UserProfile, Role, Id>
             .Model
             .GetEntityTypes();
 
-        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        builder.ApplyConfigurationsFromAssembly(typeof(SmartSalonDbContext).Assembly);
         base.OnModelCreating(builder);
 
         SetDeleteBehaviorToRestrict(entityTypes);
         SetupDeletedQueryFilter(builder, entityTypes);
     }
 
-    public override int SaveChanges(bool acceptAllChangesOnSuccess)
-    {
-        ApplyAuditInfoRules(this.ChangeTracker, currentUser.Id);
 
-        var totalNumberOfChangesMade =
-            base.SaveChanges(acceptAllChangesOnSuccess);
+    private static void SetDeleteBehaviorToRestrict(IEnumerable<IMutableEntityType> entityTypes)
+        => entityTypes
+            .SelectMany(entity =>
+                entity
+                .GetForeignKeys()
+                .Where(foreignKey => foreignKey.DeleteBehavior is DeleteBehavior.Cascade))
+            .ForEach(foreignKey => foreignKey.DeleteBehavior = DeleteBehavior.Restrict);
 
-        return totalNumberOfChangesMade;
-    }
+    private static void SetIsDeletedQueryFilter<TEntity>(ModelBuilder builder)
+        where TEntity : class, IDeletableEntity<Id>
+            => builder
+                .Entity<TEntity>()
+                .HasQueryFilter(entity => !entity.IsDeleted);
 
-    public override Task<int> SaveChangesAsync(
-        bool acceptAllChangesOnSuccess,
-        CancellationToken cancellationToken = default
+    private static void SetupDeletedQueryFilter(
+        ModelBuilder builder,
+        IEnumerable<IMutableEntityType> entities
     )
     {
-        ApplyAuditInfoRules(this.ChangeTracker, currentUser.Id);
+        var iDeletableEntity = typeof(IDeletableEntity<Id>);
+        var dbContextHelpers = typeof(UnitOfWork);
 
-        var totalNumberOfChangesMade =
-            base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        var SetIsDeletedQueryFilterMethodInfo = dbContextHelpers.GetMethod(
+            nameof(SetIsDeletedQueryFilter),
+            BindingFlags.NonPublic | BindingFlags.Static
+        );
 
-        return totalNumberOfChangesMade;
+        var deletableEntities = entities.Where(entity =>
+            entity.ClrType is not null &&
+            iDeletableEntity.IsAssignableFrom(entity.ClrType)
+        );
+
+        deletableEntities.ForEach(deletableEntityType =>
+            //TODO: debug why SetIsDeletedQueryFilterMethodInfo is null sometimes
+            SetIsDeletedQueryFilterMethodInfo
+                ?.MakeGenericMethod(deletableEntityType.ClrType)
+                .Invoke(null, [builder])
+        );
     }
 
     public DbSet<Owner> Owners { get; set; }

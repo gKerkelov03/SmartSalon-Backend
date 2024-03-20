@@ -1,8 +1,7 @@
-
-
-namespace SmartSalon.Application.Domain.Services;
+namespace SmartSalon.Application.Services;
 
 public class CurrentUserAccessor : ICurrentUserAccessor
 {
-    public Id Id { get; set; }
+    public Id Id { get; }
+
 }

@@ -1,6 +1,9 @@
-namespace SmartSalon.Application.Domain.Services;
 
-public interface ICurrentUserAccessor
+using SmartSalon.Application.Abstractions;
+
+namespace SmartSalon.Application.Services;
+
+public interface ICurrentUserAccessor : IScopedLifetime
 {
-    Id Id { get; set; }
+    Id Id { get; }
 }

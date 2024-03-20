@@ -1,8 +1,9 @@
-
 using System.Linq.Expressions;
+using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Domain.Abstractions;
 
-public interface IEfRepository<TEntity> where TEntity : IBaseEntity<Id>
+public interface IEfRepository<TEntity> : IScopedLifetime
+    where TEntity : IBaseEntity<Id>
 {
     IQueryable<TEntity> All();
 
@@ -10,19 +11,19 @@ public interface IEfRepository<TEntity> where TEntity : IBaseEntity<Id>
 
     Task<TEntity?> FirstAsync(Expression<Func<TEntity, bool>> predicate);
 
-    Task<IEnumerable<TEntity?>> FindAllAsync(Expression<Func<TEntity, bool>> predicate);
+    Task<IEnumerable<TEntity>> FindAllAsync(Expression<Func<TEntity, bool>> predicate);
 
     Task AddAsync(TEntity entity);
 
     Task AddRangeAsync(IEnumerable<TEntity> entities);
 
+    void Remove(TEntity entity);
+
     Task RemoveByIdAsync(Id id);
 
-    Task RemoveAsync(TEntity entity);
+    void RemoveRange(IEnumerable<TEntity> entities);
 
-    Task RemoveRangeAsync(IEnumerable<TEntity> entities);
+    Task UpdateByIdAsync(Id id, TEntity newEntity);
 
-    Task UpdateById(Id id, TEntity newEntity);
-
-    Task UpdateAsync(TEntity entity);
+    void Update(TEntity entity);
 }

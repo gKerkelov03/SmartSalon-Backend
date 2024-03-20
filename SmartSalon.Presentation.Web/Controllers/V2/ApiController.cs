@@ -12,7 +12,7 @@ public class ApiController : ControllerBase
     [HttpGet]
     public IActionResult Index()
     {
-        return NotFound();
+        return NotFound("The V2 api is not implemented yet");
     }
 }
 

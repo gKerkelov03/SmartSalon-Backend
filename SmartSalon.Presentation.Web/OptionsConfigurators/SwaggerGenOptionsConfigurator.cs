@@ -7,14 +7,14 @@ namespace SmartSalon.Presentation.Web;
 
 public class SwaggerGenOptionsConfigurator : IConfigureOptions<SwaggerGenOptions>
 {
-    private readonly IApiVersionDescriptionProvider apiVersionsInfo;
+    private readonly IApiVersionDescriptionProvider _apiVersionsInfo;
 
     public SwaggerGenOptionsConfigurator(IApiVersionDescriptionProvider provider)
-        => this.apiVersionsInfo = provider;
+        => _apiVersionsInfo = provider;
 
     public void Configure(SwaggerGenOptions options)
     {
-        foreach (var versionDescription in apiVersionsInfo.ApiVersionDescriptions)
+        foreach (var versionDescription in _apiVersionsInfo.ApiVersionDescriptions)
         {
             options.SwaggerDoc(
                 versionDescription.GroupName,

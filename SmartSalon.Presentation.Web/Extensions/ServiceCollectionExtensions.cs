@@ -6,12 +6,11 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Domain;
 using SmartSalon.Data;
 using SmartSalon.Data.Seeding;
 using SmartSalon.Presentation.Web.Filters;
-using SmartSalon.Shared.ConventionalServices;
-using SmartSalon.Shared.Extensions;
 using SmartSalon.Shared.Mapping;
 using static SmartSalon.Presentation.Web.WebConstants;
 
@@ -146,47 +145,29 @@ public static class ServiceCollectionExtensions
         params Assembly[] assemblies
     )
     {
-        var iTransientService = typeof(ITransientService);
-        var iScopedService = typeof(IScopedService);
-        var iSingletonService = typeof(ISingletonService);
+        var iTransientService = typeof(ITransientLifetime);
+        var iScopedService = typeof(IScopedLifetime);
+        var iSingletonService = typeof(ISingletonLifetime);
 
-        assemblies.ForEach(assembly =>
+        return services.Scan(types =>
         {
-            var serviceAndInterfacePairs =
-                assembly
-                    .GetExportedTypes()
-                    .Where(type => type.IsNotAbsctractOrInterface())
-                    .Select(type =>
-                        (
-                            Service: type,
-                            Interface: type.GetInterface($"I{type.Name}")!
-                        )
-                    )
-                    .Where(pair => pair.Interface is not null);
+            var allTypes = types.FromAssemblies(assemblies);
 
-            serviceAndInterfacePairs.ForEach(pair =>
-            {
-                var (service, @interface) = pair;
-                var isTransientService = iTransientService.IsBaseTypeOf(@interface);
-                var isScopedService = iScopedService.IsBaseTypeOf(@interface);
-                var isSingletonService = iSingletonService.IsBaseTypeOf(@interface);
+            allTypes
+                .AddClasses(@class => @class.AssignableTo(iScopedService))
+                .AsImplementedInterfaces()
+                .WithScopedLifetime();
 
-                if (isTransientService)
-                {
-                    services.AddTransient(@interface, service);
-                }
-                else if (isScopedService)
-                {
-                    services.AddScoped(@interface, service);
-                }
-                else if (isSingletonService)
-                {
-                    services.AddSingleton(@interface, service);
-                }
-            });
+            allTypes
+                .AddClasses(@class => @class.AssignableTo(iSingletonService))
+                .AsImplementedInterfaces()
+                .WithSingletonLifetime();
+
+            allTypes
+                .AddClasses(@class => @class.AssignableTo(iTransientService))
+                .AsImplementedInterfaces()
+                .WithTransientLifetime();
         });
-
-        return services;
     }
 
     public static IServiceCollection RegisterActionFilters(this IServiceCollection services)

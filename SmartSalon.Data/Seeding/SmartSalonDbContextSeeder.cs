@@ -1,7 +1,6 @@
 ﻿using SmartSalon.Shared.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System.Reflection;
 
 namespace SmartSalon.Data.Seeding;
 
@@ -16,23 +15,25 @@ public class SmartSalonDbContextSeeder : ISeeder
             .GetService<ILoggerFactory>()
             ?.CreateLogger(smartSalonDbContextSeeder);
 
-        await this.GetAllSeeders().ForEachAsync(async seeder =>
+        await GetAllSeeders().ForEachAsync(async seeder =>
         {
             await seeder.SeedAsync(dbContext, serviceProvider);
             await dbContext.SaveChangesAsync();
 
-            logger?.LogInformation($"Seeder {seeder.GetType().Name} done.");
+            var seederName = seeder.GetType().Name;
+            logger?.LogInformation($"Seeder {seederName} done.");
         });
     }
 
-    private IEnumerable<ISeeder> GetAllSeeders()
-        => Assembly
-            .GetExecutingAssembly()
+    private static IEnumerable<ISeeder> GetAllSeeders()
+        => typeof(SmartSalonDbContext)
+            .Assembly
             .GetTypes()
             .Where(type =>
                 typeof(ISeeder).IsBaseTypeOf(type) &&
                 type.IsNotAbsctractOrInterface()
-            ).Select(seederType => Activator
+            )
+            .Select(seederType => Activator
                 .CreateInstance(seederType)
                 !.CastTo<ISeeder>()
             );

@@ -1,7 +1,7 @@
-
+using SmartSalon.Shared.Extensions;
 using SmartSalon.Shared.Mapping;
 
-namespace SmartSalon.Shared.Extensions;
+namespace SmartSalon.Application.Extensions;
 
 public static class MappingExtensions
 {

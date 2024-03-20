@@ -3,12 +3,13 @@ using SmartSalon.Data;
 using SmartSalon.Shared.Extensions;
 using SmartSalon.Presentation.Web.Extensions;
 using SmartSalon.Application;
+using SmartSalon.Application.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var dataAssembly = typeof(SmartSalonDbContext).GetAssembly();
-var servicesAssembly = typeof(ApplicationConstants).GetAssembly();
-var webAssembly = typeof(WebConstants).GetAssembly();
+var dataLayer = typeof(SmartSalonDbContext).GetAssembly();
+var applicationLayer = typeof(IApplicationLayerMarker).GetAssembly();
+var presentationLayer = typeof(WebConstants).GetAssembly();
 
 builder.SetupConfigurationFiles();
 builder
@@ -19,8 +20,9 @@ builder
     .RegisterDbContext(builder.Configuration)
     .RegisterSettingsProvider(builder.Configuration)
     .RegisterSeedingServices()
-    .RegisterConventionalServicesFrom(servicesAssembly, dataAssembly)
-    .RegisterMappingsFrom(servicesAssembly, dataAssembly, webAssembly)
+    .RegisterConventionalServicesFrom(applicationLayer, dataLayer)
+    .RegisterMappingsFrom(applicationLayer, dataLayer, presentationLayer)
+    .AddApplication()
 
     .ConfigureOptions<SwaggerGenOptionsConfigurator>()
     .AddSwaggerGeneration()
