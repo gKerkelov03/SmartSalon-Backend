@@ -21,7 +21,7 @@ builder
     .RegisterSeedingServices()
     .RegisterConventionalServicesFrom(applicationLayer, dataLayer)
     .RegisterMappingsFrom(applicationLayer, dataLayer, presentationLayer)
-    // .RegisterActionFilters()
+    .AddExceptionHandler<GlobalExceptionHandler>()
     .AddApplication()
 
     .ConfigureOptions<SwaggerGenOptionsConfigurator>()
@@ -37,13 +37,14 @@ var app = builder.Build();
 
 app
     .UseCors()
-    .UseDeveloperExceptionPage()
     .UseHttpsRedirection()
     .UseAuthorization()
     .AddSwaggerUI(app.Environment, app.Services)
-    .AddSeeding(app.Services);
+    .AddExceptionHandling();
 
 app.MapControllers();
 
-app.OpenSwaggerOnStartup();
-app.Run();
+app
+    .OpenSwaggerOnStartup()
+    .SeedTheDatabase(app.Services)
+    .Run();

@@ -4,6 +4,7 @@ using SmartSalon.Application.Queries;
 using SmartSalon.Presentation.Web.Models.Requests;
 using SmartSalon.Application.Extensions;
 using SmartSalon.Presentation.Web.Extensions;
+using SmartSalon.Presentation.Web.Models.Responses;
 
 namespace SmartSalon.Presentation.Web.Controllers.V1;
 
@@ -15,14 +16,17 @@ public class ExampleController : ApiController
     [Route("example-path1")]
     public async Task<IActionResult> ExampleEndpoint1(ExampleRequest request)
     {
-        var queryResponse = await _sender.Send(request.MapTo<ExampleQuery>());
+        var responseResult = await _sender.Send(request.MapTo<ExampleQuery>());
 
-        if (queryResponse.IsFailed)
+        if (responseResult.IsFailed)
         {
-            return BadRequest(queryResponse.ToErrorObject());
+            var problemDetails = responseResult.ToProblemDetails();
+            return BadRequest(problemDetails);
         }
 
-        return Ok(queryResponse.Value);
+        var response = responseResult.Value.MapTo<ExampleResponse>();
+
+        return Ok(response);
     }
 
     [HttpPost]
@@ -33,7 +37,7 @@ public class ExampleController : ApiController
 
         if (commandResponse.IsFailed)
         {
-            return BadRequest(commandResponse.ToErrorObject());
+            return BadRequest(commandResponse.ToProblemDetails());
         }
 
         return Ok(commandResponse);

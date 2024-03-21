@@ -36,8 +36,4 @@
             </_Parameter1>
         </AssemblyAttribute>
     </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="ExceptionHandlers/" />
-    </ItemGroup>
 </Project>

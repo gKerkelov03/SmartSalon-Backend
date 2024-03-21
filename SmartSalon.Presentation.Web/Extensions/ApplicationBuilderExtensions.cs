@@ -1,34 +1,19 @@
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.EntityFrameworkCore;
-using SmartSalon.Data;
-using SmartSalon.Data.Seeding;
 
 namespace SmartSalon.Presentation.Web.Extensions;
 
 public static class IApplicationBuilderExtensions
 {
-    public static IApplicationBuilder AddSeeding(this IApplicationBuilder app, IServiceProvider serviceProvider)
-    {
-        using var scope = serviceProvider.CreateScope();
+    //TODO: ask about the dev exception page
+    public static IApplicationBuilder AddExceptionHandling(this IApplicationBuilder app)
+        => app
+            .UseDeveloperExceptionPage()
+            .UseExceptionHandler("/Error");
 
-        var dbContext = scope
-            .ServiceProvider
-            .GetRequiredService<SmartSalonDbContext>();
-
-        var seeder = serviceProvider.GetRequiredService<ISeeder>();
-
-        dbContext.Database.EnsureDeleted();
-        dbContext.Database.Migrate();
-
-        seeder
-            .SeedAsync(dbContext, scope.ServiceProvider)
-            .GetAwaiter()
-            .GetResult();
-
-        return app;
-    }
-
-    public static IApplicationBuilder AddSwaggerUI(this IApplicationBuilder app, IWebHostEnvironment environment, IServiceProvider serviceProvider)
+    public static IApplicationBuilder AddSwaggerUI(
+        this IApplicationBuilder app,
+        IWebHostEnvironment environment,
+        IServiceProvider serviceProvider)
     {
         if (!environment.IsDevelopment())
         {
