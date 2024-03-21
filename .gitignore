@@ -5,6 +5,8 @@
 # Logs
 Logs/
 
+.vscode
+
 # Generated files
 project.lock.json
 .vs/
