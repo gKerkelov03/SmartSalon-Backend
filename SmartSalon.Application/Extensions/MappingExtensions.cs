@@ -1,5 +1,5 @@
+using SmartSalon.Application.Mapping;
 using SmartSalon.Shared.Extensions;
-using SmartSalon.Shared.Mapping;
 
 namespace SmartSalon.Application.Extensions;
 
@@ -9,8 +9,7 @@ public static class MappingExtensions
     {
         ArgumentNullException.ThrowIfNull(origin);
 
-        var mappedValue = AutoMapperConfig.MapperInstance.Map<DestinationType>(origin);
-        return mappedValue;
+        return AutoMapperConfig.MapperInstance.Map<DestinationType>(origin);
     }
 
     public static TargetType MapFrom<TargetType>(this TargetType target, object source)

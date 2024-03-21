@@ -1,5 +1,5 @@
 using System.Collections;
-using SmartSalon.Shared.Mapping;
+using SmartSalon.Application.Mapping;
 
 namespace SmartSalon.Application.Extensions;
 

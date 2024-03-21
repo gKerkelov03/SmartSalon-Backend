@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-namespace SmartSalon.Shared.Mapping.Abstractions;
+namespace SmartSalon.Application.Mapping;
 
 public interface IHaveCustomMappings
 {

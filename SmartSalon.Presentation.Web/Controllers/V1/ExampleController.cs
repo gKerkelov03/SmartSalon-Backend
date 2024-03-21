@@ -10,14 +10,31 @@ public class ExampleController : ApiController
 {
     public ExampleController(ISender sender) : base(sender) { }
 
-    [Route("example-path")]
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> ExampleEndpoint(ExampleRequest request)
+    [Route("example-path1")]
+    public async Task<IActionResult> ExampleEndpoint1(ExampleRequest request)
     {
-        var response = await _sender.Send(request.MapTo<ExampleQuery>());
+        var queryResponse = await _sender.Send(request.MapTo<ExampleQuery>());
 
-        return Ok(response);
+        if (queryResponse.IsFailed)
+        {
+            return BadRequest(queryResponse);
+        }
+
+        return Ok(queryResponse);
+    }
+
+    [HttpPost]
+    [Route("example-path2")]
+    public async Task<IActionResult> ExampleEndpoint2(ExampleRequest request)
+    {
+        var commandResponse = await _sender.Send(request.MapTo<ExampleCommand>());
+
+        if (commandResponse.IsFailed)
+        {
+            return BadRequest(commandResponse.Errors);
+        }
+
+        return Ok(commandResponse);
     }
 }

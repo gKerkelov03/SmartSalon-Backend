@@ -1,5 +1,4 @@
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SmartSalon.Presentation.Web.Controllers.V1;
@@ -7,13 +6,13 @@ namespace SmartSalon.Presentation.Web.Controllers.V1;
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/[controller]")]
+[ProducesResponseType(typeof(UnauthorizedResponseModel), StatusCodes.Status401Unauthorized)]
 // [Authorize]
-public class ApiController : ControllerBase
+public abstract class ApiController : ControllerBase
 {
     protected readonly ISender _sender;
 
     public ApiController(ISender sender)
         => _sender = sender;
-
 }
 

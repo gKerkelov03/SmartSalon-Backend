@@ -8,10 +8,10 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Domain;
+using SmartSalon.Application.Mapping;
 using SmartSalon.Data;
 using SmartSalon.Data.Seeding;
 using SmartSalon.Presentation.Web.Filters;
-using SmartSalon.Shared.Mapping;
 using static SmartSalon.Presentation.Web.WebConstants;
 
 namespace SmartSalon.Presentation.Web.Extensions;
@@ -173,7 +173,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection RegisterActionFilters(this IServiceCollection services)
     {
         services.AddControllers(options =>
-            options.Filters.Add<ModelOrNotFoundActionFilter>());
+            options.Filters.Add<ResultOrErrorActionFilter>());
 
         return services;
     }

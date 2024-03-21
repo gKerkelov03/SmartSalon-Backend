@@ -1,6 +1,5 @@
 using SmartSalon.Presentation.Web;
 using SmartSalon.Data;
-using SmartSalon.Shared.Extensions;
 using SmartSalon.Presentation.Web.Extensions;
 using SmartSalon.Application;
 using SmartSalon.Application.Extensions;
@@ -22,6 +21,7 @@ builder
     .RegisterSeedingServices()
     .RegisterConventionalServicesFrom(applicationLayer, dataLayer)
     .RegisterMappingsFrom(applicationLayer, dataLayer, presentationLayer)
+    .RegisterActionFilters()
     .AddApplication()
 
     .ConfigureOptions<SwaggerGenOptionsConfigurator>()

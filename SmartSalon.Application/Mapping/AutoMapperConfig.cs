@@ -1,12 +1,11 @@
 ﻿using System.Reflection;
 using AutoMapper;
 using SmartSalon.Shared.Extensions;
-using SmartSalon.Shared.Mapping.Abstractions;
 using TypeAndInterfacePair = (System.Type Type, System.Type Interface);
 using SourceAndDestinationPair = (System.Type Source, System.Type Destination);
 using SmartSalon.Application.Extensions;
 
-namespace SmartSalon.Shared.Mapping;
+namespace SmartSalon.Application.Mapping;
 
 public static class AutoMapperConfig
 {
