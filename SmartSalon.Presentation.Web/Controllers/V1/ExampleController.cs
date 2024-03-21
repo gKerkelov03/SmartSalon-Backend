@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SmartSalon.Application.Queries;
 using SmartSalon.Presentation.Web.Models.Requests;
 using SmartSalon.Application.Extensions;
+using SmartSalon.Presentation.Web.Extensions;
 
 namespace SmartSalon.Presentation.Web.Controllers.V1;
 
@@ -18,10 +19,10 @@ public class ExampleController : ApiController
 
         if (queryResponse.IsFailed)
         {
-            return BadRequest(queryResponse);
+            return BadRequest(queryResponse.ToErrorObject());
         }
 
-        return Ok(queryResponse);
+        return Ok(queryResponse.Value);
     }
 
     [HttpPost]
@@ -32,7 +33,7 @@ public class ExampleController : ApiController
 
         if (commandResponse.IsFailed)
         {
-            return BadRequest(commandResponse.Errors);
+            return BadRequest(commandResponse.ToErrorObject());
         }
 
         return Ok(commandResponse);

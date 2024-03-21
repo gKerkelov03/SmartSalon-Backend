@@ -21,7 +21,7 @@ builder
     .RegisterSeedingServices()
     .RegisterConventionalServicesFrom(applicationLayer, dataLayer)
     .RegisterMappingsFrom(applicationLayer, dataLayer, presentationLayer)
-    .RegisterActionFilters()
+    // .RegisterActionFilters()
     .AddApplication()
 
     .ConfigureOptions<SwaggerGenOptionsConfigurator>()
