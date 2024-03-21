@@ -1,4 +1,6 @@
-﻿namespace SmartSalon.Shared.Extensions;
+﻿using System.Collections;
+
+namespace SmartSalon.Shared.Extensions;
 
 public static class EnumerableExtensions
 {
@@ -26,5 +28,16 @@ public static class EnumerableExtensions
         }
 
         await Task.WhenAll(tasks);
+    }
+
+    public static void ForEach(
+        this IEnumerable enumerable,
+        Action<object> action
+    )
+    {
+        foreach (var element in enumerable)
+        {
+            action(element);
+        }
     }
 }

@@ -12,8 +12,7 @@ public static class EnumerableMappingExtensions
 
         foreach (var item in source)
         {
-            var mappedValue = AutoMapperConfig.MapperInstance.Map<TDestination>(item);
-            yield return mappedValue;
+            yield return AutoMapperConfig.MapperInstance.Map<TDestination>(item);
         }
     }
 }

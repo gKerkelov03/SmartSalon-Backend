@@ -1,6 +1,6 @@
 using System.Reflection;
 
-namespace SmartSalon.Shared.Extensions;
+namespace SmartSalon.Application.Extensions;
 
 public static class TypeExtensions
 {

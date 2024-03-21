@@ -1,6 +1,7 @@
 ﻿using SmartSalon.Shared.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SmartSalon.Application.Extensions;
 
 namespace SmartSalon.Data.Seeding;
 
