@@ -7,7 +7,8 @@ public class Result : IResult
     public bool IsFailure { get => !IsSuccess; }
     public IEnumerable<Error>? Errors { get; private set; }
 
-    private Result() { }
+    //public only for automapper, intended to be used with the factory methods
+    public Result() { }
 
     public static Result Failure(IEnumerable<Error> errors)
         => new Result()
@@ -50,7 +51,12 @@ public class Result<TValue> : IResult
                 throw new InvalidOperationException("Failed results doesn't have a value");
             }
 
-            return _value!;
+            if (_value is null)
+            {
+                throw new InvalidOperationException("You cannot access the Value property until you give it a non null value");
+            }
+
+            return _value;
         }
         set
         {
@@ -63,7 +69,8 @@ public class Result<TValue> : IResult
         }
     }
 
-    private Result() { }
+    //public only for automapper, intended to be used with the factory methods
+    public Result() { }
 
     public static Result<TValue> Failure(IEnumerable<Error> errors)
         => new Result<TValue>()

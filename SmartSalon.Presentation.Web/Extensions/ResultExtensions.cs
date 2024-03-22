@@ -1,28 +1,16 @@
-using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SmartSalon.Application.ResultObject;
+using SmartSalon.Shared.Extensions;
+
 //because of conflict
 using iResult = SmartSalon.Application.ResultObject.IResult;
+using SmartSalon.Application.Enums;
 
 namespace SmartSalon.Presentation.Web.Extensions;
 
 public static class ResultExtensions
 {
-    //TODO: move into ToProblemDetails
-    public static object GetErrorsInValidationFormat(this iResult result)
-    {
-        //match everything between quotes '.....'
-        string pattern = @"'([^']*)'";
-
-        return result.Errors!.Select(error =>
-        {
-            var match = Regex.Match(error.Description, pattern);
-            var propertyName = match.Groups[1].Value;
-            var errorDescription = error.Description.Remove(match.Index, match.Length);
-
-            return new { Property = propertyName, Error = errorDescription.Trim() };
-        });
-    }
 
     public static ProblemDetails ToProblemDetails(this iResult result)
     {
@@ -37,9 +25,37 @@ public static class ResultExtensions
             Title = "Bad Request",
             Extensions = new Dictionary<string, object?>()
             {
-                ["errors"] = result.GetErrorsInValidationFormat()
+                ["errors"] = ConstructErrorsObject(result)
             },
             Type = "https://www.rfc7807.com/types/bad-request",
         };
+
+        static object ConstructErrorsObject(iResult result)
+        {
+            var errorsObject = new List<object>();
+
+            result.Errors!.ForEach(error =>
+            {
+                if (error is ValidationError validationError)
+                {
+                    errorsObject.Add(new
+                    {
+                        validationError.PropertyName,
+                        validationError.Description,
+                        validationError.Type
+                    });
+                }
+                else
+                {
+                    errorsObject.Add(new
+                    {
+                        error.Description,
+                        error.Type
+                    });
+                }
+            });
+
+            return errorsObject;
+        }
     }
 }

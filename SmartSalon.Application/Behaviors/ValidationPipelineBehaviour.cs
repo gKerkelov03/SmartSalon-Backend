@@ -7,6 +7,7 @@ namespace SmartSalon.Application.Behaviors;
 
 public class ValidationPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
+    //TODO debug why changing ResultBase to Result makes the PipelineBehaviour unreachable
     where TResponse : IResult
 {
     private readonly IEnumerable<IValidator<TRequest>> _validators;
@@ -23,7 +24,7 @@ public class ValidationPipelineBehavior<TRequest, TResponse> : IPipelineBehavior
             .Select(validator => validator.Validate(request))
             .SelectMany(result => result.Errors)
             .Where(failure => failure is not null)
-            .Select(failure => new ValidationError(failure.PropertyName, failure.ErrorMessage))
+            .Select(failure => Error.Validation(failure.PropertyName, failure.ErrorMessage))
             .Distinct()
             .ToList();
 
@@ -43,20 +44,19 @@ public class ValidationPipelineBehavior<TRequest, TResponse> : IPipelineBehavior
         var genericResult = typeof(Result<>);
         var enumerableOfError = typeof(IEnumerable<Error>);
 
-        var failedResultFactoryMethod = "WithErrors";
+        var failedResultFactoryMethod = nameof(Result.Failure);
 
         if (tResult == nonGenericResult)
         {
             return Result.Failure(errors).CastTo<TResult>();
         }
-        else if (tResult.IsGenericType && tResult.GetGenericTypeDefinition() == genericResult)
+        else
         {
             var genericArgumentType = tResult.GetGenericArguments()[0];
             var constructedResultType = genericResult.MakeGenericType(genericArgumentType);
             var method = constructedResultType.GetMethod(failedResultFactoryMethod, [enumerableOfError]);
             var resultInstance = Activator.CreateInstance(constructedResultType);
 
-            //TODO: ask if you should remove the ! from below
             return method!.Invoke(resultInstance, [errors.ToArray()])!.CastTo<TResult>();
         }
 

@@ -3,7 +3,8 @@ namespace SmartSalon.Application.Enums;
 
 public enum ErrorType
 {
-    Validation = 1,
-    NotFound = 2,
-    Conflict = 3,
+    Validation = 400,
+    NotFound = 404,
+    Conflict = 409,
+    Unauthorized = 401,
 }
