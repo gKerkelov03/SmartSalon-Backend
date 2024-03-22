@@ -1,6 +1,6 @@
 namespace SmartSalon.Application.Queries;
 
-public class ExampleQueryResponse
+public class ExampleQueryResponseModel
 {
     public required string ExampleProperty1 { get; set; }
 

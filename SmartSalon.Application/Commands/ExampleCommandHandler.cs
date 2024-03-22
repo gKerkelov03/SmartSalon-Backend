@@ -17,6 +17,6 @@ public class ExampleCommandHandler : ICommandHandler<ExampleCommand>
 
     public async Task<Result> Handle(ExampleCommand query, CancellationToken cancellationToken)
     {
-        return Result.Ok();
+        return await Task.FromResult(Result.Ok());
     }
 }

@@ -4,7 +4,7 @@ using SmartSalon.Application.Domain;
 
 namespace SmartSalon.Application.Queries;
 
-public class ExampleQueryHandler : IQueryHandler<ExampleQuery, ExampleQueryResponse>
+public class ExampleQueryHandler : IQueryHandler<ExampleQuery, ExampleQueryResponseModel>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IEfRepository<BookingTime> _repository;
@@ -15,7 +15,7 @@ public class ExampleQueryHandler : IQueryHandler<ExampleQuery, ExampleQueryRespo
         _repository = repository;
     }
 
-    public async Task<Result<ExampleQueryResponse>> Handle(ExampleQuery query, CancellationToken cancellationToken)
+    public async Task<Result<ExampleQueryResponseModel>> Handle(ExampleQuery query, CancellationToken cancellationToken)
     {
         var currentTime = TimeOnly.FromDateTime(DateTime.Now);
 
@@ -24,7 +24,7 @@ public class ExampleQueryHandler : IQueryHandler<ExampleQuery, ExampleQueryRespo
             From = currentTime,
             To = currentTime
         };
-        var response = new ExampleQueryResponse() { ExampleProperty1 = "gosho", ExampleProperty2 = 5 };
+        var response = new ExampleQueryResponseModel() { ExampleProperty1 = "gosho", ExampleProperty2 = 5 };
 
         return await Task.FromResult(Result.Ok(response));
     }

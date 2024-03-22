@@ -13,11 +13,11 @@ public static class ResultExtensions
 
         return result.Errors.Select(error =>
         {
-            Match match = Regex.Match(error.Message, pattern);
-            string propertyName = match.Groups[1].Value;
-            string errorMessage = error.Message.Remove(match.Index, match.Length);
+            var match = Regex.Match(error.Message, pattern);
+            var propertyName = match.Groups[1].Value;
+            var errorMessage = error.Message.Remove(match.Index, match.Length);
 
-            return new { Property = propertyName, ErrorMessage = errorMessage.Trim() };
+            return new { Property = propertyName, Error = errorMessage.Trim() };
         });
     }
 

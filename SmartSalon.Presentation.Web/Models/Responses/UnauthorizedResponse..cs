@@ -1,8 +1,7 @@
 ﻿namespace SmartSalon.Presentation.Web;
 
-public class UnauthorizedResponseModel
+public class UnauthorizedResponse
 {
-    // TODO: ask about this
     public required int ContentLength { get; set; }
 
     public required DateTime Date { get; set; }

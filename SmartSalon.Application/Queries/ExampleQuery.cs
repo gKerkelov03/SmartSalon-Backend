@@ -2,7 +2,7 @@
 
 namespace SmartSalon.Application.Queries;
 
-public class ExampleQuery : IQuery<ExampleQueryResponse>
+public class ExampleQuery : IQuery<ExampleQueryResponseModel>
 {
     public required string ExampleProperty1 { get; set; }
 

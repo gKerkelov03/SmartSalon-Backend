@@ -4,11 +4,15 @@ namespace SmartSalon.Presentation.Web.Extensions;
 
 public static class IApplicationBuilderExtensions
 {
-    //TODO: ask about the dev exception page
-    public static IApplicationBuilder AddExceptionHandling(this IApplicationBuilder app)
-        => app
-            .UseDeveloperExceptionPage()
-            .UseExceptionHandler("/Error");
+    public static IApplicationBuilder UseExceptionHandling(this IApplicationBuilder app, IWebHostEnvironment environment)
+    {
+        if (environment.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+        }
+
+        return app.UseExceptionHandler("/Error");
+    }
 
     public static IApplicationBuilder AddSwaggerUI(
         this IApplicationBuilder app,

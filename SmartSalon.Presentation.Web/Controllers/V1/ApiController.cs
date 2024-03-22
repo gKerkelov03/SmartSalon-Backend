@@ -6,7 +6,7 @@ namespace SmartSalon.Presentation.Web.Controllers.V1;
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/[controller]")]
-[ProducesResponseType(typeof(UnauthorizedResponseModel), StatusCodes.Status401Unauthorized)]
+[ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
 // [Authorize]
 public abstract class ApiController : ControllerBase
 {

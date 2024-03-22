@@ -3,7 +3,7 @@ using SmartSalon.Application.Queries;
 
 namespace SmartSalon.Presentation.Web.Models.Responses;
 
-public class ExampleResponse : IMapFrom<ExampleQueryResponse>
+public class ExampleResponse : IMapFrom<ExampleQueryResponseModel>
 {
     public required string ExampleProperty1 { get; set; }
 
