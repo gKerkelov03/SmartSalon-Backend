@@ -18,7 +18,7 @@ public class ExampleController : ApiController
     {
         var responseResult = await _sender.Send(request.MapTo<ExampleQuery>());
 
-        if (responseResult.IsFailed)
+        if (responseResult.IsFailure)
         {
             var problemDetails = responseResult.ToProblemDetails();
             return BadRequest(problemDetails);
@@ -35,7 +35,7 @@ public class ExampleController : ApiController
     {
         var commandResponse = await _sender.Send(request.MapTo<ExampleCommand>());
 
-        if (commandResponse.IsFailed)
+        if (commandResponse.IsFailure)
         {
             return BadRequest(commandResponse.ToProblemDetails());
         }

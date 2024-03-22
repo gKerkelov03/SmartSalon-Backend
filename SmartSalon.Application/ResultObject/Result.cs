@@ -1,0 +1,92 @@
+﻿
+namespace SmartSalon.Application.ResultObject;
+
+public class Result : IResult
+{
+    public bool IsSuccess { get; private set; }
+    public bool IsFailure { get => !IsSuccess; }
+    public IEnumerable<Error>? Errors { get; private set; }
+
+    private Result() { }
+
+    public static Result Failure(IEnumerable<Error> errors)
+        => new Result()
+        {
+            IsSuccess = false,
+            Errors = errors
+        };
+
+    public static Result Failure(Error error)
+        => new Result()
+        {
+            IsSuccess = false,
+            Errors = [error]
+        };
+
+    public static Result Success()
+        => new Result()
+        {
+            IsSuccess = true,
+        };
+
+    public static implicit operator Result(Error error) => Failure(error);
+
+}
+
+public class Result<TValue> : IResult
+{
+    private TValue? _value;
+    public bool IsSuccess { get; private set; }
+    public bool IsFailure { get => !IsSuccess; }
+
+    public IEnumerable<Error>? Errors { get; private set; }
+
+    public TValue Value
+    {
+        get
+        {
+            if (IsFailure)
+            {
+                throw new InvalidOperationException("Failed results doesn't have a value");
+            }
+
+            return _value!;
+        }
+        set
+        {
+            if (value is null)
+            {
+                throw new InvalidOperationException("Your result value cannot be null");
+            }
+
+            _value = value;
+        }
+    }
+
+    private Result() { }
+
+    public static Result<TValue> Failure(IEnumerable<Error> errors)
+        => new Result<TValue>()
+        {
+            IsSuccess = false,
+            Errors = errors
+        };
+
+    public static Result<TValue> Failure(Error error)
+        => new Result<TValue>()
+        {
+            IsSuccess = false,
+            Errors = [error]
+        };
+
+    public static Result<TValue> Success(TValue value)
+        => new Result<TValue>
+        {
+            IsSuccess = true,
+            Value = value
+        };
+
+    public static implicit operator Result<TValue>(Error error) => Failure(error);
+
+    public static implicit operator Result<TValue>(TValue value) => Success(value);
+}

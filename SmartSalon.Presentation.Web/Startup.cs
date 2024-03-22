@@ -24,13 +24,12 @@ builder
     .AddAuthorizationPolicies()
     .AddApplicationServices()
     .AddCorsPolicies()
-
+    .AddHttpContextAccessor()
     .RegisterDbContext(builder.Configuration)
     .RegisterSettingsProvider(builder.Configuration)
     .RegisterSeedingServices()
     .RegisterConventionalServicesFrom(applicationLayer, dataLayer)
     .RegisterMappingsFrom(applicationLayer, dataLayer, presentationLayer)
-
     .ConfigureOptions<SwaggerGenOptionsConfigurator>()
     .AddSwaggerGeneration();
 
@@ -45,11 +44,10 @@ app
     .UseExceptionHandling(app.Environment);
 
 app.MapControllers();
-
 app
     .SeedTheDatabase(app.Services)
     .OpenSwaggerOnStartup();
 
-//The cw is only for improved dev experience and will be removed
+//Only for improved dev experience and will be removed eventually
 Console.WriteLine($"Running on: http://localhost:5054");
 app.Run();

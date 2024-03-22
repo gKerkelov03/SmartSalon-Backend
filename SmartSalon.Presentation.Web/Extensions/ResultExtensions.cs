@@ -1,27 +1,30 @@
 using System.Text.RegularExpressions;
-using FluentResults;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+//because of conflict
+using iResult = SmartSalon.Application.ResultObject.IResult;
 
 namespace SmartSalon.Presentation.Web.Extensions;
 
 public static class ResultExtensions
 {
-    public static object GetErrors(this ResultBase result)
+    //TODO: move into ToProblemDetails
+    public static object GetErrorsInValidationFormat(this iResult result)
     {
         //match everything between quotes '.....'
         string pattern = @"'([^']*)'";
 
-        return result.Errors.Select(error =>
+        return result.Errors!.Select(error =>
         {
-            var match = Regex.Match(error.Message, pattern);
+            var match = Regex.Match(error.Description, pattern);
             var propertyName = match.Groups[1].Value;
-            var errorMessage = error.Message.Remove(match.Index, match.Length);
+            var errorDescription = error.Description.Remove(match.Index, match.Length);
 
-            return new { Property = propertyName, Error = errorMessage.Trim() };
+            return new { Property = propertyName, Error = errorDescription.Trim() };
         });
     }
 
-    public static ProblemDetails ToProblemDetails(this ResultBase result)
+    public static ProblemDetails ToProblemDetails(this iResult result)
     {
         if (result.IsSuccess)
         {
@@ -34,7 +37,7 @@ public static class ResultExtensions
             Title = "Bad Request",
             Extensions = new Dictionary<string, object?>()
             {
-                ["errors"] = result.GetErrors()
+                ["errors"] = result.GetErrorsInValidationFormat()
             },
             Type = "https://www.rfc7807.com/types/bad-request",
         };

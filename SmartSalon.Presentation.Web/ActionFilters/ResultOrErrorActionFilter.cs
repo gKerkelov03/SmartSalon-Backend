@@ -1,6 +1,6 @@
-﻿using FluentResults;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using SmartSalon.Application.ResultObject;
 using SmartSalon.Shared.Extensions;
 
 namespace SmartSalon.Presentation.Web.Filters;
@@ -23,7 +23,7 @@ public class ResultOrErrorActionFilter : ActionFilterAttribute
         //     }
         //     else
         //     {
-        //         var errorMessages = result.Errors.Select(error => error.Message);
+        //         var errorMessages = result.Errors!.Select(error => error.Description);
         //         context.Result = new BadRequestObjectResult(errorMessages);
         //     }
         // }

@@ -1,5 +1,5 @@
-using FluentResults;
 using MediatR;
+using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Abstractions;
 

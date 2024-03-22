@@ -23,6 +23,7 @@
     <ItemGroup>
         <Using Include="SmartSalon.Shared.GlobalConstants" Static="True" />
         <Using Include="System.Guid" Alias="Id" />
+        <Using Remove="Microsoft.AspNetCore.Http" />
     </ItemGroup>
 
     <ItemGroup>

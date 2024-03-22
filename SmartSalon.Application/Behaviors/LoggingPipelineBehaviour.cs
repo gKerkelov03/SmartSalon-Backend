@@ -1,12 +1,12 @@
-using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Behaviors;
 
 public class LoggingPipelineBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
-    where TResponse : ResultBase
+    where TResponse : IResult
 {
     private readonly ILogger<LoggingPipelineBehaviour<TRequest, TResponse>> _logger;
 
@@ -31,7 +31,7 @@ public class LoggingPipelineBehaviour<TRequest, TResponse> : IPipelineBehavior<T
         else
         {
             _logger.LogError("Completed request {RequestName} with errors: {Errors}",
-                requestName, result.Errors.Select(error => error.Message));
+                requestName, result.Errors!.Select(error => error.Description));
         }
 
         return result;

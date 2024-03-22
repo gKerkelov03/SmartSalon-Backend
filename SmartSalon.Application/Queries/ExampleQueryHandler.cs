@@ -1,6 +1,6 @@
-﻿using FluentResults;
-using SmartSalon.Application.Abstractions;
+﻿using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Domain;
+using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Queries;
 
@@ -24,8 +24,9 @@ public class ExampleQueryHandler : IQueryHandler<ExampleQuery, ExampleQueryRespo
             From = currentTime,
             To = currentTime
         };
+
         var response = new ExampleQueryResponseModel() { ExampleProperty1 = "gosho", ExampleProperty2 = 5 };
 
-        return await Task.FromResult(Result.Ok(response));
+        return await Task.FromResult(response);
     }
 }

@@ -1,14 +1,13 @@
-using FluentResults;
 using FluentValidation;
 using MediatR;
+using SmartSalon.Application.ResultObject;
 using SmartSalon.Shared.Extensions;
 
 namespace SmartSalon.Application.Behaviors;
 
 public class ValidationPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
-    //TODO debug why changing ResultBase to Result makes the PipelineBehaviour unreachable
-    where TResponse : ResultBase
+    where TResponse : IResult
 {
     private readonly IEnumerable<IValidator<TRequest>> _validators;
 
@@ -24,7 +23,7 @@ public class ValidationPipelineBehavior<TRequest, TResponse> : IPipelineBehavior
             .Select(validator => validator.Validate(request))
             .SelectMany(result => result.Errors)
             .Where(failure => failure is not null)
-            .Select(failure => new Error(failure.ErrorMessage))
+            .Select(failure => new ValidationError(failure.PropertyName, failure.ErrorMessage))
             .Distinct()
             .ToList();
 
@@ -36,19 +35,19 @@ public class ValidationPipelineBehavior<TRequest, TResponse> : IPipelineBehavior
         return await next();
     }
 
-    private static TResult CreateFailedResult<TResult>(IEnumerable<IError> errors)
-        where TResult : ResultBase
+    private static TResult CreateFailedResult<TResult>(IEnumerable<Error> errors)
+        where TResult : IResult
     {
         var tResult = typeof(TResult);
         var nonGenericResult = typeof(Result);
         var genericResult = typeof(Result<>);
-        var enumerableOfError = typeof(IEnumerable<IError>);
+        var enumerableOfError = typeof(IEnumerable<Error>);
 
         var failedResultFactoryMethod = "WithErrors";
 
         if (tResult == nonGenericResult)
         {
-            return new Result().WithErrors(errors).CastTo<TResult>();
+            return Result.Failure(errors).CastTo<TResult>();
         }
         else if (tResult.IsGenericType && tResult.GetGenericTypeDefinition() == genericResult)
         {
