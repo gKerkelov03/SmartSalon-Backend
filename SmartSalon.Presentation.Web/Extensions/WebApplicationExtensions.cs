@@ -1,4 +1,3 @@
-
 using Microsoft.EntityFrameworkCore;
 using SmartSalon.Data;
 using SmartSalon.Data.Seeding;

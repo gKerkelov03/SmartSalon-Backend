@@ -2,5 +2,18 @@
     "Settings": {
         "JwtSecretKey": "Some magic horses from tu sofia generated this string",
         "ConnectionString": "Server=.,1433;Database=SmartSalon;TrustServerCertificate=True;User Id=sa;Password=P@ssw0rd123"
+    },
+    "Serilog": {
+        "Using": ["Serilog.Sinks.Seq"],
+        "MinimumLevel": {
+            "Default": "Information",
+            "Override": {
+                "Microsoft": "Information"
+            }
+        },
+        "WriteTo": [
+            { "Name": "Seq", "Args": { "serverUrl": "http://localhost:5341" } }
+        ],
+        "Enrich": ["FromLogContext", "WithMachineName", "WithTreadId"]
     }
 }

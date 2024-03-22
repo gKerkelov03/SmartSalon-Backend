@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Domain;
 using SmartSalon.Application.Mapping;
@@ -228,4 +229,5 @@ public static class ServiceCollectionExtensions
                 [securityScheme] = []
             });
         });
+
 }

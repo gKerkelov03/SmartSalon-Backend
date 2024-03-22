@@ -1,15 +1,14 @@
 using FluentResults;
 using FluentValidation;
 using MediatR;
-using SmartSalon.Application.Abstractions;
 using SmartSalon.Shared.Extensions;
 
 namespace SmartSalon.Application.Behaviors;
 
-public class ValidationPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>, ITransientLifetime
+public class ValidationPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
     //TODO debug why changing ResultBase to Result makes the PipelineBehaviour unreachable
-    where TResponse : ResultBase, new()
+    where TResponse : ResultBase
 {
     private readonly IEnumerable<IValidator<TRequest>> _validators;
 
@@ -38,7 +37,7 @@ public class ValidationPipelineBehavior<TRequest, TResponse> : IPipelineBehavior
     }
 
     private static TResult CreateFailedResult<TResult>(IEnumerable<IError> errors)
-        where TResult : ResultBase, new()
+        where TResult : ResultBase
     {
         var tResult = typeof(TResult);
         var nonGenericResult = typeof(Result);

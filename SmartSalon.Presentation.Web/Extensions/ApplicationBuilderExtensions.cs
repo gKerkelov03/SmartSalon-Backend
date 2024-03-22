@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Serilog;
 
 namespace SmartSalon.Presentation.Web.Extensions;
 
@@ -9,6 +10,14 @@ public static class IApplicationBuilderExtensions
         => app
             .UseDeveloperExceptionPage()
             .UseExceptionHandler("/Error");
+
+    public static IApplicationBuilder AddLogging(this IApplicationBuilder app)
+    {
+        app
+            .UseSerilogRequestLogging();
+
+        return app;
+    }
 
     public static IApplicationBuilder AddSwaggerUI(
         this IApplicationBuilder app,
