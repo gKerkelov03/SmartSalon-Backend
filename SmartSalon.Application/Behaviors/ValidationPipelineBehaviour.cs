@@ -1,5 +1,6 @@
 using FluentValidation;
 using MediatR;
+using SmartSalon.Application.Errors;
 using SmartSalon.Application.ResultObject;
 using SmartSalon.Shared.Extensions;
 
@@ -20,23 +21,21 @@ public class ValidationPipelineBehavior<TRequest, TResponse> : IPipelineBehavior
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        var errors = _validators
+        var validationErrors = _validators
             .Select(validator => validator.Validate(request))
             .SelectMany(result => result.Errors)
             .Where(failure => failure is not null)
-            .Select(failure => Error.Validation(failure.PropertyName, failure.ErrorMessage))
-            .Distinct()
-            .ToList();
+            .Select(failure => Error.Validation(failure.PropertyName, failure.ErrorMessage));
 
-        if (errors.Any())
+        if (validationErrors.Any())
         {
-            return CreateFailedResult<TResponse>(errors);
+            return CreateFailedResult<TResponse>(validationErrors.First());
         }
 
         return await next();
     }
 
-    private static TResult CreateFailedResult<TResult>(IEnumerable<Error> errors)
+    private static TResult CreateFailedResult<TResult>(Error error)
         where TResult : IResult
     {
         var tResult = typeof(TResult);
@@ -48,18 +47,17 @@ public class ValidationPipelineBehavior<TRequest, TResponse> : IPipelineBehavior
 
         if (tResult == nonGenericResult)
         {
-            return Result.Failure(errors).CastTo<TResult>();
+            return Result.Failure(error).CastTo<TResult>();
         }
-        else
+        else if (tResult == genericResult)
         {
-            var genericArgumentType = tResult.GetGenericArguments()[0];
-            var constructedResultType = genericResult.MakeGenericType(genericArgumentType);
-            var method = constructedResultType.GetMethod(failedResultFactoryMethod, [enumerableOfError]);
-            var resultInstance = Activator.CreateInstance(constructedResultType);
+            var genericArgument = tResult.GetGenericArguments()[0];
+            var genericResultWithTypeParameter = genericResult.MakeGenericType(genericArgument);
+            var method = genericResultWithTypeParameter.GetMethod(failedResultFactoryMethod, [enumerableOfError]);
 
-            return method!.Invoke(resultInstance, [errors.ToArray()])!.CastTo<TResult>();
+            return method!.Invoke(null, [error])!.CastTo<TResult>();
         }
 
-        throw new ArgumentException("TResult must be either Result or Result<T>.");
+        throw new ArgumentException("TResult must be either Result, Result<TValue> or a type that inherits from them. If not you should configure the ValidationPipelineBehaviour's CreateFailedResult method to be able to construct the desired type of yours");
     }
 }

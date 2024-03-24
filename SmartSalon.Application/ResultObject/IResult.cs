@@ -1,4 +1,6 @@
-﻿namespace SmartSalon.Application.ResultObject;
+﻿using SmartSalon.Application.Errors;
+
+namespace SmartSalon.Application.ResultObject;
 
 public interface IResult
 {

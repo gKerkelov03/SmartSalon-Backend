@@ -1,11 +1,27 @@
 ﻿
+
+using SmartSalon.Application.Errors;
+
 namespace SmartSalon.Application.ResultObject;
 
 public class Result : IResult
 {
+    private IEnumerable<Error>? _errors;
     public bool IsSuccess { get; private set; }
     public bool IsFailure { get => !IsSuccess; }
-    public IEnumerable<Error>? Errors { get; private set; }
+    public IEnumerable<Error>? Errors
+    {
+        get
+        {
+            if (IsSuccess)
+            {
+                throw new InvalidOperationException("You are trying to access the errors property of a successful result");
+            }
+
+            return _errors;
+        }
+        private set { _errors = value; }
+    }
 
     //public only for automapper, intended to be used with the factory methods
     public Result() { }

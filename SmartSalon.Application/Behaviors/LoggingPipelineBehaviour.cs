@@ -26,12 +26,13 @@ public class LoggingPipelineBehaviour<TRequest, TResponse> : IPipelineBehavior<T
 
         if (result.IsSuccess)
         {
-            _logger.LogInformation("Completed request {RequestName}", requestName);
+            _logger.LogInformation("Completed handler for {RequestName}", requestName);
         }
         else
         {
-            _logger.LogError("Completed request {RequestName} with errors: {Errors}",
-                requestName, result.Errors!.Select(error => error.Description));
+            var errorDescriptions = result.Errors!.Select(error => error.Description);
+
+            _logger.LogError("Completed handler for {RequestName} with errors: {Errors}", requestName, errorDescriptions);
         }
 
         return result;
