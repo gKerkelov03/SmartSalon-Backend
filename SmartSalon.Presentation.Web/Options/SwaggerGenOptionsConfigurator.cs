@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace SmartSalon.Presentation.Web;
+namespace SmartSalon.Presentation.Web.Options;
 
 public class SwaggerGenOptionsConfigurator : IConfigureOptions<SwaggerGenOptions>
 {

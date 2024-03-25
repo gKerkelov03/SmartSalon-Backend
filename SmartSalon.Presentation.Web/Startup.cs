@@ -22,15 +22,14 @@ builder
     .AddIdentity()
     .AddJwtAuthentication(builder.Configuration)
     .AddAuthorizationPolicies()
-    .AddApplicationServices()
+    .AddApplicationServices(builder.Configuration)
     .AddCorsPolicies()
     .AddHttpContextAccessor()
     .RegisterDbContext(builder.Configuration)
-    .RegisterSettingsProvider(builder.Configuration)
+    .RegisterTheOptionsClasses(builder.Configuration)
     .RegisterSeedingServices()
     .RegisterConventionalServicesFrom(applicationLayer, dataLayer)
     .RegisterMappingsFrom(applicationLayer, dataLayer, presentationLayer)
-    .ConfigureOptions<SwaggerGenOptionsConfigurator>()
     .AddSwaggerGeneration();
 
 var app = builder.Build();

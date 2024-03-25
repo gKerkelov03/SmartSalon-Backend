@@ -15,13 +15,13 @@ public static class WebApplicationExtensions
             .ServiceProvider
             .GetRequiredService<SmartSalonDbContext>();
 
-        dbContext.Database.EnsureDeleted();
+        // dbContext.Database.EnsureDeleted();
         dbContext.Database.Migrate();
 
-        seeder
-            .SeedAsync(dbContext, scope.ServiceProvider)
-            .GetAwaiter()
-            .GetResult();
+        // seeder
+        //     .SeedAsync(dbContext, scope.ServiceProvider)
+        //     .GetAwaiter()
+        //     .GetResult();
 
         return app;
     }

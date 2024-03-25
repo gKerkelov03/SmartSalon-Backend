@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -6,14 +7,14 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Serilog;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Domain;
+using SmartSalon.Application.Extensions;
 using SmartSalon.Application.Mapping;
 using SmartSalon.Data;
 using SmartSalon.Data.Seeding;
 using SmartSalon.Presentation.Web.Filters;
-using static SmartSalon.Presentation.Web.WebConstants;
+using SmartSalon.Presentation.Web.Options;
 
 namespace SmartSalon.Presentation.Web.Extensions;
 
@@ -38,23 +39,20 @@ public static class ServiceCollectionExtensions
         services.AddDbContext<SmartSalonDbContext>(options =>
             options.UseSqlServer(
                 configuration
-                    .GetSettingsProvider()
-                    .ConnectionString
+                    .GetConnectionString("Sql")
             )
         );
 
         return services;
     }
 
-    public static IServiceCollection RegisterSettingsProvider(
-        this IServiceCollection services,
-        IConfiguration config
-    )
-        => services.AddSingleton(config.GetSettingsProvider());
+    public static IServiceCollection RegisterTheOptionsClasses(this IServiceCollection services, IConfiguration config)
+        => services
+            .Configure<ConnectionStringsOptions>(config.GetSection("ConnectionStrings"))
+            .Configure<SecretKeysOptions>(config.GetSection("ConnectionStrings"))
+            .ConfigureOptions<SwaggerGenOptionsConfigurator>();
 
-    public static IServiceCollection RegisterSeedingServices(
-        this IServiceCollection services
-    )
+    public static IServiceCollection RegisterSeedingServices(this IServiceCollection services)
         => services.AddSingleton<ISeeder, SmartSalonDbContextSeeder>();
 
     public static IServiceCollection AddIdentity(this IServiceCollection services)
@@ -82,8 +80,9 @@ public static class ServiceCollectionExtensions
         IConfiguration config
     )
     {
-        var jwtSecret = config.GetSettingsProvider().JwtSecret;
-        var key = Encoding.ASCII.GetBytes(jwtSecret);
+        var jwtSecret = config.GetSection("SecretKeys")?.Get<SecretKeysOptions>()?.Jwt ?? "somedefaultvalue";
+        var signingKeyBytes = Encoding.ASCII.GetBytes(jwtSecret);
+
         services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -95,7 +94,7 @@ public static class ServiceCollectionExtensions
             options.TokenValidationParameters = new()
             {
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
+                IssuerSigningKey = new SymmetricSecurityKey(signingKeyBytes),
                 ValidateIssuer = false,
                 ValidateAudience = false
             };
@@ -229,5 +228,4 @@ public static class ServiceCollectionExtensions
                 [securityScheme] = []
             });
         });
-
 }

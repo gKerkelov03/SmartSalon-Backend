@@ -2,6 +2,7 @@
 
 namespace SmartSalon.Application.Queries;
 
-public class GetAllQuery : IQuery<IEnumerable<GetByIdQueryResponse>>
+public class GetAllQuery : ICachedQuery<IEnumerable<GetByIdQueryResponse>>
 {
+    public string CachingKey => "caching-test";
 }

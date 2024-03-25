@@ -1,7 +1,10 @@
 {
-    "Settings": {
-        "JwtSecretKey": "Some magic horses from tu sofia generated this string",
-        "ConnectionString": "Server=.,1433;Database=SmartSalon;TrustServerCertificate=True;User Id=sa;Password=P@ssw0rd123"
+    "ConnectionStrings": {
+        "Sql": "Server=.,1433;Database=SmartSalon;TrustServerCertificate=True;User Id=sa;Password=P@ssw0rd123",
+        "Redis": "localhost:6379"
+    },
+    "SecretKeys": {
+        "Jwt": "Some magic horses from tu sofia generated this string"
     },
     "Serilog": {
         "Using": ["Serilog.Sinks.Seq", "Serilog.Sinks.Console"],
