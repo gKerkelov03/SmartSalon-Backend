@@ -7,7 +7,6 @@ namespace SmartSalon.Presentation.Web.Extensions;
 
 public static class ResultExtensions
 {
-
     public static ProblemDetails ToProblemDetails(this IResult result)
     {
         if (result.IsSuccess)
