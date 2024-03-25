@@ -17,8 +17,9 @@ public class GlobalExceptionHandler : IExceptionHandler
 
         var problemDetails = new ProblemDetails()
         {
-            Status = StatusCodes.Status500InternalServerError,
-            Title = "Internal Server Error"
+            Status = Status500InternalServerError,
+            Title = "Internal Server Error",
+            Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.6.1"
         };
 
         await httpContext.Response.WriteAsJsonAsync(problemDetails);

@@ -125,7 +125,7 @@ public static class AutoMapperConfig
                 var (type, @interface) = typeAndInterfacePair;
                 var iHaveCustomMappings = typeof(IHaveCustomMappings);
 
-                return iHaveCustomMappings.IsBaseTypeOf(type) &&
+                return iHaveCustomMappings.IsAssignableFrom(type) &&
                     type.IsNotAbsctractOrInterface();
             })
             .Select(typeAndInterfacePair =>

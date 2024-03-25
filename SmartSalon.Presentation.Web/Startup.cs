@@ -7,9 +7,9 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var dataLayer = typeof(SmartSalonDbContext).GetAssembly();
-var applicationLayer = typeof(IApplicationLayerMarker).GetAssembly();
-var presentationLayer = typeof(WebConstants).GetAssembly();
+var dataLayer = typeof(SmartSalonDbContext).Assembly;
+var applicationLayer = typeof(IApplicationLayerMarker).Assembly;
+var presentationLayer = typeof(WebConstants).Assembly;
 
 builder.SetupConfigurationFiles();
 builder.ConfigureSerilogFromTheConfigurationFiles();

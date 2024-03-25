@@ -12,64 +12,60 @@ internal class UsersSeeder : ISeeder
         var userProfileManager = serviceProvider.GetRequiredService<UserManager<UserProfile>>();
         var password = "password";
 
-        await GetCustomersToSeed().ForEachAsync(async customer =>
+        foreach (var admin in GetAdminsToSeed())
+        {
+            await userProfileManager.CreateAsync(admin, password);
+            dbContext.SaveChanges();
+            await userProfileManager.AddToRoleAsync(admin, AdminRoleName);
+        };
+
+        foreach (var customer in GetCustomersToSeed())
         {
             var profile = customer.UserProfile!;
             await userProfileManager.CreateAsync(profile, password);
             await userProfileManager.AddToRoleAsync(profile, CustomerRoleName);
-        });
+        };
 
-        await GetWorkersToSeed().ForEachAsync(async worker =>
+        foreach (var worker in GetWorkersToSeed())
         {
             var profile = worker.UserProfile!;
             await userProfileManager.CreateAsync(profile, password);
             await userProfileManager.AddToRoleAsync(profile, OwnerRoleName);
+        };
 
-        });
-
-        await GetOwnersToSeed().ForEachAsync(async owner =>
+        foreach (var owner in GetOwnersToSeed())
         {
             var profile = owner.UserProfile!;
             await userProfileManager.CreateAsync(profile, password);
             await userProfileManager.AddToRoleAsync(profile, OwnerRoleName);
 
-        });
+        };
 
-        await GetAdminsToSeed().ForEachAsync(async admin =>
-        {
-            await userProfileManager.CreateAsync(admin, password);
-            await userProfileManager.AddToRoleAsync(admin, AdminRoleName);
-        });
 
         dbContext.SaveChanges();
     }
 
     private Customer[] GetCustomersToSeed()
     {
-        var profileId = Id.NewGuid();
-
         return [
             new Customer {
                 UserProfile = new()
                 {
-
                     FirstName = "Ivan",
                     LastName = "Stefanov",
                     PhoneNumber = "1234567890",
                     Email = "ivan@abv.bg",
                     IsDeleted = false,
                     CreatedOn = DateTime.Now,
-                    RoleId = Id.NewGuid(),
-                    Id = profileId
                 },
-                UserProfileId = profileId
             }
         ];
     }
 
     private Worker[] GetWorkersToSeed()
     {
-        var profileId = Id.NewGuid();
+        var profileId1 = Id.NewGuid();
+        var profileId2 = Id.NewGuid();
 
         return [
             new Worker
@@ -83,9 +79,9 @@ internal class UsersSeeder : ISeeder
                     IsDeleted = false,
                     CreatedOn = DateTime.Now,
                     RoleId = Id.NewGuid(),
-                    Id = profileId
+                    Id = profileId1
                 },
-                UserProfileId = profileId
+                UserProfileId = profileId1
             },
             new Worker
             {
@@ -98,9 +94,9 @@ internal class UsersSeeder : ISeeder
                     IsDeleted = false,
                     CreatedOn = DateTime.Now,
                     RoleId = Id.NewGuid(),
-                    Id = profileId
+                    Id = profileId2
                 },
-                UserProfileId = profileId
+                UserProfileId = profileId2
             }
         ];
     }
@@ -138,7 +134,6 @@ internal class UsersSeeder : ISeeder
                 Email = "gkerkelov03@abv.bg",
                 IsDeleted = false,
                 CreatedOn = DateTime.Now,
-                RoleId = Id.NewGuid(),
             },
             new UserProfile
             {
@@ -148,7 +143,6 @@ internal class UsersSeeder : ISeeder
                 Email = "pivanov03@abv.bg",
                 IsDeleted = false,
                 CreatedOn = DateTime.Now,
-                RoleId = Id.NewGuid(),
             }
         ];
 }

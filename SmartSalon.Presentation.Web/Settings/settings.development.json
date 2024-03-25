@@ -4,7 +4,7 @@
         "ConnectionString": "Server=.,1433;Database=SmartSalon;TrustServerCertificate=True;User Id=sa;Password=P@ssw0rd123"
     },
     "Serilog": {
-        "Using": ["Serilog.Sinks.Seq"],
+        "Using": ["Serilog.Sinks.Seq", "Serilog.Sinks.Console"],
         "MinimumLevel": {
             "Default": "Information",
             "Override": {
@@ -12,6 +12,10 @@
             }
         },
         "WriteTo": [
+            {
+                "Name": "Console",
+                "Args": { "restrictedToMinimumLevel": "Error" }
+            },
             { "Name": "Seq", "Args": { "serverUrl": "http://localhost:5341" } }
         ],
         "Enrich": ["FromLogContext", "WithMachineName", "WithTreadId"]

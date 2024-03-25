@@ -1,7 +1,6 @@
-﻿using SmartSalon.Shared.Extensions;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using SmartSalon.Application.Extensions;
+using SmartSalon.Data.Seeding.Seeders;
 
 namespace SmartSalon.Data.Seeding;
 
@@ -11,32 +10,41 @@ public class SmartSalonDbContextSeeder : ISeeder
     {
         ArgumentNullException.ThrowIfNull(serviceProvider);
 
-        var smartSalonDbContextSeeder = typeof(SmartSalonDbContextSeeder)!;
         var logger = serviceProvider
-            .GetService<ILoggerFactory>()
-            ?.CreateLogger(smartSalonDbContextSeeder);
+            .GetService<ILogger<SmartSalonDbContextSeeder>>();
 
-        await GetAllSeeders().ForEachAsync(async seeder =>
+        foreach (var seeder in GetAllSeeders())
         {
-            await seeder.SeedAsync(dbContext, serviceProvider);
-            await dbContext.SaveChangesAsync();
-
             var seederName = seeder.GetType().Name;
-            logger?.LogInformation($"Seeder {seederName} done.");
-        });
+
+            try
+            {
+                await seeder.SeedAsync(dbContext, serviceProvider);
+                await dbContext.SaveChangesAsync();
+                logger?.LogInformation($"Seeder {seederName} done.");
+            }
+            catch
+            {
+                logger?.LogError($"Seeder {seederName} failed.");
+            }
+        };
     }
 
     private static IEnumerable<ISeeder> GetAllSeeders()
-        => typeof(SmartSalonDbContext)
-            .Assembly
-            .GetTypes()
-            .Where(type =>
-                typeof(ISeeder).IsBaseTypeOf(type) &&
-                type.IsNotAbsctractOrInterface()
-            )
-            .Select(seederType => Activator
-                .CreateInstance(seederType)
-                !.CastTo<ISeeder>()
-            );
+    {
+        return [new RolesSeeder(), new UsersSeeder()];
+        // var mainSeeder = typeof(SmartSalonDbContextSeeder);
 
+        // return mainSeeder
+        //         .Assembly
+        //         .GetTypes()
+        //         .Where(type =>
+        //             typeof(ISeeder).IsAssignableFrom(type) &&
+        //             type.IsNotAbsctractOrInterface() &&
+        //             type != mainSeeder)
+        //         .Select(seederType => Activator
+        //             .CreateInstance(seederType)
+        //             !.CastTo<ISeeder>()
+        //         );
+    }
 }

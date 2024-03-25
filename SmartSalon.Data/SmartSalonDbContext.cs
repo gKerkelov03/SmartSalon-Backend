@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using SmartSalon.Application.Domain.Abstractions;
 using SmartSalon.Shared.Extensions;
 using System.Reflection;
+using SmartSalon.Application.Extensions;
 
 namespace SmartSalon.Data;
 
@@ -61,17 +62,14 @@ public class SmartSalonDbContext : IdentityDbContext<UserProfile, Role, Id>
         IEnumerable<IMutableEntityType> entities
     )
     {
-        var iDeletableEntity = typeof(IDeletableEntity<Id>);
-        var dbContextHelpers = typeof(UnitOfWork);
-
-        var SetIsDeletedQueryFilterMethodInfo = dbContextHelpers.GetMethod(
+        var SetIsDeletedQueryFilterMethodInfo = typeof(UnitOfWork).GetMethod(
             nameof(SetIsDeletedQueryFilter),
             BindingFlags.NonPublic | BindingFlags.Static
         );
 
         var deletableEntities = entities.Where(entity =>
             entity.ClrType is not null &&
-            iDeletableEntity.IsAssignableFrom(entity.ClrType)
+            typeof(IDeletableEntity<Id>).IsAssignableFrom(entity.ClrType)
         );
 
         deletableEntities.ForEach(deletableEntityType =>

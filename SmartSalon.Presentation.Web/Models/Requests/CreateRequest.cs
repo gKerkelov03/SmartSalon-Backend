@@ -4,11 +4,11 @@ using SmartSalon.Application.Queries;
 
 namespace SmartSalon.Presentation.Web.Models.Requests;
 
-public class ExampleRequest : IMapTo<ExampleQuery>, IMapTo<ExampleCommand>
+public class CreateRequest : IMapTo<CreateCommand>
 {
     [Required]
-    public required string ExampleProperty1 { get; set; }
+    public required string Name { get; set; }
 
     [Required]
-    public required int ExampleProperty2 { get; set; }
+    public required int Age { get; set; }
 }

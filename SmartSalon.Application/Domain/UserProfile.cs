@@ -14,7 +14,7 @@ public class UserProfile : IdentityUser<Id>, IBaseEntity<Id>
 
     public string ProfilePictureUrl { get; set; } = blankProfilePictureUrl;
 
-    public required Id RoleId { get; set; }
+    public Id RoleId { get; set; }
 
     public Role? Role { get; set; }
 

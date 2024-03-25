@@ -15,21 +15,6 @@ public static class EnumerableExtensions
         }
     }
 
-    public static async Task ForEachAsync<TElement>(
-        this IEnumerable<TElement> enumerable,
-        Func<TElement, Task> action
-    )
-    {
-        var tasks = new List<Task>();
-
-        foreach (var element in enumerable)
-        {
-            tasks.Add(action(element));
-        }
-
-        await Task.WhenAll(tasks);
-    }
-
     public static void ForEach(
         this IEnumerable enumerable,
         Action<object> action
