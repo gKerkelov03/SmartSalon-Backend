@@ -7,8 +7,8 @@ namespace SmartSalon.Presentation.Web.Models.Requests;
 public class CreateRequest : IMapTo<CreateCommand>
 {
     [Required]
-    public required string Name { get; set; }
+    public string Name { get; set; }
 
     [Required]
-    public required int Age { get; set; }
+    public int? Age { get; set; }
 }

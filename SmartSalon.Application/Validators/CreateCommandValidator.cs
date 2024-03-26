@@ -7,7 +7,7 @@ internal class CreateCommandValidator : AbstractValidator<CreateCommand>
 {
     public CreateCommandValidator()
     {
-        RuleFor(command => command.Age).GreaterThan(5);
-        RuleFor(command => command.Name).Length(10, 15);
+        RuleFor(command => command.Age).NotEmpty().GreaterThan(5);
+        RuleFor(command => command.Name).NotNull().NotEmpty().Length(10, 15);
     }
 }

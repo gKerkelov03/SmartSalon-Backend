@@ -3,14 +3,16 @@ using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Domain;
-using SmartSalon.Application.Extensions;
+using SmartSalon.Application.Errors;
 using SmartSalon.Application.Mapping;
+using SmartSalon.Application.ResultObject;
 using SmartSalon.Data;
 using SmartSalon.Data.Seeding;
 using SmartSalon.Presentation.Web.Filters;
@@ -178,6 +180,29 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
+    public static IServiceCollection RegisterInvalidModelStateResponseFactory(this IServiceCollection services)
+    {
+        services
+        .AddControllers()
+        .ConfigureApiBehaviorOptions(options => options.InvalidModelStateResponseFactory =
+            context =>
+            {
+                var validationErrors = context
+                    .ModelState
+                    .Where(kvp => kvp.Value?.Errors.Count > 0)
+                    .Select(kvp => new { PropertyName = kvp.Key, Errors = kvp.Value!.Errors.Select(error => error.ErrorMessage) })
+                    .SelectMany(validationViolations =>
+                        validationViolations.Errors.Select(error => Error.Validation(validationViolations.PropertyName, error)));
+
+                var result = Result.Failure(validationErrors);
+                var traceId = context.HttpContext.TraceIdentifier;
+                return new ObjectResult(result.ToProblemDetails(traceId));
+            }
+        );
+
+        return services;
+    }
+
     public static IServiceCollection AddVersioning(this IServiceCollection services)
         => services
             .AddApiVersioning(options =>
@@ -221,7 +246,6 @@ public static class ServiceCollectionExtensions
                     Example: '{schemeName} 1a2b3c4d5e6f7g'
                 """,
             });
-
 
             options.AddSecurityRequirement(new()
             {

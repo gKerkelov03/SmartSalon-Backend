@@ -21,7 +21,7 @@ public abstract class ApiController : ControllerBase
         => _sender = sender;
 
     protected IActionResult ProblemDetails(IResult result)
-        => new ObjectResult(result.ToProblemDetails());
+        => new ObjectResult(result.ToProblemDetails(HttpContext.TraceIdentifier));
 
     protected IActionResult CreatedAndLocatedAt(string actionName, Id id, object? response = null)
     {

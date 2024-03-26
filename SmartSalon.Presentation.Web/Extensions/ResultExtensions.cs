@@ -7,7 +7,7 @@ namespace SmartSalon.Presentation.Web.Extensions;
 
 public static class ResultExtensions
 {
-    public static ProblemDetails ToProblemDetails(this IResult result)
+    public static ProblemDetails ToProblemDetails(this IResult result, string traceId)
     {
         if (result.IsSuccess)
         {
@@ -15,12 +15,13 @@ public static class ResultExtensions
         }
 
         IEnumerable<Error> errors;
-        var validationErrors = result.Errors!.Where(error => error is ValidationError);
+        var validationErrors = result.Errors!.OfType<ValidationError>();
         var firstError = result.Errors!.First();
 
         if (validationErrors.Any())
         {
             errors = validationErrors;
+            firstError = validationErrors.First();
         }
         else
         {
@@ -35,7 +36,8 @@ public static class ResultExtensions
             Title = title,
             Extensions = new Dictionary<string, object?>()
             {
-                ["errors"] = GetErrorsObject(errors)
+                ["errors"] = GetErrorsObject(errors),
+                [nameof(traceId)] = traceId
             },
             Type = type
         };
@@ -43,22 +45,17 @@ public static class ResultExtensions
         static object GetErrorsObject(IEnumerable<Error> errors)
         {
             var errorsObject = new List<object>();
+            var validationErrorGroups = errors.OfType<ValidationError>().GroupBy(error => error.PropertyName);
 
-            errors.ForEach(error =>
+            validationErrorGroups.ForEach(group =>
             {
-                if (error is ValidationError validationError)
-                {
-                    errorsObject.Add(new
-                    {
-                        validationError.PropertyName,
-                        validationError.Description,
-                    });
-                }
-                else
-                {
-                    errorsObject.Add(error.Description);
-                }
+                var propertyName = group.Key;
+                var validationViolations = group.Select(validationError => validationError.Description);
+
+                errorsObject.Add(new { propertyName, validationViolations });
             });
+
+            // errorsObject.Add(validationError.Description);
 
             return errorsObject;
         }

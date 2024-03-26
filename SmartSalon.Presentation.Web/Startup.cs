@@ -30,6 +30,7 @@ builder
     .RegisterSeedingServices()
     .RegisterConventionalServicesFrom(applicationLayer, dataLayer)
     .RegisterMappingsFrom(applicationLayer, dataLayer, presentationLayer)
+    .RegisterInvalidModelStateResponseFactory()
     .AddSwaggerGeneration();
 
 var app = builder.Build();
@@ -43,6 +44,7 @@ app
     .UseExceptionHandling(app.Environment);
 
 app.MapControllers();
+
 app
     .SeedTheDatabase(app.Services)
     .OpenSwaggerOnStartup();
