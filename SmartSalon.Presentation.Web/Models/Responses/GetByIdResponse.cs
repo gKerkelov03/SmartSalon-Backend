@@ -1,6 +1,6 @@
 ﻿
 using SmartSalon.Application.Mapping;
-using SmartSalon.Application.Queries;
+using SmartSalon.Application.Queries.Responses;
 
 namespace SmartSalon.Presentation.Web.Models.Responses;
 

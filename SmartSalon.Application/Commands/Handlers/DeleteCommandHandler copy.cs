@@ -2,7 +2,7 @@
 using SmartSalon.Application.Domain;
 using SmartSalon.Application.ResultObject;
 
-namespace SmartSalon.Application.Queries;
+namespace SmartSalon.Application.Commands.Handlers;
 
 public class DeleteCommandHandler : ICommandHandler<DeleteCommand>
 {

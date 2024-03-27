@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using SmartSalon.Application.Commands;
 using SmartSalon.Application.Mapping;
-using SmartSalon.Application.Queries;
 
 namespace SmartSalon.Presentation.Web.Models.Requests;
 

@@ -1,5 +1,5 @@
 using FluentValidation;
-using SmartSalon.Application.Queries;
+using SmartSalon.Application.Commands;
 
 namespace SmartSalon.Application.Validators;
 

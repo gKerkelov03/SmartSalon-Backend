@@ -1,4 +1,4 @@
-namespace SmartSalon.Application.Queries;
+namespace SmartSalon.Application.Queries.Responses;
 
 public class GetByIdQueryResponse
 {

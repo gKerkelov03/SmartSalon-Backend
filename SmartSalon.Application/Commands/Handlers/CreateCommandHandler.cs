@@ -1,9 +1,10 @@
 ﻿using MediatR;
 using SmartSalon.Application.Abstractions;
+using SmartSalon.Application.Commands.Responses;
 using SmartSalon.Application.Domain;
 using SmartSalon.Application.ResultObject;
 
-namespace SmartSalon.Application.Queries;
+namespace SmartSalon.Application.Commands.Handlers;
 
 public class CreateCommandHandler : ICommandHandler<CreateCommand, CreateCommandResponse>
 {

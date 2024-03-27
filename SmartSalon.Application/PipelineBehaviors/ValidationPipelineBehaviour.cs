@@ -4,7 +4,7 @@ using SmartSalon.Application.Errors;
 using SmartSalon.Application.ResultObject;
 using SmartSalon.Shared.Extensions;
 
-namespace SmartSalon.Application.Behaviors;
+namespace SmartSalon.Application.PipelineBehaviors;
 
 public class ValidationPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>

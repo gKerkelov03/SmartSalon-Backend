@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SmartSalon.Application.Behaviors;
+using SmartSalon.Application.PipelineBehaviors;
 
 namespace SmartSalon.Application.Extensions;
 

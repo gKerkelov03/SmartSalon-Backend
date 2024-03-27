@@ -1,6 +1,6 @@
 ﻿using SmartSalon.Application.Abstractions;
 
-namespace SmartSalon.Application.Queries;
+namespace SmartSalon.Application.Commands;
 
 public class UpdateCommand : ICommand
 {

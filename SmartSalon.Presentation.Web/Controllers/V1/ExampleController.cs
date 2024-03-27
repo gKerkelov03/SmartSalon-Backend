@@ -4,6 +4,7 @@ using SmartSalon.Application.Queries;
 using SmartSalon.Presentation.Web.Models.Requests;
 using SmartSalon.Application.Extensions;
 using SmartSalon.Presentation.Web.Models.Responses;
+using SmartSalon.Application.Commands;
 
 namespace SmartSalon.Presentation.Web.Controllers.V1;
 

@@ -1,5 +1,5 @@
 ﻿
-namespace SmartSalon.Application.Queries;
+namespace SmartSalon.Application.Commands.Responses;
 
 public class CreateCommandResponse
 {

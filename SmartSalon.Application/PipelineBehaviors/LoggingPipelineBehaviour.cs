@@ -2,7 +2,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using SmartSalon.Application.ResultObject;
 
-namespace SmartSalon.Application.Behaviors;
+namespace SmartSalon.Application.PipelineBehaviors;
 
 public class LoggingPipelineBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>

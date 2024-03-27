@@ -1,8 +1,9 @@
 ﻿using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Domain;
+using SmartSalon.Application.Queries.Responses;
 using SmartSalon.Application.ResultObject;
 
-namespace SmartSalon.Application.Queries;
+namespace SmartSalon.Application.Queries.Handlers;
 
 public class GetByIdQueryHandler : IQueryHandler<GetByIdQuery, GetByIdQueryResponse>
 {

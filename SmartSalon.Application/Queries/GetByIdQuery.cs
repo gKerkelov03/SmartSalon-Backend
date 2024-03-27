@@ -1,4 +1,5 @@
 ﻿using SmartSalon.Application.Abstractions;
+using SmartSalon.Application.Queries.Responses;
 
 namespace SmartSalon.Application.Queries;
 

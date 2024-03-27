@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using SmartSalon.Application.Domain.Abstractions;
 using SmartSalon.Shared.Extensions;
 using System.Reflection;
-using SmartSalon.Application.Extensions;
 
 namespace SmartSalon.Data;
 
