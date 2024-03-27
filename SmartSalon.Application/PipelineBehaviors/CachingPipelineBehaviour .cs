@@ -27,26 +27,33 @@ public class CachingPipelineBehaviour<TQuery, TResult> : IPipelineBehavior<TQuer
         if (cachedValue is null)
         {
             var result = await next();
-            var popertyContainingTheValue = "Value";
 
-            var value = result
-                .GetType()
-                .GetProperty(popertyContainingTheValue)
-                !.GetValue(result);
-
-            var json = JsonConvert.SerializeObject(value);
-
-            _cache.SetString(
-                query.CachingKey,
-                json,
-                new() { AbsoluteExpirationRelativeToNow = query.Expiration }
-            );
+            await AddResultValueToTheCacheAsync(result, query.CachingKey, query.Expiration);
 
             return result;
         }
 
+        return ParseValueToResult(cachedValue).CastTo<TResult>();
+    }
+
+    private async Task AddResultValueToTheCacheAsync(IResult result, string key, TimeSpan expiration)
+    {
+        var popertyContainingTheValue = "Value";
+
+        var value = result
+            .GetType()
+            .GetProperty(popertyContainingTheValue)
+            !.GetValue(result);
+
+        var json = JsonConvert.SerializeObject(value);
+
+        await _cache.SetStringAsync(key, json, new() { AbsoluteExpirationRelativeToNow = expiration }, default);
+    }
+
+    private IResult ParseValueToResult(string value)
+    {
         var resultGenericArgument = typeof(TResult).GetGenericArguments()[0];
-        var deserialized = JsonConvert.DeserializeObject(cachedValue, resultGenericArgument);
+        var deserialized = JsonConvert.DeserializeObject(value, resultGenericArgument);
 
         return typeof(Result<>)
             .MakeGenericType(resultGenericArgument)
