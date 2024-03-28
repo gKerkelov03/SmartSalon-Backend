@@ -7,15 +7,10 @@ using SmartSalon.Shared.Extensions;
 
 namespace SmartSalon.Application.PipelineBehaviors;
 
-public class CachingPipelineBehaviour<TQuery, TResult> : IPipelineBehavior<TQuery, TResult>
+public class CachingPipelineBehaviour<TQuery, TResult>(IDistributedCache _cache) : IPipelineBehavior<TQuery, TResult>
     where TQuery : ICachedQuery
     where TResult : IResult
 {
-    private readonly IDistributedCache _cache;
-
-    public CachingPipelineBehaviour(IDistributedCache cache)
-        => _cache = cache;
-
     public async Task<TResult> Handle(
         TQuery query,
         RequestHandlerDelegate<TResult> next,

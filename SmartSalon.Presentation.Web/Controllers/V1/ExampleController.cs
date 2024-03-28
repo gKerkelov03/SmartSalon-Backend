@@ -8,10 +8,8 @@ using SmartSalon.Application.Commands;
 
 namespace SmartSalon.Presentation.Web.Controllers.V1;
 
-public class ExampleController : ApiController
+public class ExampleController(ISender _sender) : ApiController
 {
-    public ExampleController(ISender sender) : base(sender) { }
-
     [HttpPost]
     [ProducesResponseType(Status201Created)]
     [ProducesResponseType(typeof(ProblemDetailsWithErrors), Status409Conflict)]
@@ -86,7 +84,7 @@ public class ExampleController : ApiController
     [ProducesResponseType(Status204NoContent)]
     public async Task<IActionResult> Delete(Id id)
     {
-        var command = new DeleteCommand(id);
+        var command = new DeleteCommand { Id = id };
         var result = await _sender.Send(command);
 
         if (result.IsFailure)

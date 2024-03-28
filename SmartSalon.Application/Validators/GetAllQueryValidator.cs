@@ -3,7 +3,7 @@ using SmartSalon.Application.Queries;
 
 namespace SmartSalon.Application.Validators;
 
-class GetAllQueryValidator : AbstractValidator<GetAllQuery>
+internal class GetAllQueryValidator : AbstractValidator<GetAllQuery>
 {
     public GetAllQueryValidator()
     {

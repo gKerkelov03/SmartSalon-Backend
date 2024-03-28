@@ -5,8 +5,7 @@ namespace SmartSalon.Application.Extensions;
 
 public static class EnumerableMappingExtensions
 {
-    public static IEnumerable<TDestination> To<TDestination>(
-        this IEnumerable source)
+    public static IEnumerable<TDestination> To<TDestination>(this IEnumerable source)
     {
         ArgumentNullException.ThrowIfNull(source);
 

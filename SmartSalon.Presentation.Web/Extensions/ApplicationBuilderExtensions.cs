@@ -17,7 +17,8 @@ public static class IApplicationBuilderExtensions
     public static IApplicationBuilder AddSwaggerUI(
         this IApplicationBuilder app,
         IWebHostEnvironment environment,
-        IServiceProvider serviceProvider)
+        IServiceProvider serviceProvider
+    )
     {
         if (!environment.IsDevelopment())
         {

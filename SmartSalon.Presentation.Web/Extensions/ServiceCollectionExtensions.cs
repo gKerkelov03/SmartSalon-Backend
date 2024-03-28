@@ -1,4 +1,3 @@
-using System.Globalization;
 using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -15,17 +14,13 @@ using SmartSalon.Application.Mapping;
 using SmartSalon.Application.ResultObject;
 using SmartSalon.Data;
 using SmartSalon.Data.Seeding;
-using SmartSalon.Presentation.Web.Filters;
 using SmartSalon.Presentation.Web.Options;
 
 namespace SmartSalon.Presentation.Web.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection RegisterMappingsFrom(
-        this IServiceCollection services,
-        params Assembly[] assemblies
-    )
+    public static IServiceCollection RegisterMappingsFrom(this IServiceCollection services, params Assembly[] assemblies)
     {
         AutoMapperConfig.RegisterMappings(assemblies);
         services.AddSingleton(AutoMapperConfig.MapperInstance);
@@ -33,20 +28,9 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection RegisterDbContext(
-        this IServiceCollection services,
-        IConfiguration configuration
-    )
-    {
-        services.AddDbContext<SmartSalonDbContext>(options =>
-            options.UseSqlServer(
-                configuration
-                    .GetConnectionString("Sql")
-            )
-        );
-
-        return services;
-    }
+    public static IServiceCollection RegisterDbContext(this IServiceCollection services, IConfiguration configuration)
+        => services.AddDbContext<SmartSalonDbContext>(
+            options => options.UseSqlServer(configuration.GetConnectionString("Sql")));
 
     public static IServiceCollection RegisterTheOptionsClasses(this IServiceCollection services, IConfiguration config)
         => services
@@ -54,8 +38,7 @@ public static class ServiceCollectionExtensions
             .Configure<SecretKeysOptions>(config.GetSection("ConnectionStrings"))
             .ConfigureOptions<SwaggerGenOptionsConfigurator>();
 
-    public static IServiceCollection RegisterSeedingServices(this IServiceCollection services)
-        => services.AddSingleton<ISeeder, DatabaseSeeder>();
+    public static IServiceCollection RegisterSeedingServices(this IServiceCollection services) => services.AddSingleton<ISeeder, DatabaseSeeder>();
 
     public static IServiceCollection AddIdentity(this IServiceCollection services)
     {
@@ -77,128 +60,105 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection AddJwtAuthentication(
-        this IServiceCollection services,
-        IConfiguration config
-    )
+    public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration config)
     {
         var jwtSecret = config.GetSection("SecretKeys")?.Get<SecretKeysOptions>()?.Jwt ?? "somedefaultvalue";
         var signingKeyBytes = Encoding.ASCII.GetBytes(jwtSecret);
 
-        services.AddAuthentication(options =>
-        {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(options =>
-        {
-            options.RequireHttpsMetadata = false;
-            options.SaveToken = false;
-            options.TokenValidationParameters = new()
+        services
+            .AddAuthentication(options =>
             {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(signingKeyBytes),
-                ValidateIssuer = false,
-                ValidateAudience = false
-            };
-        });
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = false;
+                options.TokenValidationParameters = new()
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(signingKeyBytes),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
 
         return services;
     }
 
-    public static IServiceCollection AddAuthorizationPolicies(
-        this IServiceCollection services
-    )
+    public static IServiceCollection AddAuthorizationPolicies(this IServiceCollection services)
         => services.AddAuthorization(options =>
-            {
-                options.AddPolicy(
-                    CustomerPolicyName,
-                    policy => policy.RequireRole(CustomerRoleName)
-                );
+        {
+            options.AddPolicy(
+                CustomerPolicyName,
+                policy => policy.RequireRole(CustomerRoleName)
+            );
 
-                options.AddPolicy(
-                    WorkerPolicyName,
-                    policy => policy.RequireRole(WorkerRoleName)
-                );
+            options.AddPolicy(
+                WorkerPolicyName,
+                policy => policy.RequireRole(WorkerRoleName)
+            );
 
-                options.AddPolicy(
-                    OwnerPolicyName,
-                    policy => policy.RequireRole(OwnerRoleName)
-                );
+            options.AddPolicy(
+                OwnerPolicyName,
+                policy => policy.RequireRole(OwnerRoleName)
+            );
 
-                options.AddPolicy(
-                    AdminPolicyName,
-                    policy => policy.RequireRole(AdminRoleName)
-                );
-            });
+            options.AddPolicy(
+                AdminPolicyName,
+                policy => policy.RequireRole(AdminRoleName)
+            );
+        });
 
     public static IServiceCollection AddCorsPolicies(this IServiceCollection services)
-        => services
-            .AddCors(options => options
-                .AddPolicy(
-                    AngularLocalhostCorsPolicyName,
-                    policy => policy
-                        .WithOrigins(AngularLocalhostUrl)
-                        .AllowAnyHeader()
-                        .AllowAnyMethod()
-                ));
+        => services.AddCors(options => options.AddPolicy(AngularLocalhostCorsPolicyName,
+                policy => policy
+                    .WithOrigins(AngularLocalhostUrl)
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+            ));
 
-    public static IServiceCollection RegisterConventionalServicesFrom(
-        this IServiceCollection services,
-        params Assembly[] assemblies
-    )
-    {
-        var iTransientService = typeof(ITransientLifetime);
-        var iScopedService = typeof(IScopedLifetime);
-        var iSingletonService = typeof(ISingletonLifetime);
-
-        return services.Scan(types =>
+    public static IServiceCollection RegisterConventionalServicesFrom(this IServiceCollection services, params Assembly[] assemblies)
+        => services.Scan(types =>
         {
             var allTypes = types.FromAssemblies(assemblies);
 
             allTypes
-                .AddClasses(@class => @class.AssignableTo(iScopedService))
+                .AddClasses(@class => @class.AssignableTo(typeof(IScopedLifetime)))
                 .AsImplementedInterfaces()
                 .WithScopedLifetime();
 
             allTypes
-                .AddClasses(@class => @class.AssignableTo(iSingletonService))
+                .AddClasses(@class => @class.AssignableTo(typeof(ISingletonLifetime)))
                 .AsImplementedInterfaces()
                 .WithSingletonLifetime();
 
             allTypes
-                .AddClasses(@class => @class.AssignableTo(iTransientService))
+                .AddClasses(@class => @class.AssignableTo(typeof(ITransientLifetime)))
                 .AsImplementedInterfaces()
                 .WithTransientLifetime();
         });
-    }
-
-    public static IServiceCollection RegisterActionFilters(this IServiceCollection services)
-    {
-        services.AddControllers(options =>
-            options.Filters.Add<ResultOrErrorActionFilter>());
-
-        return services;
-    }
 
     public static IServiceCollection RegisterInvalidModelStateResponseFactory(this IServiceCollection services)
     {
         services
-        .AddControllers()
-        .ConfigureApiBehaviorOptions(options => options.InvalidModelStateResponseFactory =
-            context =>
-            {
-                var validationErrors = context
-                    .ModelState
-                    .Where(kvp => kvp.Value?.Errors.Count > 0)
-                    .Select(kvp => new { PropertyName = kvp.Key, Errors = kvp.Value!.Errors.Select(error => error.ErrorMessage) })
-                    .SelectMany(validationViolations =>
-                        validationViolations.Errors.Select(error => Error.Validation(validationViolations.PropertyName, error)));
+            .AddControllers()
+            .ConfigureApiBehaviorOptions(options => options.InvalidModelStateResponseFactory = context =>
+                {
+                    var validationErrors = context
+                        .ModelState
+                        .Where(kvp => kvp.Value?.Errors.Count > 0)
+                        .Select(kvp => new { PropertyName = kvp.Key, Errors = kvp.Value!.Errors.Select(error => error.ErrorMessage) })
+                        .SelectMany(validationViolations =>
+                            validationViolations.Errors.Select(error => Error.Validation(validationViolations.PropertyName, error)));
 
-                var result = Result.Failure(validationErrors);
-                var traceId = context.HttpContext.TraceIdentifier;
-                return new ObjectResult(result.ToProblemDetails(traceId));
-            }
-        );
+                    var result = Result.Failure(validationErrors);
+                    var traceId = context.HttpContext.TraceIdentifier;
+
+                    return new ObjectResult(result.ToProblemDetails(traceId));
+                }
+            );
 
         return services;
     }

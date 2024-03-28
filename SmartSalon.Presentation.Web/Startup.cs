@@ -1,14 +1,14 @@
 using SmartSalon.Presentation.Web;
 using SmartSalon.Data;
 using SmartSalon.Presentation.Web.Extensions;
-using SmartSalon.Application;
 using SmartSalon.Application.Extensions;
 using Serilog;
+using SmartSalon.Application.ResultObject;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var dataLayer = typeof(SmartSalonDbContext).Assembly;
-var applicationLayer = typeof(IApplicationLayerMarker).Assembly;
+var applicationLayer = typeof(IResult).Assembly;
 var presentationLayer = typeof(WebConstants).Assembly;
 
 builder.SetupConfigurationFiles();

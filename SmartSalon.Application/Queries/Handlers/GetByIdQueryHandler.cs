@@ -5,17 +5,8 @@ using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Queries.Handlers;
 
-public class GetByIdQueryHandler : IQueryHandler<GetByIdQuery, GetByIdQueryResponse>
+public class GetByIdQueryHandler(IUnitOfWork _unitOfWork, IEfRepository<BookingTime> _repository) : IQueryHandler<GetByIdQuery, GetByIdQueryResponse>
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IEfRepository<BookingTime> _repository;
-
-    public GetByIdQueryHandler(IUnitOfWork unitOfWork, IEfRepository<BookingTime> repository)
-    {
-        _unitOfWork = unitOfWork;
-        _repository = repository;
-    }
-
     public async Task<Result<GetByIdQueryResponse>> Handle(GetByIdQuery query, CancellationToken cancellationToken)
     {
         var response = new GetByIdQueryResponse() { Name = "gosho", Age = 5 };

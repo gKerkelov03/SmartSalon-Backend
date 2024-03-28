@@ -17,9 +17,7 @@ public static class AutoMapperConfig
         {
             if (mapperInstance is null)
             {
-                throw new InvalidOperationException(
-                    "You cannot access the mapper instance before calling the RegisterMappings method"
-                );
+                throw new InvalidOperationException("You cannot access the mapper instance before calling the RegisterMappings method");
             }
 
             return mapperInstance;
@@ -61,27 +59,18 @@ public static class AutoMapperConfig
             (type, @interface) => (Type: type, Interface: @interface)
         );
 
-    private static IEnumerable<TypeAndInterfacePair> GetMaps(
-        IEnumerable<Type> types,
-        Func<TypeAndInterfacePair, bool> predicate
-    )
-        => GetPairs(types)
-            .Where(typeAndInterfacePair =>
-            {
-                var (type, @interface) = typeAndInterfacePair;
+    private static IEnumerable<TypeAndInterfacePair> GetMaps(IEnumerable<Type> types, Func<TypeAndInterfacePair, bool> predicate)
+        => GetPairs(types).Where(pair =>
+        {
+            var (type, @interface) = pair;
 
-                return @interface.GetTypeInfo().IsGenericType &&
-                    type.IsNotAbsctractOrInterface() &&
-                    predicate(typeAndInterfacePair);
-            });
+            return @interface.GetTypeInfo().IsGenericType &&
+                type.IsNotAbsctractOrInterface() &&
+                predicate(pair);
+        });
 
-    private static IEnumerable<SourceAndDestinationPair> GetFromMapsFrom(
-        IEnumerable<Type> types
-    )
-        => GetMaps(types, typeAndInterfacePair =>
-                typeAndInterfacePair
-                .Interface
-                .GetGenericTypeDefinition() == typeof(IMapFrom<>)
+    private static IEnumerable<SourceAndDestinationPair> GetFromMapsFrom(IEnumerable<Type> types)
+        => GetMaps(types, pair => pair.Interface.GetGenericTypeDefinition() == typeof(IMapFrom<>)
             )
             .Select(typeAndInterfacePair =>
             {
@@ -96,14 +85,8 @@ public static class AutoMapperConfig
                 );
             });
 
-    private static IEnumerable<SourceAndDestinationPair> GetToMapsFrom(
-        IEnumerable<Type> types
-    )
-        => GetMaps(types, typeAndInterfacePair =>
-                typeAndInterfacePair
-                .Interface
-                .GetGenericTypeDefinition() == typeof(IMapTo<>)
-            )
+    private static IEnumerable<SourceAndDestinationPair> GetToMapsFrom(IEnumerable<Type> types)
+        => GetMaps(types, pair => pair.Interface.GetGenericTypeDefinition() == typeof(IMapTo<>))
             .Select(typeAndInterfacePair =>
             {
                 var (type, @interface) = typeAndInterfacePair;
@@ -116,24 +99,21 @@ public static class AutoMapperConfig
                 );
             });
 
-    private static IEnumerable<IHaveCustomMappings> GetCustomMappingsFrom(
-        IEnumerable<Type> types
-    )
-        => GetPairs(types)
-            .Where(typeAndInterfacePair =>
-            {
-                var (type, @interface) = typeAndInterfacePair;
-                var iHaveCustomMappings = typeof(IHaveCustomMappings);
+    private static IEnumerable<IHaveCustomMappings> GetCustomMappingsFrom(IEnumerable<Type> types)
+        => GetPairs(types).Where(pair =>
+        {
+            var (type, @interface) = pair;
+            var iHaveCustomMappings = typeof(IHaveCustomMappings);
 
-                return iHaveCustomMappings.IsAssignableFrom(type) &&
-                    type.IsNotAbsctractOrInterface();
-            })
-            .Select(typeAndInterfacePair =>
-            {
-                var (type, @interface) = typeAndInterfacePair;
+            return iHaveCustomMappings.IsAssignableFrom(type) &&
+                type.IsNotAbsctractOrInterface();
+        })
+        .Select(typeAndInterfacePair =>
+        {
+            var (type, @interface) = typeAndInterfacePair;
 
-                return Activator
-                    .CreateInstance(type)!
-                    .CastTo<IHaveCustomMappings>();
-            });
+            return Activator
+                .CreateInstance(type)!
+                .CastTo<IHaveCustomMappings>();
+        });
 }

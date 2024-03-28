@@ -60,15 +60,13 @@ public static class ResultExtensions
             return errorsObject;
         }
 
-        static (string title, int statusCode, string type) GetProblemDetailsInfoFor(Error error)
-            => error switch
-            {
-
-                ValidationError => ("Bad Request", Status400BadRequest, "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.1"),
-                UnauthorizedError => ("Unauthorized", Status401Unauthorized, "https://datatracker.ietf.org/doc/html/rfc7235#section-3.1"),
-                NotFoundError => ("Resource not found", Status404NotFound, "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4"),
-                ConflictError => ("Conflicting resources", Status409Conflict, "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.8"),
-                _ => throw new ArgumentException("Such an Error type is not recognized when trying to construct ProblemDetails response")
-            };
+        static (string title, int statusCode, string type) GetProblemDetailsInfoFor(Error error) => error switch
+        {
+            ValidationError => ("Bad Request", Status400BadRequest, "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.1"),
+            UnauthorizedError => ("Unauthorized", Status401Unauthorized, "https://datatracker.ietf.org/doc/html/rfc7235#section-3.1"),
+            NotFoundError => ("Resource not found", Status404NotFound, "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4"),
+            ConflictError => ("Conflicting resources", Status409Conflict, "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.8"),
+            _ => throw new ArgumentException("Such an Error type is not recognized when trying to construct ProblemDetails response")
+        };
     }
 }

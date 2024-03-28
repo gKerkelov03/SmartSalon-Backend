@@ -7,8 +7,9 @@ namespace SmartSalon.Application.ResultObject;
 public class Result : IResult
 {
     private IEnumerable<Error>? _errors;
+
     public bool IsSuccess { get; private set; }
-    public bool IsFailure { get => !IsSuccess; }
+    public bool IsFailure => !IsSuccess;
     public IEnumerable<Error>? Errors
     {
         get
@@ -20,44 +21,23 @@ public class Result : IResult
 
             return _errors;
         }
-        private set { _errors = value; }
+        private set => _errors = value;
     }
 
-    //public only for automapper, intended to be used with the factory methods
-    public Result() { }
-
-    public static Result Failure(IEnumerable<Error> errors)
-        => new Result()
-        {
-            IsSuccess = false,
-            Errors = errors
-        };
-
-    public static Result Failure(Error error)
-        => new Result()
-        {
-            IsSuccess = false,
-            Errors = [error]
-        };
-
-    public static Result Success()
-        => new Result()
-        {
-            IsSuccess = true,
-        };
+    public static Result Failure(IEnumerable<Error> errors) => new() { IsSuccess = false, Errors = errors };
+    public static Result Failure(Error error) => new() { IsSuccess = false, Errors = [error] };
+    public static Result Success() => new() { IsSuccess = true, };
 
     public static implicit operator Result(Error error) => Failure(error);
-
 }
 
 public class Result<TValue> : IResult
 {
     private TValue? _value;
+
     public bool IsSuccess { get; private set; }
-    public bool IsFailure { get => !IsSuccess; }
-
+    public bool IsFailure => !IsSuccess;
     public IEnumerable<Error>? Errors { get; private set; }
-
     public TValue Value
     {
         get
@@ -85,31 +65,10 @@ public class Result<TValue> : IResult
         }
     }
 
-    //public only for automapper, intended to be used with the factory methods
-    public Result() { }
-
-    public static Result<TValue> Failure(IEnumerable<Error> errors)
-        => new Result<TValue>()
-        {
-            IsSuccess = false,
-            Errors = errors
-        };
-
-    public static Result<TValue> Failure(Error error)
-        => new Result<TValue>()
-        {
-            IsSuccess = false,
-            Errors = [error]
-        };
-
-    public static Result<TValue> Success(TValue value)
-        => new Result<TValue>
-        {
-            IsSuccess = true,
-            Value = value
-        };
+    public static Result<TValue> Failure(IEnumerable<Error> errors) => new() { IsSuccess = false, Errors = errors };
+    public static Result<TValue> Failure(Error error) => new() { IsSuccess = false, Errors = [error] };
+    public static Result<TValue> Success(TValue value) => new() { IsSuccess = true, Value = value };
 
     public static implicit operator Result<TValue>(Error error) => Failure(error);
-
     public static implicit operator Result<TValue>(TValue value) => Success(value);
 }

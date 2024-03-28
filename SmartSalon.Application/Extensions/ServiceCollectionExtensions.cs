@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SmartSalon.Application.PipelineBehaviors;
+using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Extensions;
 
@@ -15,7 +16,7 @@ public static class ServiceCollectionExtensions
 
     internal static IServiceCollection RegisterMediatR(this IServiceCollection services)
         => services.AddMediatR(options => options
-            .RegisterServicesFromAssembly(typeof(IApplicationLayerMarker).Assembly)
+            .RegisterServicesFromAssembly(typeof(IResult).Assembly)
             .AddOpenBehavior(typeof(LoggingPipelineBehaviour<,>))
             .AddOpenBehavior(typeof(ValidationPipelineBehavior<,>))
             .AddOpenBehavior(typeof(CachingPipelineBehaviour<,>))
@@ -28,7 +29,7 @@ public static class ServiceCollectionExtensions
 
     internal static IServiceCollection RegisterValidators(this IServiceCollection services)
         => services.AddValidatorsFromAssembly(
-            typeof(IApplicationLayerMarker).Assembly,
+            typeof(IResult).Assembly,
             includeInternalTypes: true
         );
 }

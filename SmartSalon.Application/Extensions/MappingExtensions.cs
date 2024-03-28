@@ -17,15 +17,15 @@ public static class MappingExtensions
         var targetType = target?.GetType();
 
         source
-        .GetType()
-        .GetProperties()
-        .ForEach(sourceProperty =>
-        {
-            var targetProperty = targetType?.GetProperty(sourceProperty.Name);
-            var sourcePropertyValue = sourceProperty.GetValue(source);
+            .GetType()
+            .GetProperties()
+            .ForEach(sourceProperty =>
+            {
+                var targetProperty = targetType?.GetProperty(sourceProperty.Name);
+                var sourcePropertyValue = sourceProperty.GetValue(source);
 
-            targetProperty?.SetValue(target, sourcePropertyValue);
-        });
+                targetProperty?.SetValue(target, sourcePropertyValue);
+            });
 
         return target;
     }
