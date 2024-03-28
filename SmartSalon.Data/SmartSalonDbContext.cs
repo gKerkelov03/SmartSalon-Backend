@@ -11,9 +11,7 @@ namespace SmartSalon.Data;
 
 public class SmartSalonDbContext : IdentityDbContext<Profile, Role, Id>
 {
-    public SmartSalonDbContext()
-    {
-    }
+    public SmartSalonDbContext() { }
 
     public SmartSalonDbContext(DbContextOptions<SmartSalonDbContext> options) : base(options) { }
 
@@ -48,7 +46,6 @@ public class SmartSalonDbContext : IdentityDbContext<Profile, Role, Id>
         SetDeleteBehaviorToRestrict(entityTypes);
         SetupDeletedQueryFilter(builder, entityTypes);
     }
-
 
     private static void SetDeleteBehaviorToRestrict(IEnumerable<IMutableEntityType> entityTypes)
         => entityTypes.SelectMany(entity =>

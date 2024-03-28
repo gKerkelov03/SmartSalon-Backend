@@ -8,25 +8,11 @@ using SmartSalon.Application.Extensions;
 
 namespace SmartSalon.Data;
 
-public class UnitOfWork : IUnitOfWork
+public class UnitOfWork(SmartSalonDbContext _dbContext, ICurrentUserAccessor _currentUser) : IUnitOfWork
 {
-    private readonly SmartSalonDbContext _dbContext;
-    private readonly ICurrentUserAccessor _currentUser;
     private IDbContextTransaction? _transaction;
 
-    public UnitOfWork(SmartSalonDbContext dbContext, ICurrentUserAccessor currentUser)
-    {
-        _dbContext = dbContext;
-        _currentUser = currentUser;
-    }
-
-    public int SaveChanges()
-    {
-        ApplyAuditInfoRules(_dbContext.ChangeTracker, _currentUser.Id);
-        return _dbContext.SaveChanges();
-    }
-
-    public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    public Task<int> SaveAsync(CancellationToken cancellationToken = default)
     {
         ApplyAuditInfoRules(_dbContext.ChangeTracker, _currentUser.Id);
         return _dbContext.SaveChangesAsync(cancellationToken);
