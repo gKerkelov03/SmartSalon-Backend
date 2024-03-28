@@ -3,13 +3,13 @@ using SmartSalon.Application.Domain.Abstractions;
 
 namespace SmartSalon.Application.Domain;
 
-public class UserProfile : IdentityUser<Id>, IDeletableEntity<Id>
+public class Profile : IdentityUser<Id>, IDeletableEntity<Id>
 {
     public required string FirstName { get; set; }
 
     public required string LastName { get; set; }
 
-    public Image? ProfilePicture { get; set; }
+    public Image? Picture { get; set; }
 
     public Id RoleId { get; set; }
 

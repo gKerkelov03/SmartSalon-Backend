@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -34,8 +35,8 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection RegisterTheOptionsClasses(this IServiceCollection services, IConfiguration config)
         => services
-            .Configure<ConnectionStringsOptions>(config.GetSection("ConnectionStrings"))
-            .Configure<SecretKeysOptions>(config.GetSection("ConnectionStrings"))
+            .Configure<ConnectionStringsOptions>(config.GetSection(ConnectionStringsOptions.SectionName))
+            .Configure<JwtOptions>(config.GetSection(JwtOptions.SectionName))
             .ConfigureOptions<SwaggerGenOptionsConfigurator>();
 
     public static IServiceCollection RegisterSeedingServices(this IServiceCollection services) => services.AddSingleton<ISeeder, DatabaseSeeder>();
@@ -43,7 +44,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddIdentity(this IServiceCollection services)
     {
         services
-            .AddIdentity<UserProfile, Role>(options =>
+            .AddIdentity<Profile, Role>(options =>
             {
                 options.Password.RequireDigit = false;
                 options.Password.RequireLowercase = false;
@@ -62,8 +63,11 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration config)
     {
-        var jwtSecret = config.GetSection("SecretKeys")?.Get<SecretKeysOptions>()?.Jwt ?? "somedefaultvalue";
-        var signingKeyBytes = Encoding.ASCII.GetBytes(jwtSecret);
+        var jwtOptions = config.GetSection(JwtOptions.SectionName)?.Get<JwtOptions>();
+        var jwtSecret = jwtOptions?.SecretKey ?? "somedefaultvalue";
+        var issuer = jwtOptions?.Issuer ?? "somedefaultvalue";
+        var audience = jwtOptions?.Audience ?? "somedefaultvalue";
+        var signingKey = Encoding.ASCII.GetBytes(jwtSecret);
 
         services
             .AddAuthentication(options =>
@@ -73,14 +77,13 @@ public static class ServiceCollectionExtensions
             })
             .AddJwtBearer(options =>
             {
-                options.RequireHttpsMetadata = false;
-                options.SaveToken = false;
                 options.TokenValidationParameters = new()
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(signingKeyBytes),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
+                    ValidIssuer = issuer,
+                    ValidAudience = audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(signingKey),
+                    NameClaimType = JwtRegisteredClaimNames.Sub
                 };
             });
 

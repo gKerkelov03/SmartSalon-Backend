@@ -5,9 +5,8 @@ namespace SmartSalon.Application.Domain.Abstractions;
 
 public abstract class UserWithProfile : BaseEntity
 {
-    [ForeignKey(nameof(UserProfile))]
-    [Column("UserId")]
-    public Id UserProfileId;
+    [ForeignKey(nameof(Profile))]
+    public Id ProfileId;
 
-    public virtual UserProfile? UserProfile { get; set; }
+    public virtual Profile? Profile { get; set; }
 }

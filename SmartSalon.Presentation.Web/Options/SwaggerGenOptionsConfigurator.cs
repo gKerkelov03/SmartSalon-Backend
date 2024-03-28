@@ -16,10 +16,7 @@ public class SwaggerGenOptionsConfigurator : IConfigureOptions<SwaggerGenOptions
     {
         foreach (var versionDescription in _apiVersionsInfo.ApiVersionDescriptions)
         {
-            options.SwaggerDoc(
-                versionDescription.GroupName,
-                GenerateVersionInfo(versionDescription)
-            );
+            options.SwaggerDoc(versionDescription.GroupName, GenerateVersionInfo(versionDescription));
         }
     }
 

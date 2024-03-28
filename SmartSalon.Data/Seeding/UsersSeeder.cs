@@ -8,7 +8,7 @@ internal class UsersSeeder : ISeeder
 {
     public async Task SeedAsync(SmartSalonDbContext dbContext, IServiceProvider serviceProvider)
     {
-        var userProfileManager = serviceProvider.GetRequiredService<UserManager<UserProfile>>();
+        var userProfileManager = serviceProvider.GetRequiredService<UserManager<Profile>>();
         var password = "password";
 
         foreach (var admin in GetAdminsToSeed())
@@ -20,21 +20,21 @@ internal class UsersSeeder : ISeeder
 
         foreach (var customer in GetCustomersToSeed())
         {
-            var profile = customer.UserProfile!;
+            var profile = customer.Profile!;
             await userProfileManager.CreateAsync(profile, password);
             await userProfileManager.AddToRoleAsync(profile, CustomerRoleName);
         };
 
         foreach (var worker in GetWorkersToSeed())
         {
-            var profile = worker.UserProfile!;
+            var profile = worker.Profile!;
             await userProfileManager.CreateAsync(profile, password);
             await userProfileManager.AddToRoleAsync(profile, OwnerRoleName);
         };
 
         foreach (var owner in GetOwnersToSeed())
         {
-            var profile = owner.UserProfile!;
+            var profile = owner.Profile!;
             await userProfileManager.CreateAsync(profile, password);
             await userProfileManager.AddToRoleAsync(profile, OwnerRoleName);
 
@@ -46,7 +46,7 @@ internal class UsersSeeder : ISeeder
 
     private IEnumerable<Customer> GetCustomersToSeed() => [
         new() {
-            UserProfile = new()
+            Profile = new()
             {
                 FirstName = "Ivan",
                 LastName = "Stefanov",
@@ -60,7 +60,7 @@ internal class UsersSeeder : ISeeder
     private IEnumerable<Worker> GetWorkersToSeed() => [
         new()
         {
-            UserProfile = new()
+            Profile = new()
             {
                 FirstName = "Gancho",
                 LastName = "Papazov",
@@ -72,7 +72,7 @@ internal class UsersSeeder : ISeeder
         },
         new()
         {
-            UserProfile = new()
+            Profile = new()
             {
                 FirstName = "Shabi",
                 LastName = "Shalmani",
@@ -87,7 +87,7 @@ internal class UsersSeeder : ISeeder
     private IEnumerable<Owner> GetOwnersToSeed() => [
         new()
         {
-            UserProfile = new()
+            Profile = new()
             {
                 FirstName = "Mladen",
                 LastName = "Petrov",
@@ -99,7 +99,7 @@ internal class UsersSeeder : ISeeder
         }
     ];
 
-    private IEnumerable<UserProfile> GetAdminsToSeed() => [
+    private IEnumerable<Profile> GetAdminsToSeed() => [
         new()
         {
             FirstName = "Georgi",

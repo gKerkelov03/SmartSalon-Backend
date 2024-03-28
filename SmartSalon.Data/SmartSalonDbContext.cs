@@ -8,7 +8,7 @@ using SmartSalon.Application.Extensions;
 
 namespace SmartSalon.Data;
 
-public class SmartSalonDbContext : IdentityDbContext<UserProfile, Role, Id>
+public class SmartSalonDbContext : IdentityDbContext<Profile, Role, Id>
 {
     public SmartSalonDbContext()
     {
