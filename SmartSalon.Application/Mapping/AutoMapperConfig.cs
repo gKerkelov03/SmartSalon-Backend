@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using AutoMapper;
-using SmartSalon.Shared.Extensions;
 using TypeAndInterfacePair = (System.Type Type, System.Type Interface);
 using SourceAndDestinationPair = (System.Type Source, System.Type Destination);
 using SmartSalon.Application.Extensions;

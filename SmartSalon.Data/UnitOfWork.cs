@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Domain.Abstractions;
 using SmartSalon.Application.Services;
-using SmartSalon.Shared.Extensions;
+using SmartSalon.Application.Extensions;
 
 namespace SmartSalon.Data;
 

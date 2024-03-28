@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using SmartSalon.Application.Domain;
 using Microsoft.EntityFrameworkCore.Metadata;
 using SmartSalon.Application.Domain.Abstractions;
-using SmartSalon.Shared.Extensions;
 using System.Reflection;
+using SmartSalon.Application.Extensions;
 
 namespace SmartSalon.Data;
 
@@ -30,9 +30,7 @@ public class SmartSalonDbContext : IdentityDbContext<UserProfile, Role, Id>
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        var entityTypes = builder
-            .Model
-            .GetEntityTypes();
+        var entityTypes = builder.Model.GetEntityTypes();
 
         builder.ApplyConfigurationsFromAssembly(typeof(SmartSalonDbContext).Assembly);
         base.OnModelCreating(builder);
@@ -43,23 +41,16 @@ public class SmartSalonDbContext : IdentityDbContext<UserProfile, Role, Id>
 
 
     private static void SetDeleteBehaviorToRestrict(IEnumerable<IMutableEntityType> entityTypes)
-        => entityTypes
-            .SelectMany(entity =>
-                entity
-                .GetForeignKeys()
-                .Where(foreignKey => foreignKey.DeleteBehavior is DeleteBehavior.Cascade))
+        => entityTypes.SelectMany(entity =>
+                entity.GetForeignKeys().Where(foreignKey => foreignKey.DeleteBehavior is not DeleteBehavior.Restrict)
+            )
             .ForEach(foreignKey => foreignKey.DeleteBehavior = DeleteBehavior.Restrict);
 
     private static void SetIsDeletedQueryFilter<TEntity>(ModelBuilder builder)
         where TEntity : class, IDeletableEntity<Id>
-            => builder
-                .Entity<TEntity>()
-                .HasQueryFilter(entity => !entity.IsDeleted);
+            => builder.Entity<TEntity>().HasQueryFilter(entity => !entity.IsDeleted);
 
-    private static void SetupDeletedQueryFilter(
-        ModelBuilder builder,
-        IEnumerable<IMutableEntityType> entities
-    )
+    private static void SetupDeletedQueryFilter(ModelBuilder builder, IEnumerable<IMutableEntityType> entities)
     {
         var SetIsDeletedQueryFilterMethodInfo = typeof(UnitOfWork).GetMethod(
             nameof(SetIsDeletedQueryFilter),
@@ -73,9 +64,7 @@ public class SmartSalonDbContext : IdentityDbContext<UserProfile, Role, Id>
 
         deletableEntities.ForEach(deletableEntityType =>
             //TODO: debug why SetIsDeletedQueryFilterMethodInfo is null sometimes
-            SetIsDeletedQueryFilterMethodInfo
-                ?.MakeGenericMethod(deletableEntityType.ClrType)
-                .Invoke(null, [builder])
+            SetIsDeletedQueryFilterMethodInfo?.MakeGenericMethod(deletableEntityType.ClrType).Invoke(null, [builder])
         );
     }
 

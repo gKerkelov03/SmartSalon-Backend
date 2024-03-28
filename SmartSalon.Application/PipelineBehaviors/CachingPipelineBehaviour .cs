@@ -2,12 +2,12 @@ using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
 using SmartSalon.Application.Abstractions;
+using SmartSalon.Application.Extensions;
 using SmartSalon.Application.ResultObject;
-using SmartSalon.Shared.Extensions;
 
 namespace SmartSalon.Application.PipelineBehaviors;
 
-public class CachingPipelineBehaviour<TQuery, TResult>(IDistributedCache _cache) : IPipelineBehavior<TQuery, TResult>
+internal class CachingPipelineBehaviour<TQuery, TResult>(IDistributedCache _cache) : IPipelineBehavior<TQuery, TResult>
     where TQuery : ICachedQuery
     where TResult : IResult
 {

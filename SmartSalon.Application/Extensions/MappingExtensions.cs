@@ -1,5 +1,4 @@
 using SmartSalon.Application.Mapping;
-using SmartSalon.Shared.Extensions;
 
 namespace SmartSalon.Application.Extensions;
 

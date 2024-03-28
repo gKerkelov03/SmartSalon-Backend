@@ -1,7 +1,7 @@
 
-namespace SmartSalon.Shared;
+namespace SmartSalon.Application;
 
-public static class GlobalConstants
+public static class ApplicationConstants
 {
     public const string SystemName = "SmartSalon";
 

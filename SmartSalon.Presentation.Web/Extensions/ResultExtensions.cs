@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SmartSalon.Application.Errors;
 using SmartSalon.Application.ResultObject;
-using SmartSalon.Shared.Extensions;
+using SmartSalon.Application.Extensions;
 
 namespace SmartSalon.Presentation.Web.Extensions;
 

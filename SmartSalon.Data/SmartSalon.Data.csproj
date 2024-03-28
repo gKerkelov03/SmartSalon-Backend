@@ -12,7 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Using Include="SmartSalon.Shared.GlobalConstants" Static="True" />
+        <Using Include="SmartSalon.Application.ApplicationConstants" Static="True" />
         <Using Include="System.Guid" Alias="Id" />
     </ItemGroup>
 

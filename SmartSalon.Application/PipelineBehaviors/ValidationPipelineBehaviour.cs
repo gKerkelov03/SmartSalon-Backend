@@ -1,12 +1,12 @@
 using FluentValidation;
 using MediatR;
 using SmartSalon.Application.Errors;
+using SmartSalon.Application.Extensions;
 using SmartSalon.Application.ResultObject;
-using SmartSalon.Shared.Extensions;
 
 namespace SmartSalon.Application.PipelineBehaviors;
 
-public class ValidationPipelineBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> _validators) : IPipelineBehavior<TRequest, TResponse>
+internal class ValidationPipelineBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> _validators) : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
     where TResponse : IResult
 {

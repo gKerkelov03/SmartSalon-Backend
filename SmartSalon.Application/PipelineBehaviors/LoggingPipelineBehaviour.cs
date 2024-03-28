@@ -4,7 +4,7 @@ using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.PipelineBehaviors;
 
-public class LoggingPipelineBehaviour<TRequest, TResponse>(ILogger<LoggingPipelineBehaviour<TRequest, TResponse>> _logger) : IPipelineBehavior<TRequest, TResponse>
+internal class LoggingPipelineBehaviour<TRequest, TResponse>(ILogger<LoggingPipelineBehaviour<TRequest, TResponse>> _logger) : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
     where TResponse : IResult
 {
