@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using SmartSalon.Application.Domain.Abstractions;
 using System.Reflection;
 using SmartSalon.Application.Extensions;
+using Microsoft.AspNetCore.Identity;
 
 namespace SmartSalon.Data;
 
@@ -23,17 +24,26 @@ public class SmartSalonDbContext : IdentityDbContext<Profile, Role, Id>
             return;
         }
 
-        var connectionString = "Server=.,1433;Database=WrongDatabaseName;TrustServerCertificate=True;User Id=sa;Password=P@ssw0rd123";
-
-        options.UseSqlServer(connectionString);
+        options.UseSqlServer("Server=.,1433;Database=WrongDatabaseName;TrustServerCertificate=True;User Id=sa;Password=P@ssw0rd123");
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         var entityTypes = builder.Model.GetEntityTypes();
 
-        builder.ApplyConfigurationsFromAssembly(typeof(SmartSalonDbContext).Assembly);
         base.OnModelCreating(builder);
+
+        builder.Entity<Role>().ToTable("Roles");
+        builder.Entity<Profile>().ToTable("Profiles");
+
+        builder.Ignore<IdentityUserClaim<Id>>();
+        builder.Ignore<IdentityRoleClaim<Id>>();
+
+        builder.Entity<IdentityUserRole<Id>>().ToTable("ProfileRole");
+        builder.Entity<IdentityUserToken<Id>>().ToTable("Tokens");
+        builder.Entity<IdentityUserLogin<Id>>().ToTable("Logins");
+
+        builder.ApplyConfigurationsFromAssembly(typeof(SmartSalonDbContext).Assembly);
 
         SetDeleteBehaviorToRestrict(entityTypes);
         SetupDeletedQueryFilter(builder, entityTypes);
@@ -68,6 +78,10 @@ public class SmartSalonDbContext : IdentityDbContext<Profile, Role, Id>
         );
     }
 
+    public DbSet<Profile> Profiles { get; set; }
+
+    public new DbSet<Role> Roles { get; set; }
+
     public DbSet<Owner> Owners { get; set; }
 
     public DbSet<Worker> Workers { get; set; }
@@ -87,4 +101,6 @@ public class SmartSalonDbContext : IdentityDbContext<Profile, Role, Id>
     public DbSet<Booking> Bookings { get; set; }
 
     public DbSet<BookingTime> BookingTimes { get; set; }
+
+    public DbSet<Image> Images { get; set; }
 }
