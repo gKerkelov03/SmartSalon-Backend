@@ -9,5 +9,5 @@ public class Worker : UserWithProfile
 
     public Salon? Salon { get; set; }
 
-    public virtual IList<Booking>? Calendar { get; set; }
+    public virtual ICollection<Booking>? Calendar { get; set; }
 }

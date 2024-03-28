@@ -5,7 +5,7 @@ namespace SmartSalon.Application.Domain;
 
 public class Customer : UserWithProfile
 {
-    public virtual IList<Subscription>? OngoingSubscriptions { get; set; }
+    public virtual ICollection<Subscription>? OngoingSubscriptions { get; set; }
 
-    public virtual IList<Booking>? ActiveBookings { get; set; }
+    public virtual ICollection<Booking>? ActiveBookings { get; set; }
 }

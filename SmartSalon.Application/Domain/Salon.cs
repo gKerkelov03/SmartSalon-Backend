@@ -20,11 +20,11 @@ public class Salon : BaseEntity
 
     public virtual Owner? Owner { get; set; }
 
-    public virtual IList<Worker>? Workers { get; set; }
+    public virtual ICollection<Worker>? Workers { get; set; }
 
-    public virtual IList<SalonSpecialty>? SalonSpecialties { get; set; }
+    public virtual ICollection<SalonSpecialty>? SalonSpecialties { get; set; }
 
-    public virtual IList<SalonService>? Services { get; set; }
+    public virtual ICollection<SalonService>? Services { get; set; }
 
-    public virtual IList<Image>? Images { get; set; }
+    public virtual ICollection<Image>? Images { get; set; }
 }

@@ -16,9 +16,9 @@ public class Subscription : BaseEntity
 
     public virtual Salon? Salon { get; set; }
 
-    public virtual IList<SpecialSlot>? SpecialSlots { get; set; }
+    public virtual ICollection<SpecialSlot>? SpecialSlots { get; set; }
 
-    public virtual IList<Customer>? ActiveCustomers { get; set; }
+    public virtual ICollection<Customer>? ActiveCustomers { get; set; }
 
-    public virtual IList<SalonService>? ServicesIncluded { get; set; }
+    public virtual ICollection<SalonService>? ServicesIncluded { get; set; }
 }

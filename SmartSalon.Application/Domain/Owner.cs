@@ -4,5 +4,5 @@ namespace SmartSalon.Application.Domain;
 
 public class Owner : UserWithProfile
 {
-    public virtual IList<Salon>? Salons { get; set; }
+    public virtual ICollection<Salon>? Salons { get; set; }
 }

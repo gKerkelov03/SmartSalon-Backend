@@ -13,5 +13,5 @@ public class SalonService : BaseEntity
 
     public required int DurationInMinutes { get; set; }
 
-    public virtual IList<Salon>? Salons { get; set; }
+    public virtual Salon? Salon { get; set; }
 }

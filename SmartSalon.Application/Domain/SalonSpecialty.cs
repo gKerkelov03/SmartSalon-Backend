@@ -6,5 +6,5 @@ public class SalonSpecialty : BaseEntity
 {
     public required string Description { get; set; }
 
-    public virtual IList<Salon>? Salons { get; set; }
+    public virtual ICollection<Salon>? Salons { get; set; }
 }

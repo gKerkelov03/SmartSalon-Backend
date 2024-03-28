@@ -8,5 +8,5 @@ public class SpecialSlot : BaseEntity
 
     public virtual BookingTime? BookingTime { get; set; }
 
-    public virtual IList<Subscription>? Subscription { get; set; }
+    public virtual ICollection<Subscription>? Subscription { get; set; }
 }
