@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SmartSalon.Application.Domain;
 using SmartSalon.Application.Extensions;
 
-namespace SmartSalon.Data.Seeding.Seeders;
+namespace SmartSalon.Data.Seeding;
 
 internal class RolesSeeder : ISeeder
 {

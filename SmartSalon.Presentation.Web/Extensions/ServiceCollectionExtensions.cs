@@ -55,7 +55,7 @@ public static class ServiceCollectionExtensions
             .ConfigureOptions<SwaggerGenOptionsConfigurator>();
 
     public static IServiceCollection RegisterSeedingServices(this IServiceCollection services)
-        => services.AddSingleton<ISeeder, SmartSalonDbContextSeeder>();
+        => services.AddSingleton<ISeeder, DatabaseSeeder>();
 
     public static IServiceCollection AddIdentity(this IServiceCollection services)
     {

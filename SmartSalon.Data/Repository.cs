@@ -16,11 +16,9 @@ public class Repository<TEntity> : IEfRepository<TEntity>
         _dbSet = dbContext.Set<TEntity>();
     }
 
-    public IQueryable<TEntity> All()
-        => _dbSet;
+    public IQueryable<TEntity> All() => _dbSet;
 
-    public async Task<TEntity?> GetByIdAsync(Id id)
-        => await _dbSet.FindAsync(id);
+    public async Task<TEntity?> GetByIdAsync(Id id) => await _dbSet.FindAsync(id);
 
     public async Task<TEntity?> FirstAsync(Expression<Func<TEntity, bool>> predicate)
         => await _dbSet.FirstOrDefaultAsync(predicate);
@@ -28,11 +26,9 @@ public class Repository<TEntity> : IEfRepository<TEntity>
     public async Task<IEnumerable<TEntity>> FindAllAsync(Expression<Func<TEntity, bool>> predicate)
         => await _dbSet.Where(predicate).ToListAsync();
 
-    public async Task AddAsync(TEntity entity)
-        => await _dbSet.AddAsync(entity);
+    public async Task AddAsync(TEntity entity) => await _dbSet.AddAsync(entity);
 
-    public async Task AddRangeAsync(IEnumerable<TEntity> entities)
-        => await _dbSet.AddRangeAsync(entities);
+    public async Task AddRangeAsync(IEnumerable<TEntity> entities) => await _dbSet.AddRangeAsync(entities);
 
     public async Task RemoveByIdAsync(Id id)
     {
@@ -46,14 +42,11 @@ public class Repository<TEntity> : IEfRepository<TEntity>
         _dbSet.Remove(entity);
     }
 
-    public void Remove(TEntity entity)
-        => _dbSet.Remove(entity);
+    public void Remove(TEntity entity) => _dbSet.Remove(entity);
 
-    public void RemoveRange(IEnumerable<TEntity> entities)
-        => _dbSet.RemoveRange(entities);
+    public void RemoveRange(IEnumerable<TEntity> entities) => _dbSet.RemoveRange(entities);
 
-    public void Update(TEntity entity)
-        => _dbContext.Entry(entity).State = EntityState.Modified;
+    public void Update(TEntity entity) => _dbContext.Entry(entity).State = EntityState.Modified;
 
     public async Task UpdateByIdAsync(Id id, TEntity newEntity)
     {

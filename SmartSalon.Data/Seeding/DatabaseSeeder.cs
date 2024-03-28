@@ -1,17 +1,15 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using SmartSalon.Data.Seeding.Seeders;
 
 namespace SmartSalon.Data.Seeding;
 
-public class SmartSalonDbContextSeeder : ISeeder
+public class DatabaseSeeder : ISeeder
 {
     public async Task SeedAsync(SmartSalonDbContext dbContext, IServiceProvider serviceProvider)
     {
         ArgumentNullException.ThrowIfNull(serviceProvider);
 
-        var logger = serviceProvider
-            .GetService<ILogger<SmartSalonDbContextSeeder>>();
+        var logger = serviceProvider.GetService<ILogger<DatabaseSeeder>>();
 
         foreach (var seeder in GetAllSeeders())
         {

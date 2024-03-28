@@ -26,9 +26,7 @@ public class UnitOfWork : IUnitOfWork
         return _dbContext.SaveChanges();
     }
 
-    public Task<int> SaveChangesAsync(
-        CancellationToken cancellationToken = default
-    )
+    public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         ApplyAuditInfoRules(_dbContext.ChangeTracker, _currentUser.Id);
         return _dbContext.SaveChangesAsync(cancellationToken);
