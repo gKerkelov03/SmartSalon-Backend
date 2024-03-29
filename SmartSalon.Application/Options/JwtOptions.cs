@@ -1,4 +1,4 @@
-namespace SmartSalon.Presentation.Web.Options;
+namespace SmartSalon.Application.Options;
 
 public class JwtOptions
 {

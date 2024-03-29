@@ -12,6 +12,7 @@ using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Domain;
 using SmartSalon.Application.Errors;
 using SmartSalon.Application.Mapping;
+using SmartSalon.Application.Options;
 using SmartSalon.Application.ResultObject;
 using SmartSalon.Data;
 using SmartSalon.Data.Seeding;
@@ -144,7 +145,7 @@ public static class ServiceCollectionExtensions
         });
 
     public static IServiceCollection RegisterUnconventionalServices(this IServiceCollection services)
-        => services.AddSingleton<JwtSecurityTokenHandler, JwtSecurityTokenHandler>();
+        => services.AddSingleton<JwtSecurityTokenHandler>();
 
     public static IServiceCollection RegisterInvalidModelStateResponseFactory(this IServiceCollection services)
     {

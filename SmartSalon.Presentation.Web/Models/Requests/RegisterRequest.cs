@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using SmartSalon.Application.Commands;
+using SmartSalon.Application.Mapping;
 
 namespace SmartSalon.Presentation.Web.Models.Requests;
 
-public class RegisterRequest
+public class RegisterRequest : IMapTo<RegisterCommand>
 {
     [Required]
     public required string FirstName { get; set; }
