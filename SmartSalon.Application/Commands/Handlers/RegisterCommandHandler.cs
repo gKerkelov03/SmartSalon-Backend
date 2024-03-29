@@ -13,6 +13,9 @@ internal class RegisterCommandHandler(UsersManager _usersManager)
     public async Task<Result<RegisterCommandResponse>> Handle(RegisterCommand command, CancellationToken cancellationToken)
     {
         var userToCreate = command.MapTo<User>();
+
+        userToCreate.UserName = $"{command.FirstName} {command.LastName}";
+
         var identityResult = await _usersManager.CreateAsync(userToCreate);
 
         if (!identityResult.Succeeded)
