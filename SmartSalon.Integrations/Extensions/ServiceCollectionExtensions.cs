@@ -1,19 +1,20 @@
 ﻿using System.Net;
 using System.Net.Mail;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SmartSalon.Application.Options;
 
 namespace SmartSalon.Application.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddIntegrations(this IServiceCollection services)
-        => services.AddEmailSending();
+    public static IServiceCollection AddIntegrations(this IServiceCollection services, IConfiguration config)
+        => services.AddEmailSending(config);
 
-    public static IServiceCollection AddEmailSending(this IServiceCollection services)
+    public static IServiceCollection AddEmailSending(this IServiceCollection services, IConfiguration config)
     {
+        var emailsOptions = config.GetSection(EmailsOptions.SectionName).Get<EmailsOptions>();
         var senderEmail = "barbers.baybg@gmail.com";
-        var senderPassword = "dngd roit xigx pmmk";
-        var smtpHost = "smtp.gmail.com";
 
         services
             .AddFluentEmail(senderEmail)
@@ -21,10 +22,10 @@ public static class ServiceCollectionExtensions
             .AddSmtpSender(() =>
                 new()
                 {
-                    Host = smtpHost,
+                    Host = emailsOptions!.SmtpHost,
                     Port = 587,
                     UseDefaultCredentials = false,
-                    Credentials = new NetworkCredential(senderEmail, senderPassword),
+                    Credentials = new NetworkCredential(senderEmail, emailsOptions!.Password),
                     EnableSsl = true,
                     DeliveryMethod = SmtpDeliveryMethod.Network,
                 }

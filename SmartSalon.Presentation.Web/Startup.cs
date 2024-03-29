@@ -26,7 +26,7 @@ builder
     .AddJwtAuthentication(builder.Configuration)
     .AddAuthorizationPolicies()
     .AddApplication(builder.Configuration)
-    .AddIntegrations()
+    .AddIntegrations(builder.Configuration)
     .AddCorsPolicies()
     .AddHttpContextAccessor()
     .RegisterDbContext(builder.Configuration)

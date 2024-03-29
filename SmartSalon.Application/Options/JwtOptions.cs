@@ -10,5 +10,5 @@ public class JwtOptions
 
     public required string Issuer { get; set; }
 
-    public int ExpirationInDays => 30;
+    public int TokenExpirationInDays => 30;
 }

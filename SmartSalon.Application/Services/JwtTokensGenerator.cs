@@ -15,7 +15,7 @@ public class JwtTokensGenerator(JwtSecurityTokenHandler _jwtHelper, IOptions<Jwt
     {
         var jwtOptions = _jwtOptions.Value;
         var signingKeyBytes = Encoding.UTF8.GetBytes(jwtOptions.SecretKey);
-        var expirationTime = TimeProvider.System.GetUtcNow().AddDays(jwtOptions.ExpirationInDays).CastTo<DateTime>();
+        var expirationTime = TimeProvider.System.GetUtcNow().AddDays(jwtOptions.TokenExpirationInDays).CastTo<DateTime>();
 
         var token = new JwtSecurityToken(
             jwtOptions.Issuer,
