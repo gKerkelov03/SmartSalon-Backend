@@ -207,7 +207,7 @@ namespace SmartSalon.Data.Migrations
                     PictureId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedOn = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     UserType = table.Column<string>(type: "nvarchar(8)", maxLength: 8, nullable: false),
                     SalonId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),

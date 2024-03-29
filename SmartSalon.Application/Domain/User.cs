@@ -17,7 +17,7 @@ public class User : IdentityUser<Id>, IDeletableEntity
 
     public bool IsDeleted { get; set; }
 
-    public DateTime? DeletedOn { get; set; }
+    public DateTimeOffset? DeletedOn { get; set; }
 
     public Id? DeletedBy { get; set; }
 }

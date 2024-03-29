@@ -7,7 +7,7 @@ using SmartSalon.Application.Extensions;
 
 namespace SmartSalon.Data;
 
-public class UnitOfWork(SmartSalonDbContext _dbContext, ICurrentUserAccessor _currentUser) : IUnitOfWork
+public class UnitOfWork(SmartSalonDbContext _dbContext, ICurrentUserAccessor _currentUser, TimeProvider _timeProvider) : IUnitOfWork
 {
     private IDbContextTransaction? _transaction;
 
@@ -50,7 +50,7 @@ public class UnitOfWork(SmartSalonDbContext _dbContext, ICurrentUserAccessor _cu
         _transaction.Rollback();
     }
 
-    public static void ApplyAuditInfoRules(ChangeTracker changeTracker, Id currentUserId)
+    public void ApplyAuditInfoRules(ChangeTracker changeTracker, Id currentUserId)
         => changeTracker
             .Entries()
             .ForEach(entry =>
@@ -65,9 +65,9 @@ public class UnitOfWork(SmartSalonDbContext _dbContext, ICurrentUserAccessor _cu
 
                 var deletableEntity = entry.Entity.CastTo<IDeletableEntity>();
 
-                deletableEntity.DeletedBy = currentUserId;
-                deletableEntity.DeletedOn = DateTime.UtcNow;
                 deletableEntity.IsDeleted = true;
+                deletableEntity.DeletedBy = currentUserId;
+                deletableEntity.DeletedOn = _timeProvider.GetUtcNow();
 
                 entry.State = EntityState.Modified;
             });

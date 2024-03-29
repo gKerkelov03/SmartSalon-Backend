@@ -4,7 +4,7 @@ public class UnauthorizedResponse
 {
     public required int ContentLength { get; set; }
 
-    public required DateTime Date { get; set; }
+    public required DateTimeOffset Date { get; set; }
 
     public required string Server { get; set; }
 

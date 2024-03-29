@@ -12,7 +12,7 @@ using SmartSalon.Data;
 namespace SmartSalon.Data.Migrations
 {
     [DbContext(typeof(SmartSalonDbContext))]
-    [Migration("20240329135001_Initial")]
+    [Migration("20240329142426_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -367,8 +367,8 @@ namespace SmartSalon.Data.Migrations
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("DeletedOn")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
