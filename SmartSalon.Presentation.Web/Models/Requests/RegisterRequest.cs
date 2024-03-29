@@ -5,14 +5,14 @@ namespace SmartSalon.Presentation.Web.Models.Requests;
 public class RegisterRequest
 {
     [Required]
-    public string FirstName { get; set; }
+    public required string FirstName { get; set; }
 
     [Required]
-    public string LastName { get; set; }
+    public required string LastName { get; set; }
 
     [Required]
-    public string Email { get; set; }
+    public required string Email { get; set; }
 
     [Required]
-    public string Password { get; set; }
+    public required string Password { get; set; }
 }

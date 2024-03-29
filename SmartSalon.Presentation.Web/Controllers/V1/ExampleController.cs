@@ -18,13 +18,12 @@ public class ExampleController(ISender _sender) : ApiController
         var command = request.MapTo<CreateCommand>();
         var result = await _sender.Send(command);
 
-        if (result.IsFailure)
+        return ProblemDetailsOrActionResult(result, () =>
         {
-            return ProblemDetails(result);
-        }
+            var response = result.Value.MapTo<CreateResponse>();
 
-        var response = result.Value.MapTo<CreateResponse>();
-        return CreatedAndLocatedAt(nameof(GetById), response.Id);
+            return CreatedAndLocatedAt(nameof(GetById), response.Id);
+        });
     }
 
     [HttpGet]
@@ -36,14 +35,12 @@ public class ExampleController(ISender _sender) : ApiController
         var query = new GetByIdQuery(id);
         var result = await _sender.Send(query);
 
-        if (result.IsFailure)
+        return ProblemDetailsOrActionResult(result, () =>
         {
-            return ProblemDetails(result);
-        }
+            var response = result.Value.MapTo<GetByIdResponse>();
 
-        var response = result.Value.MapTo<GetByIdResponse>();
-
-        return Ok(response);
+            return Ok(response);
+        });
     }
 
     [HttpGet]
@@ -54,14 +51,12 @@ public class ExampleController(ISender _sender) : ApiController
         var query = request.MapTo<GetAllQuery>();
         var result = await _sender.Send(query);
 
-        if (result.IsFailure)
+        return ProblemDetailsOrActionResult(result, () =>
         {
-            return ProblemDetails(result);
-        }
+            var response = result.Value.MapTo<IEnumerable<GetByIdResponse>>();
 
-        var response = result.Value.MapTo<IEnumerable<GetByIdResponse>>();
-
-        return Ok(response);
+            return Ok(response);
+        });
     }
 
     [HttpPut]
@@ -72,12 +67,7 @@ public class ExampleController(ISender _sender) : ApiController
         var command = request.MapTo<UpdateCommand>();
         var result = await _sender.Send(command);
 
-        if (result.IsFailure)
-        {
-            return ProblemDetails(result);
-        }
-
-        return Ok();
+        return ProblemDetailsOrActionResult(result, Ok);
     }
 
     [HttpDelete(IdRouteParameter)]
@@ -87,11 +77,6 @@ public class ExampleController(ISender _sender) : ApiController
         var command = new DeleteCommand { Id = id };
         var result = await _sender.Send(command);
 
-        if (result.IsFailure)
-        {
-            return ProblemDetails(result);
-        }
-
-        return NoContent();
+        return ProblemDetailsOrActionResult(result, NoContent);
     }
 }

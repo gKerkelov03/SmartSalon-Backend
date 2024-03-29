@@ -13,8 +13,17 @@ namespace SmartSalon.Presentation.Web.Controllers.V1;
 // [Authorize]
 public abstract class ApiController() : ControllerBase
 {
-    protected IActionResult ProblemDetails(IResult result)
-        => new ObjectResult(result.ToProblemDetails(HttpContext.TraceIdentifier));
+    protected IActionResult ProblemDetailsOrActionResult(IResult result, Func<IActionResult> successResponseFactory)
+    {
+        var traceId = HttpContext.TraceIdentifier;
+
+        if (result.IsFailure)
+        {
+            return new ObjectResult(result.ToProblemDetails(traceId));
+        }
+
+        return successResponseFactory();
+    }
 
     protected IActionResult CreatedAndLocatedAt(string actionName, Id createdResourceId, object? response = null)
         => CreatedAtAction(actionName, new { Id = createdResourceId }, response ?? new { createdResourceId });
