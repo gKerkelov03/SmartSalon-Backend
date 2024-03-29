@@ -1,9 +1,7 @@
 ﻿
-using SmartSalon.Application.Domain.Abstractions;
-
 namespace SmartSalon.Application.Domain;
 
-public class Customer : UserWithProfile
+public class Customer : Profile
 {
     public virtual ICollection<Subscription>? OngoingSubscriptions { get; set; }
 

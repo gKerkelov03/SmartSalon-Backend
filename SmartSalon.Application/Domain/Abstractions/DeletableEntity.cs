@@ -2,7 +2,7 @@
 
 namespace SmartSalon.Application.Domain.Abstractions;
 
-public abstract class DeletableEntity : BaseEntity, IDeletableEntity<Id>
+public abstract class DeletableEntity : BaseEntity, IDeletableEntity
 {
     public DateTime? DeletedOn { get; set; }
 

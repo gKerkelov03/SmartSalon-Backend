@@ -3,7 +3,7 @@ using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Domain.Abstractions;
 
 public interface IEfRepository<TEntity> : IScopedLifetime
-    where TEntity : IBaseEntity<Id>
+    where TEntity : BaseEntity
 {
     IQueryable<TEntity> All();
 

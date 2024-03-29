@@ -3,7 +3,7 @@ using SmartSalon.Application.Domain.Abstractions;
 
 namespace SmartSalon.Application.Domain;
 
-public class Profile : IdentityUser<Id>, IDeletableEntity<Id>
+public class Profile : IdentityUser<Id>, IDeletableEntity
 {
     public required string FirstName { get; set; }
 

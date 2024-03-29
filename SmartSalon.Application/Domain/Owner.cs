@@ -1,8 +1,7 @@
-﻿using SmartSalon.Application.Domain.Abstractions;
-
+﻿
 namespace SmartSalon.Application.Domain;
 
-public class Owner : UserWithProfile
+public class Owner : Profile
 {
     public virtual ICollection<Salon>? Salons { get; set; }
 }

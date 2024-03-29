@@ -5,7 +5,7 @@ using SmartSalon.Application.Domain.Abstractions;
 namespace SmartSalon.Data.Repositories;
 
 public class Repository<TEntity> : IEfRepository<TEntity>
-    where TEntity : class, IBaseEntity<Id>
+    where TEntity : BaseEntity
 {
     private readonly DbContext _dbContext;
     private readonly DbSet<TEntity> _dbSet;

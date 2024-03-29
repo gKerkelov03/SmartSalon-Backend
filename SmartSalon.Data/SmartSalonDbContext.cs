@@ -27,21 +27,14 @@ public class SmartSalonDbContext : IdentityDbContext<Profile, Role, Id>
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        var entityTypes = builder.Model.GetEntityTypes();
-
         base.OnModelCreating(builder);
 
-        builder.Entity<Role>().ToTable("Roles");
-        builder.Entity<Profile>().ToTable("Profiles");
+        var entityTypes = builder.Model.GetEntityTypes();
 
-        builder.Ignore<IdentityUserClaim<Id>>();
-        builder.Ignore<IdentityRoleClaim<Id>>();
-
-        builder.Entity<IdentityUserRole<Id>>().ToTable("ProfileRole");
-        builder.Entity<IdentityUserToken<Id>>().ToTable("Tokens");
-        builder.Entity<IdentityUserLogin<Id>>().ToTable("Logins");
-
-        builder.ApplyConfigurationsFromAssembly(typeof(SmartSalonDbContext).Assembly);
+        builder
+            .Ignore<IdentityUserClaim<Id>>()
+            .Ignore<IdentityRoleClaim<Id>>()
+            .ApplyConfigurationsFromAssembly(typeof(SmartSalonDbContext).Assembly);
 
         SetDeleteBehaviorToRestrict(entityTypes);
         SetupDeletedQueryFilter(builder, entityTypes);
@@ -53,26 +46,26 @@ public class SmartSalonDbContext : IdentityDbContext<Profile, Role, Id>
             )
             .ForEach(foreignKey => foreignKey.DeleteBehavior = DeleteBehavior.Restrict);
 
-    private static void SetIsDeletedQueryFilter<TEntity>(ModelBuilder builder)
-        where TEntity : class, IDeletableEntity<Id>
+    private static void DontShowIfDeleted<TEntity>(ModelBuilder builder)
+        where TEntity : class, IDeletableEntity
             => builder.Entity<TEntity>().HasQueryFilter(entity => !entity.IsDeleted);
 
     private static void SetupDeletedQueryFilter(ModelBuilder builder, IEnumerable<IMutableEntityType> entities)
     {
-        var SetIsDeletedQueryFilterMethodInfo = typeof(UnitOfWork).GetMethod(
-            nameof(SetIsDeletedQueryFilter),
+        var dontShowIfDeleted = typeof(UnitOfWork).GetMethod(
+            nameof(DontShowIfDeleted),
             BindingFlags.NonPublic | BindingFlags.Static
         );
 
-        var deletableEntities = entities.Where(entity =>
-            entity.ClrType is not null &&
-            typeof(IDeletableEntity<Id>).IsAssignableFrom(entity.ClrType)
-        );
-
-        deletableEntities.ForEach(deletableEntityType =>
-            //TODO: debug why SetIsDeletedQueryFilterMethodInfo is null sometimes
-            SetIsDeletedQueryFilterMethodInfo?.MakeGenericMethod(deletableEntityType.ClrType).Invoke(null, [builder])
-        );
+        entities
+            .Where(entity =>
+                entity.ClrType is not null &&
+                typeof(IDeletableEntity).IsAssignableFrom(entity.ClrType)
+            )
+            .ForEach(deletableEntityType =>
+                //TODO: debug why SetIsDeletedQueryFilterMethodInfo is null sometimes
+                dontShowIfDeleted?.MakeGenericMethod(deletableEntityType.ClrType).Invoke(null, [builder])
+            );
     }
 
     public DbSet<Profile> Profiles { get; set; }

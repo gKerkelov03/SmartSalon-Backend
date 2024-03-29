@@ -1,11 +1,9 @@
 ﻿
-using SmartSalon.Application.Domain.Abstractions;
-
 namespace SmartSalon.Application.Domain;
 
-public class Worker : UserWithProfile
+public class Worker : Profile
 {
-    public Id SalonId { get; set; }
+    public Id? SalonId { get; set; }
 
     public Salon? Salon { get; set; }
 

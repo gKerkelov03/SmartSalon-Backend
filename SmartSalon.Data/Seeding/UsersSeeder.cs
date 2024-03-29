@@ -20,23 +20,20 @@ internal class UsersSeeder : ISeeder
 
         foreach (var customer in GetCustomersToSeed())
         {
-            var profile = customer.Profile!;
-            await userProfileManager.CreateAsync(profile, password);
-            await userProfileManager.AddToRoleAsync(profile, CustomerRoleName);
+            await userProfileManager.CreateAsync(customer, password);
+            await userProfileManager.AddToRoleAsync(customer, CustomerRoleName);
         };
 
         foreach (var worker in GetWorkersToSeed())
         {
-            var profile = worker.Profile!;
-            await userProfileManager.CreateAsync(profile, password);
-            await userProfileManager.AddToRoleAsync(profile, OwnerRoleName);
+            await userProfileManager.CreateAsync(worker, password);
+            await userProfileManager.AddToRoleAsync(worker, OwnerRoleName);
         };
 
         foreach (var owner in GetOwnersToSeed())
         {
-            var profile = owner.Profile!;
-            await userProfileManager.CreateAsync(profile, password);
-            await userProfileManager.AddToRoleAsync(profile, OwnerRoleName);
+            await userProfileManager.CreateAsync(owner, password);
+            await userProfileManager.AddToRoleAsync(owner, OwnerRoleName);
 
         };
 
@@ -46,56 +43,44 @@ internal class UsersSeeder : ISeeder
 
     private IEnumerable<Customer> GetCustomersToSeed() => [
         new() {
-            Profile = new()
-            {
                 FirstName = "Ivan",
                 LastName = "Stefanov",
                 PhoneNumber = "1234567890",
                 Email = "ivan@abv.bg",
                 IsDeleted = false,
-            },
         }
     ];
 
     private IEnumerable<Worker> GetWorkersToSeed() => [
         new()
         {
-            Profile = new()
-            {
                 FirstName = "Gancho",
                 LastName = "Papazov",
                 PhoneNumber = "1234567890",
                 Email = "gancho@abv.bg",
                 IsDeleted = false,
                 RoleId = Id.NewGuid(),
-            },
         },
         new()
         {
-            Profile = new()
-            {
                 FirstName = "Shabi",
                 LastName = "Shalmani",
                 PhoneNumber = "1234567890",
                 Email = "shabi@abv.bg",
                 IsDeleted = false,
                 RoleId = Id.NewGuid(),
-            },
         }
     ];
 
     private IEnumerable<Owner> GetOwnersToSeed() => [
         new()
         {
-            Profile = new()
-            {
                 FirstName = "Mladen",
                 LastName = "Petrov",
                 PhoneNumber = "1234567890",
                 Email = "mladen@abv.bg",
                 IsDeleted = false,
                 RoleId = Id.NewGuid(),
-            },
         }
     ];
 

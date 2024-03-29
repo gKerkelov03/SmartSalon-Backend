@@ -1,11 +1,12 @@
 ﻿
+
 namespace SmartSalon.Application.Domain.Abstractions;
 
-public interface IDeletableEntity<TKey> : IBaseEntity<TKey>
+public interface IDeletableEntity
 {
-    DateTime? DeletedOn { get; set; }
+    public DateTime? DeletedOn { get; set; }
 
-    Id? DeletedBy { get; set; }
+    public Id? DeletedBy { get; set; }
 
-    bool IsDeleted { get; set; }
+    public bool IsDeleted { get; set; }
 }

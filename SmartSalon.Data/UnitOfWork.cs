@@ -49,7 +49,7 @@ public class UnitOfWork(SmartSalonDbContext _dbContext, ICurrentUserAccessor _cu
             .Entries()
             .ForEach(entry =>
             {
-                var isNotDeletableEntity = entry.Entity is not IDeletableEntity<Id>;
+                var isNotDeletableEntity = entry.Entity is not IDeletableEntity;
                 var isNotInDeletedState = entry.State is not EntityState.Deleted;
 
                 if (isNotDeletableEntity || isNotInDeletedState)
@@ -57,7 +57,7 @@ public class UnitOfWork(SmartSalonDbContext _dbContext, ICurrentUserAccessor _cu
                     return;
                 }
 
-                var deletableEntity = entry.Entity.CastTo<IDeletableEntity<Id>>();
+                var deletableEntity = entry.Entity.CastTo<IDeletableEntity>();
 
                 deletableEntity.DeletedBy = currentUserId;
                 deletableEntity.DeletedOn = DateTime.UtcNow;
