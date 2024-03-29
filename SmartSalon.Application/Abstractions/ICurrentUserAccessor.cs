@@ -3,5 +3,5 @@ namespace SmartSalon.Application.Abstractions;
 
 public interface ICurrentUserAccessor : IScopedLifetime
 {
-    Id Id { get; }
+    Id? Id { get; }
 }

@@ -5,7 +5,8 @@ using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Commands.Handlers;
 
-internal class CreateCommandHandler(IUnitOfWork _unitOfWork, IEfRepository<BookingTime> _repository) : ICommandHandler<CreateCommand, CreateCommandResponse>
+internal class CreateCommandHandler(IUnitOfWork _unitOfWork, IEfRepository<BookingTime> _repository)
+    : ICommandHandler<CreateCommand, CreateCommandResponse>
 {
     public async Task<Result<CreateCommandResponse>> Handle(CreateCommand command, CancellationToken cancellationToken)
     {

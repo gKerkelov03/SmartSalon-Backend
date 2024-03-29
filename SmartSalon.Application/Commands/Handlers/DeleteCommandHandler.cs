@@ -6,7 +6,8 @@ using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Commands.Handlers;
 
-internal class DeleteCommandHandler(IUnitOfWork _unitOfWork, IEfRepository<BookingTime> _repository, IPublisher _publisher) : ICommandHandler<DeleteCommand>
+internal class DeleteCommandHandler(IUnitOfWork _unitOfWork, IEfRepository<BookingTime> _repository, IPublisher _publisher)
+    : ICommandHandler<DeleteCommand>
 {
     public async Task<Result> Handle(DeleteCommand query, CancellationToken cancellationToken)
     {

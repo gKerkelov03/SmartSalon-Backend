@@ -5,7 +5,8 @@ using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Queries.Handlers;
 
-internal class GetAllQueryHandler(IUnitOfWork _unitOfWork, IEfRepository<BookingTime> _repository) : IQueryHandler<GetAllQuery, IEnumerable<GetByIdQueryResponse>>
+internal class GetAllQueryHandler(IUnitOfWork _unitOfWork, IEfRepository<BookingTime> _repository)
+    : IQueryHandler<GetAllQuery, IEnumerable<GetByIdQueryResponse>>
 {
     public async Task<Result<IEnumerable<GetByIdQueryResponse>>> Handle(GetAllQuery query, CancellationToken cancellationToken)
     {

@@ -7,6 +7,6 @@ namespace SmartSalon.Application.Services;
 
 public class CurrentUserAccessor(IHttpContextAccessor _httpContextAccessor) : ICurrentUserAccessor
 {
-    public Id Id
-        => _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).CastTo<Id>();
+    public Id? Id
+        => _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.CastTo<Id>();
 }

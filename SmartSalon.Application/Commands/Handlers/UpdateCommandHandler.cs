@@ -6,7 +6,8 @@ using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Commands.Handlers;
 
-internal class UpdateCommandHandler(IUnitOfWork _unitOfWork, IEfRepository<BookingTime> _repository, IPublisher _publisher) : ICommandHandler<UpdateCommand>
+internal class UpdateCommandHandler(IUnitOfWork _unitOfWork, IEfRepository<BookingTime> _repository, IPublisher _publisher)
+    : ICommandHandler<UpdateCommand>
 {
     public async Task<Result> Handle(UpdateCommand query, CancellationToken cancellationToken)
     {
