@@ -8,32 +8,32 @@ internal class UsersSeeder : ISeeder
 {
     public async Task SeedAsync(SmartSalonDbContext dbContext, IServiceProvider serviceProvider)
     {
-        var userProfileManager = serviceProvider.GetRequiredService<UserManager<Profile>>();
+        var userUserManager = serviceProvider.GetRequiredService<UserManager<User>>();
         var password = "password";
 
         foreach (var admin in GetAdminsToSeed())
         {
-            await userProfileManager.CreateAsync(admin, password);
+            await userUserManager.CreateAsync(admin, password);
             dbContext.SaveChanges();
-            await userProfileManager.AddToRoleAsync(admin, AdminRoleName);
+            await userUserManager.AddToRoleAsync(admin, AdminRoleName);
         };
 
         foreach (var customer in GetCustomersToSeed())
         {
-            await userProfileManager.CreateAsync(customer, password);
-            await userProfileManager.AddToRoleAsync(customer, CustomerRoleName);
+            await userUserManager.CreateAsync(customer, password);
+            await userUserManager.AddToRoleAsync(customer, CustomerRoleName);
         };
 
         foreach (var worker in GetWorkersToSeed())
         {
-            await userProfileManager.CreateAsync(worker, password);
-            await userProfileManager.AddToRoleAsync(worker, OwnerRoleName);
+            await userUserManager.CreateAsync(worker, password);
+            await userUserManager.AddToRoleAsync(worker, OwnerRoleName);
         };
 
         foreach (var owner in GetOwnersToSeed())
         {
-            await userProfileManager.CreateAsync(owner, password);
-            await userProfileManager.AddToRoleAsync(owner, OwnerRoleName);
+            await userUserManager.CreateAsync(owner, password);
+            await userUserManager.AddToRoleAsync(owner, OwnerRoleName);
 
         };
 
@@ -84,7 +84,7 @@ internal class UsersSeeder : ISeeder
         }
     ];
 
-    private IEnumerable<Profile> GetAdminsToSeed() => [
+    private IEnumerable<User> GetAdminsToSeed() => [
         new()
         {
             FirstName = "Georgi",

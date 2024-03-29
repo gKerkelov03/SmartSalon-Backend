@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace SmartSalon.Data;
 
-public class SmartSalonDbContext : IdentityDbContext<Profile, Role, Id>
+public class SmartSalonDbContext : IdentityDbContext<User, Role, Id>
 {
     public SmartSalonDbContext() { }
 
@@ -68,7 +68,7 @@ public class SmartSalonDbContext : IdentityDbContext<Profile, Role, Id>
             );
     }
 
-    public DbSet<Profile> Profiles { get; set; }
+    public DbSet<User> Users { get; set; }
 
     public new DbSet<Role> Roles { get; set; }
 

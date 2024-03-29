@@ -1,7 +1,7 @@
 ﻿
 namespace SmartSalon.Application.Domain;
 
-public class Worker : Profile
+public class Worker : User
 {
     public Id? SalonId { get; set; }
 

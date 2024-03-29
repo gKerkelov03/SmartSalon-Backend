@@ -45,7 +45,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddIdentity(this IServiceCollection services)
     {
         services
-            .AddIdentity<Profile, Role>(options =>
+            .AddIdentity<User, Role>(options =>
             {
                 options.Password.RequireDigit = false;
                 options.Password.RequireLowercase = false;

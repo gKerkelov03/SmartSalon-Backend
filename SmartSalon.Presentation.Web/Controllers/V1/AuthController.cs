@@ -1,5 +1,3 @@
-
-using System.IdentityModel.Tokens.Jwt;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SmartSalon.Application.Commands;
@@ -9,7 +7,6 @@ using SmartSalon.Presentation.Web.Models.Responses;
 
 namespace SmartSalon.Presentation.Web.Controllers.V1;
 
-//TODO: this is pretty much pseudo code at this point, need to be finished
 public class AuthController(
     ISender _sender
 ) : ApiController

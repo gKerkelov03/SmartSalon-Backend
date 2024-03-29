@@ -27,7 +27,7 @@ public static class AutoMapperConfig
 
     public static void RegisterMappings(params Assembly[] assemblies)
     {
-        var profileName = "ReflectionProfile";
+        var profileName = "ReflectionProfileq";
         var configurationExpression = new MapperConfigurationExpression();
 
         var allTypesFromTheAssemblies = assemblies.SelectMany(assembly =>

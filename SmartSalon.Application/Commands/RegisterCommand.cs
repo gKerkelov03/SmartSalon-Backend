@@ -1,11 +1,11 @@
-﻿using AutoMapper;
-using SmartSalon.Application.Abstractions;
+﻿using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Commands.Responses;
+using SmartSalon.Application.Domain;
 using SmartSalon.Application.Mapping;
 
 namespace SmartSalon.Application.Commands;
 
-public class RegisterCommand : ICommand<RegisterCommandResponse>, IMapTo<Profile>
+public class RegisterCommand : ICommand<RegisterCommandResponse>, IMapTo<User>
 {
     public required string FirstName { get; set; }
 

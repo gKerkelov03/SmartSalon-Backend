@@ -1,4 +1,4 @@
-﻿global using ProfileManager = Microsoft.AspNetCore.Identity.UserManager<SmartSalon.Application.Domain.Profile>;
+﻿global using UsersManager = Microsoft.AspNetCore.Identity.UserManager<SmartSalon.Application.Domain.User>;
 
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Commands.Responses;
@@ -7,13 +7,13 @@ using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Commands.Handlers;
 
-internal class LoginCommandHandler(IJwtTokensGenerator _jwtGenerator, ProfileManager _profileManager)
+internal class LoginCommandHandler(IJwtTokensGenerator _jwtGenerator, UsersManager _usersManager)
     : ICommandHandler<LoginCommand, LoginCommandResponse>
 {
     public async Task<Result<LoginCommandResponse>> Handle(LoginCommand command, CancellationToken cancellationToken)
     {
-        var user = await _profileManager.FindByEmailAsync(command.Email);
-        var isPasswordCorrect = await _profileManager.CheckPasswordAsync(user!, command.Password);
+        var user = await _usersManager.FindByEmailAsync(command.Email);
+        var isPasswordCorrect = await _usersManager.CheckPasswordAsync(user!, command.Password);
 
         if (user is null || !isPasswordCorrect)
         {

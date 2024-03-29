@@ -1,7 +1,7 @@
 ﻿
 namespace SmartSalon.Application.Domain;
 
-public class Owner : Profile
+public class Owner : User
 {
     public virtual ICollection<Salon>? Salons { get; set; }
 }

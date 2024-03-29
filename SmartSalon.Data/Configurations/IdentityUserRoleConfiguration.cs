@@ -7,5 +7,5 @@ namespace SmartSalon.Data.Configurations;
 public class IdentityUserRoleConfiguration : IEntityTypeConfiguration<IdentityUserRole<Id>>
 {
     public void Configure(EntityTypeBuilder<IdentityUserRole<Id>> builder)
-        => builder.ToTable("ProfileRole");
+        => builder.ToTable("UserRole");
 }

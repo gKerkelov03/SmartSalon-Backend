@@ -1,7 +1,7 @@
 ﻿
 namespace SmartSalon.Application.Domain;
 
-public class Customer : Profile
+public class Customer : User
 {
     public virtual ICollection<Subscription>? OngoingSubscriptions { get; set; }
 
