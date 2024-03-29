@@ -1,20 +1,22 @@
+global using ProfileManager = Microsoft.AspNetCore.Identity.UserManager<SmartSalon.Application.Domain.Profile>;
+global using SignInManager = Microsoft.AspNetCore.Identity.SignInManager<SmartSalon.Application.Domain.Profile>;
+
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using SmartSalon.Application.Domain;
 using SmartSalon.Application.Extensions;
 using SmartSalon.Presentation.Web.Models.Requests;
 using SmartSalon.Presentation.Web.Options;
 
 namespace SmartSalon.Presentation.Web.Controllers.V1;
 
+//TODO: this is pretty much pseudo code at this point, need to be finished
 public class AuthController(
-    UserManager<Profile> _profileManager,
-    SignInManager<Profile> _signInManager,
+    ProfileManager _profileManager,
+    SignInManager _signInManager,
     IOptions<JwtOptions> _jwtOptions,
     JwtSecurityTokenHandler _jwtHelper
 ) : ApiController
@@ -36,10 +38,12 @@ public class AuthController(
             return BadRequest("Invalid username or password.");
         }
 
-        var token = GenerateJwtToken(Id.NewGuid().ToString(), _jwtOptions.Value, _jwtHelper);
+        var profileId = Id.NewGuid().ToString();
+        var token = GenerateJwtToken(profileId, _jwtOptions.Value, _jwtHelper);
 
-        return Ok(new { Token = token });
+        return Ok(new { Jwt = token });
     }
+
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterRequest requests)
     {
@@ -59,17 +63,16 @@ public class AuthController(
     {
         var claims = new[] { new Claim(JwtRegisteredClaimNames.Sub, userId), };
         var signingKey = Encoding.UTF8.GetBytes(jwtOptions.SecretKey);
-        var creds = new SigningCredentials(new SymmetricSecurityKey(signingKey), SecurityAlgorithms.HmacSha256);
-
-        // DateTime.UtcNow.AddDays(jwtOptions.ExpirationInDays),
+        var credentials = new SigningCredentials(new SymmetricSecurityKey(signingKey), SecurityAlgorithms.HmacSha256);
+        var expirationTime = TimeProvider.System.GetUtcNow().AddDays(jwtOptions.ExpirationInDays).CastTo<DateTime>();
 
         var token = new JwtSecurityToken(
             _jwtOptions.Value.Issuer,
             _jwtOptions.Value.Audience,
             claims,
-            //TODO: accept the datetime from the constructor
-            expires: TimeProvider.System.GetUtcNow().AddDays(jwtOptions.ExpirationInDays).CastTo<DateTime>(),
-            signingCredentials: creds
+            //TODO:start injecting TimeProvider instead of using DateTime 
+            expires: expirationTime,
+            signingCredentials: credentials
         );
 
         return jwtHelper.WriteToken(token);

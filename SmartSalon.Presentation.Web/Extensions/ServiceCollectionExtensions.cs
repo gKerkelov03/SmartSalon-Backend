@@ -143,6 +143,9 @@ public static class ServiceCollectionExtensions
                 .WithTransientLifetime();
         });
 
+    public static IServiceCollection RegisterUnconventionalServices(this IServiceCollection services)
+        => services.AddSingleton<JwtSecurityTokenHandler, JwtSecurityTokenHandler>();
+
     public static IServiceCollection RegisterInvalidModelStateResponseFactory(this IServiceCollection services)
     {
         services
