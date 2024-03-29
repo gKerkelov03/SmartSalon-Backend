@@ -5,10 +5,11 @@ using SmartSalon.Presentation.Web.Models.Requests;
 using SmartSalon.Application.Extensions;
 using SmartSalon.Presentation.Web.Models.Responses;
 using SmartSalon.Application.Commands;
+using SmartSalon.Application.Abstractions;
 
 namespace SmartSalon.Presentation.Web.Controllers.V1;
 
-public class ExampleController(ISender _sender) : ApiController
+public class ExampleController(ISender _sender, IJwtTokensGenerator test) : ApiController
 {
     [HttpPost]
     [ProducesResponseType(Status201Created)]

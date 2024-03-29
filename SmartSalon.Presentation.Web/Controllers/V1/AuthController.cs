@@ -28,7 +28,7 @@ public class AuthController(
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterRequest request)
     {
-        var command = request.MapTo<LoginCommand>();
+        var command = request.MapTo<RegisterCommand>();
         var result = await _sender.Send(command);
 
         return ProblemDetailsOrActionResult(result, () =>
