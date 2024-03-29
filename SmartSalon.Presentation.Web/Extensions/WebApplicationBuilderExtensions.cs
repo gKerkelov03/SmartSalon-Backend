@@ -4,7 +4,7 @@ namespace SmartSalon.Presentation.Web.Extensions;
 
 public static class WebApplicationBuilderExtensions
 {
-    public static WebApplicationBuilder ConfigureSerilogFromTheConfigurationFiles(this WebApplicationBuilder builder)
+    public static WebApplicationBuilder ConfigureSerilog(this WebApplicationBuilder builder)
     {
         builder.Host.UseSerilog((context, loggerConfig) => loggerConfig.ReadFrom.Configuration(context.Configuration));
 

@@ -4,15 +4,18 @@ using SmartSalon.Presentation.Web.Extensions;
 using SmartSalon.Application.Extensions;
 using Serilog;
 using SmartSalon.Application.ResultObject;
-
-var builder = WebApplication.CreateBuilder(args);
+using SmartSalon.Integrations.Emails;
 
 var dataLayer = typeof(SmartSalonDbContext).Assembly;
 var applicationLayer = typeof(IResult).Assembly;
 var presentationLayer = typeof(WebConstants).Assembly;
+var integrationsLayer = typeof(EmailsManager).Assembly;
 
-builder.SetupConfigurationFiles();
-builder.ConfigureSerilogFromTheConfigurationFiles();
+var builder = WebApplication.CreateBuilder(args);
+
+builder
+    .SetupConfigurationFiles()
+    .ConfigureSerilog();
 
 builder
     .Services
@@ -22,13 +25,14 @@ builder
     .AddIdentity()
     .AddJwtAuthentication(builder.Configuration)
     .AddAuthorizationPolicies()
-    .AddApplicationServices(builder.Configuration)
+    .AddApplication(builder.Configuration)
+    .AddIntegrations()
     .AddCorsPolicies()
     .AddHttpContextAccessor()
     .RegisterDbContext(builder.Configuration)
     .RegisterTheOptionsClasses(builder.Configuration)
     .RegisterSeedingServices()
-    .RegisterConventionalServicesFrom(applicationLayer, dataLayer)
+    .RegisterConventionalServicesFrom(applicationLayer, dataLayer, integrationsLayer)
     .RegisterMappingsFrom(applicationLayer, dataLayer, presentationLayer)
     .RegisterInvalidModelStateResponseFactory()
     .AddSwaggerGeneration();

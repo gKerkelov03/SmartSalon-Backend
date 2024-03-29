@@ -8,7 +8,7 @@ namespace SmartSalon.Application.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config)
+    public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration config)
         => services
             .RegisterMediatR()
             .RegisterValidators()

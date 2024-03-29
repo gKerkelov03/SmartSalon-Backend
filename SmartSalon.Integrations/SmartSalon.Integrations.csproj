@@ -4,4 +4,18 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\SmartSalon.Application\SmartSalon.Application.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Using Include="SmartSalon.Application.ApplicationConstants" Static="True" />
+        <Using Include="System.Guid" Alias="Id" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FluentEmail.Razor" Version="3.0.2" />
+        <PackageReference Include="FluentEmail.Smtp" Version="3.0.2" />
+    </ItemGroup>
 </Project>

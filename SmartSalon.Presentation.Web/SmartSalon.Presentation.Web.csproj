@@ -8,6 +8,7 @@
     <ItemGroup>
         <ProjectReference Include="..\SmartSalon.Application\SmartSalon.Application.csproj" />
         <ProjectReference Include="..\SmartSalon.Data\SmartSalon.Data.csproj" />
+        <ProjectReference Include="..\SmartSalon.Integrations\SmartSalon.Integrations.csproj" />
     </ItemGroup>
 
     <ItemGroup>
