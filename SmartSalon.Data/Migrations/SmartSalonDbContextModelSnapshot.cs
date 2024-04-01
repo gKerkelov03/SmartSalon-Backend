@@ -73,23 +73,19 @@ namespace SmartSalon.Data.Migrations
                     b.ToTable("UserRole", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
+            modelBuilder.Entity("OwnerSalon", b =>
                 {
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("OwnersId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("SalonsId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                    b.HasKey("OwnersId", "SalonsId");
 
-                    b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
+                    b.HasIndex("SalonsId");
 
-                    b.HasKey("UserId", "LoginProvider", "Name");
-
-                    b.ToTable("Tokens", (string)null);
+                    b.ToTable("OwnerSalon");
                 });
 
             modelBuilder.Entity("SalonSalonSpecialty", b =>
@@ -229,9 +225,6 @@ namespace SmartSalon.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("OwnerId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<bool>("SubscriptionsEnabled")
                         .HasColumnType("bit");
 
@@ -242,8 +235,6 @@ namespace SmartSalon.Data.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OwnerId");
 
                     b.ToTable("Salons");
                 });
@@ -346,6 +337,29 @@ namespace SmartSalon.Data.Migrations
                     b.HasIndex("SalonId");
 
                     b.ToTable("Subscriptions");
+                });
+
+            modelBuilder.Entity("SmartSalon.Application.Domain.Token", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Tokens");
                 });
 
             modelBuilder.Entity("SmartSalon.Application.Domain.User", b =>
@@ -530,11 +544,17 @@ namespace SmartSalon.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
+            modelBuilder.Entity("OwnerSalon", b =>
                 {
-                    b.HasOne("SmartSalon.Application.Domain.User", null)
+                    b.HasOne("SmartSalon.Application.Domain.Owner", null)
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("OwnersId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SmartSalon.Application.Domain.Salon", null)
+                        .WithMany()
+                        .HasForeignKey("SalonsId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -597,17 +617,6 @@ namespace SmartSalon.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("SmartSalon.Application.Domain.Salon", b =>
-                {
-                    b.HasOne("SmartSalon.Application.Domain.Owner", "Owner")
-                        .WithMany("Salons")
-                        .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Owner");
-                });
-
             modelBuilder.Entity("SmartSalon.Application.Domain.SalonService", b =>
                 {
                     b.HasOne("SmartSalon.Application.Domain.Salon", "Salon")
@@ -643,6 +652,17 @@ namespace SmartSalon.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Salon");
+                });
+
+            modelBuilder.Entity("SmartSalon.Application.Domain.Token", b =>
+                {
+                    b.HasOne("SmartSalon.Application.Domain.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("SmartSalon.Application.Domain.User", b =>
@@ -705,11 +725,6 @@ namespace SmartSalon.Data.Migrations
             modelBuilder.Entity("SmartSalon.Application.Domain.Customer", b =>
                 {
                     b.Navigation("ActiveBookings");
-                });
-
-            modelBuilder.Entity("SmartSalon.Application.Domain.Owner", b =>
-                {
-                    b.Navigation("Salons");
                 });
 
             modelBuilder.Entity("SmartSalon.Application.Domain.Worker", b =>

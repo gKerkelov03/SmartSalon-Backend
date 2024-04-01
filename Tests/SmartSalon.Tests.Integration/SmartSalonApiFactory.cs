@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using SmartSalon.Data;
-using SmartSalon.Presentation.Web.Controllers.V1;
 using Xunit;
 using Testcontainers.MsSql;
 using Microsoft.EntityFrameworkCore;
+using SmartSalon.Presentation.Web.Features;
 
 namespace SmartSalon.Tests.Integration;
 

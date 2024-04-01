@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using SmartSalon.Application.Abstractions;
+using SmartSalon.Application.Abstractions.Lifetimes;
 using SmartSalon.Application.Domain;
 using SmartSalon.Application.Errors;
 using SmartSalon.Application.Mapping;
@@ -22,13 +22,8 @@ namespace SmartSalon.Presentation.Web.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection RegisterMappingsFrom(this IServiceCollection services, params Assembly[] assemblies)
-    {
-        AutoMapperConfig.RegisterMappings(assemblies);
-        services.AddSingleton(AutoMapperConfig.MapperInstance);
-
-        return services;
-    }
+    public static IServiceCollection RegisterMappings(this IServiceCollection services, params Assembly[] assemblies)
+        => services.AddSingleton(new MapperFactory().CreateMapper(assemblies));
 
     public static IServiceCollection RegisterDbContext(this IServiceCollection services, IConfiguration configuration)
         => services.AddDbContext<SmartSalonDbContext>(

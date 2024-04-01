@@ -34,7 +34,7 @@ builder
     .RegisterSeedingServices()
     .RegisterConventionalServicesFrom(applicationLayer, dataLayer, integrationsLayer)
     .RegisterUnconventionalServices()
-    .RegisterMappingsFrom(applicationLayer, dataLayer, presentationLayer)
+    .RegisterMappings(applicationLayer, dataLayer, presentationLayer)
     .RegisterInvalidModelStateResponseFactory()
     .AddSwaggerGeneration();
 

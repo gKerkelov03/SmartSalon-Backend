@@ -34,6 +34,7 @@ public class SmartSalonDbContext : IdentityDbContext<User, Role, Id>
         builder
             .Ignore<IdentityUserClaim<Id>>()
             .Ignore<IdentityRoleClaim<Id>>()
+            .Ignore<IdentityUserToken<Id>>()
             .ApplyConfigurationsFromAssembly(typeof(SmartSalonDbContext).Assembly);
 
         SetDeleteBehaviorToRestrict(entityTypes);
@@ -68,7 +69,7 @@ public class SmartSalonDbContext : IdentityDbContext<User, Role, Id>
             );
     }
 
-    public DbSet<User> Users { get; set; }
+    public new DbSet<User> Users { get; set; }
 
     public new DbSet<Role> Roles { get; set; }
 
@@ -93,4 +94,6 @@ public class SmartSalonDbContext : IdentityDbContext<User, Role, Id>
     public DbSet<BookingTime> BookingTimes { get; set; }
 
     public DbSet<Image> Images { get; set; }
+
+    public DbSet<Token> Tokens { get; set; }
 }

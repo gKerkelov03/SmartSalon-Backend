@@ -1,7 +1,7 @@
 using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
-using SmartSalon.Application.Abstractions;
+using SmartSalon.Application.Abstractions.MediatR;
 using SmartSalon.Application.Extensions;
 using SmartSalon.Application.ResultObject;
 

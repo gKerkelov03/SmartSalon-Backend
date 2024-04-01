@@ -8,7 +8,7 @@ public static class MappingExtensions
     {
         ArgumentNullException.ThrowIfNull(origin);
 
-        return AutoMapperConfig.MapperInstance.Map<DestinationType>(origin);
+        return MapperFactory.MapperInstance.Map<DestinationType>(origin);
     }
 
     public static TargetType MapFrom<TargetType>(this TargetType target, object source)

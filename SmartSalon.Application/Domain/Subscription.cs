@@ -1,4 +1,5 @@
 ﻿using SmartSalon.Application.Domain.Abstractions;
+using SmartSalon.Application.Domain.Enums;
 
 namespace SmartSalon.Application.Domain;
 

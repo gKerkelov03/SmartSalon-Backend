@@ -8,10 +8,11 @@ public static class EnumerableMappingExtensions
     public static IEnumerable<TDestination> To<TDestination>(this IEnumerable source)
     {
         ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(MapperFactory.MapperInstance);
 
         foreach (var item in source)
         {
-            yield return AutoMapperConfig.MapperInstance.Map<TDestination>(item);
+            yield return MapperFactory.MapperInstance.Map<TDestination>(item);
         }
     }
 }

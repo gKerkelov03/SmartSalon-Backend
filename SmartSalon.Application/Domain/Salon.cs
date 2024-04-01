@@ -16,9 +16,7 @@ public class Salon : BaseEntity
 
     public bool WorkersCanSetNonWorkingPeriods { get; set; }
 
-    public Id OwnerId { get; set; }
-
-    public virtual Owner? Owner { get; set; }
+    public virtual ICollection<Owner>? Owners { get; set; }
 
     public virtual ICollection<Worker>? Workers { get; set; }
 
