@@ -37,7 +37,7 @@ public class UsersController(ISender _sender) : ApiController
         return ProblemDetailsOr(Ok, result);
     }
 
-    [HttpPatch]
+    [HttpPatch("ChangeEmail")]
     [ProducesResponseType(Status200OK)]
     [ProducesResponseType(typeof(ProblemDetailsWithErrors), Status409Conflict)]
     public async Task<IActionResult> ChangePassword(ChangePasswordRequest request)
@@ -48,7 +48,7 @@ public class UsersController(ISender _sender) : ApiController
         return ProblemDetailsOr(Ok, result);
     }
 
-    [HttpPatch]
+    [HttpPatch("ChangePassword")]
     [ProducesResponseType(Status200OK)]
     [ProducesResponseType(typeof(ProblemDetailsWithErrors), Status409Conflict)]
     public async Task<IActionResult> ChangeEmail(ChangeEmailRequest request)

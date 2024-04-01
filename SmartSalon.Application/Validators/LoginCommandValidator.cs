@@ -3,11 +3,9 @@ using SmartSalon.Application.Commands;
 
 namespace SmartSalon.Application.Validators;
 
-internal class CreateCommandValidator : AbstractValidator<CreateWorkerCommand>
+internal class LoginCommandValidator : AbstractValidator<LoginCommand>
 {
-    public CreateCommandValidator()
+    public LoginCommandValidator()
     {
-        RuleFor(command => command.UserName).NotEmpty();
-        RuleFor(command => command.FirstName).NotNull().NotEmpty().Length(10, 15);
     }
 }

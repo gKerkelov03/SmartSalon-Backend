@@ -9,7 +9,7 @@ namespace SmartSalon.Presentation.Web.Features.Users.Controllers;
 
 public class AuthController(ISender _sender) : ApiController
 {
-    [HttpPost("login")]
+    [HttpPost("Login")]
     public async Task<IActionResult> Login(LoginRequest request)
     {
         var command = request.MapTo<LoginCommand>();
@@ -21,7 +21,7 @@ public class AuthController(ISender _sender) : ApiController
         );
     }
 
-    [HttpPost("register")]
+    [HttpPost("Register")]
     public async Task<IActionResult> Register(RegisterRequest request)
     {
         var command = request.MapTo<RegisterCommand>();

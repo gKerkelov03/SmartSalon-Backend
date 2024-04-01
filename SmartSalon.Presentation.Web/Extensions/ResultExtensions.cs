@@ -8,28 +8,29 @@ namespace SmartSalon.Presentation.Web.Extensions;
 internal static class ResultExtensions
 {
 
-    public static ProblemDetails ToProblemDetails(this iResult result, string traceId)
+    public static ProblemDetails ToProblemDetails(this iResult result, string requestId)
     {
         if (result.IsSuccess)
         {
             throw new InvalidOperationException("Cannot make problem details out of successfully executed result");
         }
 
-        IEnumerable<Error> errors;
+        Error errorToGetProblemDetailsInfoFrom;
+        object errorsResponseObject;
         var validationErrors = result.Errors!.OfType<ValidationError>();
-        var firstError = result.Errors!.First();
 
         if (validationErrors.Any())
         {
-            errors = validationErrors;
-            firstError = validationErrors.First();
+            errorToGetProblemDetailsInfoFrom = validationErrors.First();
+            errorsResponseObject = GetValidationErrorsObject(validationErrors);
         }
         else
         {
-            errors = [firstError];
+            errorToGetProblemDetailsInfoFrom = result.Errors!.First();
+            errorsResponseObject = result.Errors!.Select(error => error.Description);
         }
 
-        var (title, statusCode, type) = GetProblemDetailsInfoFor(firstError);
+        var (title, statusCode, type) = GetProblemDetailsInfoFor(errorToGetProblemDetailsInfoFrom);
 
         return new ProblemDetails
         {
@@ -37,13 +38,22 @@ internal static class ResultExtensions
             Title = title,
             Extensions = new Dictionary<string, object?>()
             {
-                ["errors"] = GetErrorsObject(errors),
-                [nameof(traceId)] = traceId
+                ["errors"] = errorsResponseObject,
+                [nameof(requestId)] = requestId
             },
             Type = type
         };
 
-        static object GetErrorsObject(IEnumerable<Error> errors)
+        static (string title, int statusCode, string type) GetProblemDetailsInfoFor(Error error) => error switch
+        {
+            ValidationError => ("Bad Request", Status400BadRequest, "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.1"),
+            UnauthorizedError => ("Unauthorized", Status401Unauthorized, "https://datatracker.ietf.org/doc/html/rfc7235#section-3.1"),
+            NotFoundError => ("Resource not found", Status404NotFound, "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4"),
+            ConflictError => ("Conflicting resources", Status409Conflict, "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.8"),
+            _ => throw new ArgumentException("Such an Error type is not recognized when trying to construct ProblemDetails response")
+        };
+
+        static object GetValidationErrorsObject(IEnumerable<ValidationError> errors)
         {
             var errorsObject = new List<object>();
             var validationErrorGroups = errors.OfType<ValidationError>().GroupBy(error => error.PropertyName);
@@ -56,18 +66,7 @@ internal static class ResultExtensions
                 errorsObject.Add(new { propertyName, validationViolations });
             });
 
-            // errorsObject.Add(validationError.Description);
-
             return errorsObject;
         }
-
-        static (string title, int statusCode, string type) GetProblemDetailsInfoFor(Error error) => error switch
-        {
-            ValidationError => ("Bad Request", Status400BadRequest, "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.1"),
-            UnauthorizedError => ("Unauthorized", Status401Unauthorized, "https://datatracker.ietf.org/doc/html/rfc7235#section-3.1"),
-            NotFoundError => ("Resource not found", Status404NotFound, "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4"),
-            ConflictError => ("Conflicting resources", Status409Conflict, "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.8"),
-            _ => throw new ArgumentException("Such an Error type is not recognized when trying to construct ProblemDetails response")
-        };
     }
 }
