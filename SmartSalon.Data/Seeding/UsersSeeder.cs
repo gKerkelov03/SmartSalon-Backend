@@ -8,43 +8,40 @@ internal class UsersSeeder : ISeeder
 {
     public async Task SeedAsync(SmartSalonDbContext dbContext, IServiceProvider serviceProvider)
     {
-        var userUserManager = serviceProvider.GetRequiredService<UserManager<User>>();
+        var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
         var password = "password";
 
         foreach (var admin in GetAdminsToSeed())
         {
-            await userUserManager.CreateAsync(admin, password);
-            dbContext.SaveChanges();
-            await userUserManager.AddToRoleAsync(admin, AdminRoleName);
+            await userManager.CreateAsync(admin, password);
+            await userManager.AddToRoleAsync(admin, AdminRoleName);
         };
 
         foreach (var customer in GetCustomersToSeed())
         {
-            await userUserManager.CreateAsync(customer, password);
-            await userUserManager.AddToRoleAsync(customer, CustomerRoleName);
+            await userManager.CreateAsync(customer, password);
+            await userManager.AddToRoleAsync(customer, CustomerRoleName);
         };
 
         foreach (var worker in GetWorkersToSeed())
         {
-            await userUserManager.CreateAsync(worker, password);
-            await userUserManager.AddToRoleAsync(worker, OwnerRoleName);
+            await userManager.CreateAsync(worker, password);
+            await userManager.AddToRoleAsync(worker, OwnerRoleName);
         };
 
         foreach (var owner in GetOwnersToSeed())
         {
-            await userUserManager.CreateAsync(owner, password);
-            await userUserManager.AddToRoleAsync(owner, OwnerRoleName);
+            await userManager.CreateAsync(owner, password);
+            await userManager.AddToRoleAsync(owner, OwnerRoleName);
 
         };
-
-
-        dbContext.SaveChanges();
     }
 
     private IEnumerable<Customer> GetCustomersToSeed() => [
         new() {
                 FirstName = "Ivan",
                 LastName = "Stefanov",
+                UserName= "Ivo",
                 PhoneNumber = "1234567890",
                 Email = "ivan@abv.bg",
                 IsDeleted = false,
@@ -56,19 +53,19 @@ internal class UsersSeeder : ISeeder
         {
                 FirstName = "Gancho",
                 LastName = "Papazov",
+                UserName= "Ganio",
                 PhoneNumber = "1234567890",
                 Email = "gancho@abv.bg",
                 IsDeleted = false,
-                RoleId = Id.NewGuid(),
         },
         new()
         {
                 FirstName = "Shabi",
                 LastName = "Shalmani",
+                UserName= "Shabi",
                 PhoneNumber = "1234567890",
                 Email = "shabi@abv.bg",
                 IsDeleted = false,
-                RoleId = Id.NewGuid(),
         }
     ];
 
@@ -77,10 +74,10 @@ internal class UsersSeeder : ISeeder
         {
                 FirstName = "Mladen",
                 LastName = "Petrov",
+                UserName= "Mlado",
                 PhoneNumber = "1234567890",
                 Email = "mladen@abv.bg",
                 IsDeleted = false,
-                RoleId = Id.NewGuid(),
         }
     ];
 
@@ -89,6 +86,7 @@ internal class UsersSeeder : ISeeder
         {
             FirstName = "Georgi",
             LastName = "Kerkelov",
+            UserName= "Kerkelov",
             PhoneNumber = "0895105609",
             Email = "gkerkelov03@abv.bg",
             IsDeleted = false,
@@ -97,6 +95,7 @@ internal class UsersSeeder : ISeeder
         {
             FirstName = "Petar",
             LastName = "Ivanov",
+            UserName= "Peca",
             PhoneNumber = "0899829897",
             Email = "pivanov03@abv.bg",
             IsDeleted = false,

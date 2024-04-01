@@ -7,7 +7,7 @@ internal class CreateCommandValidator : AbstractValidator<CreateWorkerCommand>
 {
     public CreateCommandValidator()
     {
-        RuleFor(command => command.Nickname).NotEmpty();
+        RuleFor(command => command.UserName).NotEmpty();
         RuleFor(command => command.FirstName).NotNull().NotEmpty().Length(10, 15);
     }
 }

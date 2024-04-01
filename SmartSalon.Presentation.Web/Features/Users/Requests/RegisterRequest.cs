@@ -7,7 +7,7 @@ namespace SmartSalon.Presentation.Web.Features.Users.Requests;
 public class RegisterRequest : IMapTo<RegisterCommand>
 {
     [Required]
-    public required string Nickname { get; set; }
+    public required string UserName { get; set; }
 
     [Required]
     public required string FirstName { get; set; }

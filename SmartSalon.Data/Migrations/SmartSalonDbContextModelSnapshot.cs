@@ -425,9 +425,6 @@ namespace SmartSalon.Data.Migrations
                     b.Property<Guid?>("PictureId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -454,8 +451,6 @@ namespace SmartSalon.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.HasIndex("PictureId");
-
-                    b.HasIndex("RoleId");
 
                     b.ToTable("Users", (string)null);
 
@@ -672,15 +667,7 @@ namespace SmartSalon.Data.Migrations
                         .HasForeignKey("PictureId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("SmartSalon.Application.Domain.Role", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("Picture");
-
-                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("SpecialSlotSubscription", b =>

@@ -9,7 +9,7 @@ namespace SmartSalon.Application.Commands;
 
 public class RegisterCommand : ICommand<RegisterCommandResponse>, IMapTo<User>
 {
-    public required string Nickname { get; set; }
+    public required string UserName { get; set; }
 
     public required string FirstName { get; set; }
 

@@ -9,11 +9,9 @@ public class User : IdentityUser<Id>, IDeletableEntity
 
     public required string LastName { get; set; }
 
+    public Id? PictureId { get; set; }
+
     public Image? Picture { get; set; }
-
-    public Id RoleId { get; set; }
-
-    public Role? Role { get; set; }
 
     public bool IsDeleted { get; set; }
 

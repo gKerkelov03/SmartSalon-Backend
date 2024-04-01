@@ -10,7 +10,7 @@ public class UpdateUserRequest : IMapTo<UpdateUserCommand>
     public Id UserId { get; set; }
 
     [Required]
-    public required string Nickname { get; set; }
+    public required string UserName { get; set; }
 
     [Required]
     public required string FirstName { get; set; }

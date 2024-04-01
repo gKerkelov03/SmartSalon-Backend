@@ -10,7 +10,7 @@ public class GetUserByIdQuery : IQuery<GetUserByIdQueryResponse>
 
 public class GetUserByIdQueryResponse
 {
-    public required string Nickname { get; set; }
+    public required string UserName { get; set; }
 
     public required string FirstName { get; set; }
 
@@ -28,7 +28,7 @@ internal class GetUserByIdQueryHandler(IUnitOfWork _unitOfWork, UsersManager _us
     {
         var response = new GetUserByIdQueryResponse()
         {
-            Nickname = "Shabi",
+            UserName = "Shabi",
             FirstName = "Shalabi",
             LastName = "Shabilibibi",
             Email = "shabi@abv.bg",
