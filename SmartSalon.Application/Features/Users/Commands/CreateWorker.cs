@@ -4,7 +4,7 @@ using SmartSalon.Application.Abstractions.MediatR;
 using SmartSalon.Application.Domain;
 using SmartSalon.Application.ResultObject;
 
-namespace SmartSalon.Application.Commands;
+namespace SmartSalon.Application.Features.Users.Commands;
 
 public class CreateWorkerCommand : ICommand<CreateWorkerCommandResponse>
 {

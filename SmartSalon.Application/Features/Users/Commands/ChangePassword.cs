@@ -1,10 +1,9 @@
 ﻿using MediatR;
-using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.MediatR;
-using SmartSalon.Application.Notifications;
+using SmartSalon.Application.Features.Users.Notifications;
 using SmartSalon.Application.ResultObject;
 
-namespace SmartSalon.Application.Commands;
+namespace SmartSalon.Application.Features.Users.Commands;
 
 public class ChangePasswordCommand : ICommand
 {

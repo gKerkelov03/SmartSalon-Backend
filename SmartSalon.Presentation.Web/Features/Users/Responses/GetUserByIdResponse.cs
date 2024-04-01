@@ -1,6 +1,6 @@
 ﻿
 using SmartSalon.Application.Abstractions.Mapping;
-using SmartSalon.Application.Queries.Handlers;
+using SmartSalon.Application.Features.Users.Queries;
 
 namespace SmartSalon.Presentation.Web.Features.Users.Responses;
 

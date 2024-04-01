@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using SmartSalon.Presentation.Web.Features.Users.Requests;
 using SmartSalon.Application.Extensions;
 using SmartSalon.Presentation.Web.Features.Users.Responses;
-using SmartSalon.Application.Commands;
 using SmartSalon.Presentation.Web.Features;
 using SmartSalon.Presentation.Web.Features.Users.Controllers;
+using SmartSalon.Application.Features.Users.Commands;
 
 namespace SmartSalon.Presentation.Web.Users.Controllers;
 

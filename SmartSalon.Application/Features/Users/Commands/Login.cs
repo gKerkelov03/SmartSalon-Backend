@@ -5,7 +5,7 @@ using SmartSalon.Application.Abstractions.MediatR;
 using SmartSalon.Application.Errors;
 using SmartSalon.Application.ResultObject;
 
-namespace SmartSalon.Application.Commands;
+namespace SmartSalon.Application.Features.Users.Commands;
 
 public class LoginCommand : ICommand<LoginCommandResponse>
 {

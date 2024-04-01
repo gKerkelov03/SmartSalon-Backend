@@ -1,11 +1,10 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SmartSalon.Application.Queries;
 using SmartSalon.Application.Extensions;
-using SmartSalon.Application.Commands;
 using SmartSalon.Presentation.Web.Features.Users.Responses;
 using SmartSalon.Presentation.Web.Features.Users.Requests;
-using SmartSalon.Application.Queries.Handlers;
+using SmartSalon.Application.Features.Users.Queries;
+using SmartSalon.Application.Features.Users.Commands;
 
 namespace SmartSalon.Presentation.Web.Features.Users.Controllers;
 

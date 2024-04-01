@@ -1,7 +1,7 @@
 ﻿using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.ResultObject;
 
-namespace SmartSalon.Application.Queries.Handlers;
+namespace SmartSalon.Application.Features.Users.Queries;
 
 public class GetUserByIdQuery : IQuery<GetUserByIdQueryResponse>
 {

@@ -1,7 +1,7 @@
 using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
 
-namespace SmartSalon.Application.Notifications;
+namespace SmartSalon.Application.Features.Users.Notifications;
 
 public class UserChangedNotification : INotification
 {

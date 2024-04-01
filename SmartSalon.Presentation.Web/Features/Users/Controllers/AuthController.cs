@@ -1,7 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SmartSalon.Application.Commands;
 using SmartSalon.Application.Extensions;
+using SmartSalon.Application.Features.Users.Commands;
 using SmartSalon.Presentation.Web.Features.Users.Requests;
 using SmartSalon.Presentation.Web.Features.Users.Responses;
 
