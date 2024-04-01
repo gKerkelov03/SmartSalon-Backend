@@ -12,8 +12,8 @@ namespace SmartSalon.Presentation.Web.Users.Controllers;
 public class WorkersController(ISender _sender) : ApiController
 {
     [HttpPost]
-    [ProducesResponseType(Status201Created)]
-    [ProducesResponseType(typeof(ProblemDetailsWithErrors), Status409Conflict)]
+    [SuccessResponse(Status201Created)]
+    [FailureResponse(Status409Conflict)]
     public async Task<IActionResult> CreateWorker(CreateWorkerRequest request)
     {
         var command = request.MapTo<CreateWorkerCommand>();
@@ -26,7 +26,7 @@ public class WorkersController(ISender _sender) : ApiController
     }
 
     [HttpDelete(IdRouteParameter)]
-    [ProducesResponseType(Status204NoContent)]
+    [SuccessResponse(Status204NoContent)]
     public async Task<IActionResult> DeleteWorker(Id workerId)
     {
         var command = new DeleteWorkerCommand { WorkerId = workerId };

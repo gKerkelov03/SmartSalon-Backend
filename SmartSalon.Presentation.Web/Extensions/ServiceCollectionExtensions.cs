@@ -151,9 +151,14 @@ public static class ServiceCollectionExtensions
                     var validationErrors = context
                         .ModelState
                         .Where(kvp => kvp.Value?.Errors.Count > 0)
-                        .Select(kvp => new { PropertyName = kvp.Key, Errors = kvp.Value!.Errors.Select(error => error.ErrorMessage) })
+                        .Select(kvp => new
+                        {
+                            PropertyName = kvp.Key,
+                            Errors = kvp.Value!.Errors.Select(error => error.ErrorMessage)
+                        })
                         .SelectMany(validationViolations =>
-                            validationViolations.Errors.Select(error => Error.Validation(validationViolations.PropertyName, error)));
+                            validationViolations.Errors.Select(error =>
+                                Error.Validation(validationViolations.PropertyName, error)));
 
                     var result = Result.Failure(validationErrors);
                     var traceId = context.HttpContext.TraceIdentifier;

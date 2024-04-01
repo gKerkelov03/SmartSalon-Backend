@@ -12,8 +12,8 @@ public class UsersController(ISender _sender) : ApiController
 {
     [HttpGet]
     [Route(IdRouteParameter)]
-    [ProducesResponseType(typeof(GetUserByIdResponse), Status200OK)]
-    [ProducesResponseType(typeof(ProblemDetailsWithErrors), Status404NotFound)]
+    [SuccessResponse<GetUserByIdResponse>(Status200OK)]
+    [FailureResponse(Status404NotFound)]
     public async Task<IActionResult> GetUserById(Id userId)
     {
         var query = new GetUserByIdQuery() { UserId = userId };
@@ -26,8 +26,8 @@ public class UsersController(ISender _sender) : ApiController
     }
 
     [HttpPatch]
-    [ProducesResponseType(Status200OK)]
-    [ProducesResponseType(typeof(ProblemDetailsWithErrors), Status409Conflict)]
+    [SuccessResponse(Status200OK)]
+    [FailureResponse(Status409Conflict)]
     public async Task<IActionResult> UpdateUser(UpdateUserRequest request)
     {
         var command = request.MapTo<UpdateUserCommand>();
@@ -37,8 +37,8 @@ public class UsersController(ISender _sender) : ApiController
     }
 
     [HttpPatch("ChangeEmail")]
-    [ProducesResponseType(Status200OK)]
-    [ProducesResponseType(typeof(ProblemDetailsWithErrors), Status409Conflict)]
+    [SuccessResponse(Status200OK)]
+    [FailureResponse(Status409Conflict)]
     public async Task<IActionResult> ChangePassword(ChangePasswordRequest request)
     {
         var command = request.MapTo<ChangePasswordCommand>();
@@ -48,8 +48,8 @@ public class UsersController(ISender _sender) : ApiController
     }
 
     [HttpPatch("ChangePassword")]
-    [ProducesResponseType(Status200OK)]
-    [ProducesResponseType(typeof(ProblemDetailsWithErrors), Status409Conflict)]
+    [SuccessResponse(Status200OK)]
+    [FailureResponse(Status409Conflict)]
     public async Task<IActionResult> ChangeEmail(ChangeEmailRequest request)
     {
         var command = request.MapTo<ChangeEmailCommand>();
@@ -59,7 +59,7 @@ public class UsersController(ISender _sender) : ApiController
     }
 
     [HttpDelete(IdRouteParameter)]
-    [ProducesResponseType(Status204NoContent)]
+    [SuccessResponse(Status204NoContent)]
     public async Task<IActionResult> DeleteUser(Id userId)
     {
         var command = new DeleteUserCommand { UserId = userId };

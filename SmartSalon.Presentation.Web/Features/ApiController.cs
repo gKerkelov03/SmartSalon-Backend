@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using SmartSalon.Application.Errors;
-using SmartSalon.Application.Extensions;
 using SmartSalon.Application.ResultObject;
 using SmartSalon.Presentation.Web.Extensions;
 
@@ -9,8 +7,8 @@ namespace SmartSalon.Presentation.Web.Features;
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/[controller]")]
-[ProducesResponseType(typeof(ProblemDetailsWithErrors), Status401Unauthorized)]
-[ProducesResponseType(typeof(ProblemDetailsWithErrors), Status400BadRequest)]
+[FailureResponse(Status401Unauthorized)]
+[FailureResponse(Status400BadRequest)]
 // [Authorize]
 public abstract class ApiController() : ControllerBase
 {

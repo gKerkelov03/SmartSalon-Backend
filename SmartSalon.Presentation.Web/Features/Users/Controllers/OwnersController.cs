@@ -10,8 +10,8 @@ namespace SmartSalon.Presentation.Web.Features.Users.Controllers;
 public class OwnersController(ISender _sender) : ApiController
 {
     [HttpPost]
-    [ProducesResponseType(Status201Created)]
-    [ProducesResponseType(typeof(ProblemDetailsWithErrors), Status409Conflict)]
+    [SuccessResponse(Status201Created)]
+    [FailureResponse(Status409Conflict)]
     public async Task<IActionResult> CreateOwner(CreateOwnerRequest request)
     {
         var command = request.MapTo<CreateOwnerCommand>();
@@ -24,7 +24,7 @@ public class OwnersController(ISender _sender) : ApiController
     }
 
     [HttpDelete(IdRouteParameter)]
-    [ProducesResponseType(Status204NoContent)]
+    [SuccessResponse(Status204NoContent)]
     public async Task<IActionResult> DeleteOwner(Id ownerId)
     {
         var command = new DeleteOwnerCommand { OwnerId = ownerId };
