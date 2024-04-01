@@ -35,8 +35,6 @@ public static class ServiceCollectionExtensions
             .Configure<JwtOptions>(config.GetSection(JwtOptions.SectionName))
             .ConfigureOptions<SwaggerGenOptionsConfigurator>();
 
-    public static IServiceCollection RegisterSeedingServices(this IServiceCollection services) => services.AddSingleton<ISeeder, DatabaseSeeder>();
-
     public static IServiceCollection AddIdentity(this IServiceCollection services)
     {
         services
@@ -137,7 +135,11 @@ public static class ServiceCollectionExtensions
         });
 
     public static IServiceCollection RegisterUnconventionalServices(this IServiceCollection services)
-        => services.AddSingleton<JwtSecurityTokenHandler>();
+    {
+        return services
+            .AddSingleton<ISeeder, DatabaseSeeder>()
+            .AddSingleton<JwtSecurityTokenHandler>();
+    }
 
     public static IServiceCollection RegisterInvalidModelStateResponseFactory(this IServiceCollection services)
     {

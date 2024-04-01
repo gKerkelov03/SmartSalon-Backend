@@ -31,7 +31,6 @@ builder
     .AddHttpContextAccessor()
     .RegisterDbContext(builder.Configuration)
     .RegisterTheOptionsClasses(builder.Configuration)
-    .RegisterSeedingServices()
     .RegisterConventionalServicesFrom(applicationLayer, dataLayer, integrationsLayer)
     .RegisterUnconventionalServices()
     .RegisterMappings(applicationLayer, dataLayer, presentationLayer)

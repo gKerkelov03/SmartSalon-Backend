@@ -25,4 +25,20 @@ public static class ApplicationConstants
             return appDirectory;
         }
     }
+
+    public class Validation
+    {
+        public class User
+        {
+            public const int FirstNameLength = 30;
+
+            public const int LastNameLength = 30;
+
+            public const int UserNameLength = 30;
+
+            public const int PhoneNumberLength = 30;
+
+            public const int EmailLength = 30;
+        }
+    }
 }
