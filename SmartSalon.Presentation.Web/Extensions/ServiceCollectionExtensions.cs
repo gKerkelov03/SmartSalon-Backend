@@ -60,10 +60,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration config)
     {
         var jwtOptions = config.GetSection(JwtOptions.SectionName)?.Get<JwtOptions>();
-        var jwtSecret = jwtOptions?.SecretKey ?? "somedefaultvalue";
-        var issuer = jwtOptions?.Issuer ?? "somedefaultvalue";
-        var audience = jwtOptions?.Audience ?? "somedefaultvalue";
-        var signingKey = Encoding.ASCII.GetBytes(jwtSecret);
+        var signingKeyBytes = Encoding.ASCII.GetBytes(jwtOptions!.SecretKey);
 
         services
             .AddAuthentication(options =>
@@ -76,9 +73,9 @@ public static class ServiceCollectionExtensions
                 options.TokenValidationParameters = new()
                 {
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = issuer,
-                    ValidAudience = audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(signingKey),
+                    ValidIssuer = jwtOptions!.Issuer,
+                    ValidAudience = jwtOptions!.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(signingKeyBytes),
                     NameClaimType = JwtRegisteredClaimNames.Sub
                 };
             });

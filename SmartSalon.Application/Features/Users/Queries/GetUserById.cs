@@ -1,11 +1,14 @@
 ﻿using SmartSalon.Application.Abstractions;
+using SmartSalon.Application.Abstractions.MediatR;
 using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Users.Queries;
 
-public class GetUserByIdQuery : IQuery<GetUserByIdQueryResponse>
+public class GetUserByIdQuery : ICachedQuery<GetUserByIdQueryResponse>
 {
     public Id UserId { get; set; }
+
+    public string CachingKey => UserId.ToString();
 }
 
 public class GetUserByIdQueryResponse
@@ -30,7 +33,7 @@ internal class GetUserByIdQueryHandler(IUnitOfWork _unitOfWork, UsersManager _us
         {
             UserName = "Shabi",
             FirstName = "Shalabi",
-            LastName = "Shabilibibi",
+            LastName = "Shabililibi",
             Email = "shabi@abv.bg",
             PictureUrl = "somepictureurl"
         };

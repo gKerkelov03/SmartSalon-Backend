@@ -6,6 +6,7 @@ using SmartSalon.Presentation.Web.Features.Users.Responses;
 using SmartSalon.Presentation.Web.Features;
 using SmartSalon.Presentation.Web.Features.Users.Controllers;
 using SmartSalon.Application.Features.Users.Commands;
+using SmartSalon.Presentation.Web.Attributes;
 
 namespace SmartSalon.Presentation.Web.Users.Controllers;
 

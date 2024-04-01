@@ -1,6 +1,8 @@
 
 using Microsoft.AspNetCore.Mvc;
-using SmartSalon.Presentation.Web.Features;
+using SmartSalon.Presentation.Web.Models;
+
+namespace SmartSalon.Presentation.Web.Attributes;
 
 public class FailureResponseAttribute : ProducesResponseTypeAttribute
 {

@@ -1,5 +1,5 @@
 ﻿
-namespace SmartSalon.Presentation.Web.Features;
+namespace SmartSalon.Presentation.Web.Models;
 
 public class ProblemDetailsWithErrors
 {
