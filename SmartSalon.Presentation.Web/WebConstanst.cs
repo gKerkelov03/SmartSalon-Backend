@@ -6,8 +6,6 @@ internal static class WebConstants
 
     public const string AngularLocalhostUrl = "http://localhost:4200";
 
-    public const string SettingsSectionName = "Settings";
-
     public const string SettingsFilesFolderName = "Settings";
 
     public const string CustomerPolicyName = "customer-role-policy";
