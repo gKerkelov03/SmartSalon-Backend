@@ -31,10 +31,10 @@ internal class GetWorkerByIdQueryHandler(IEfRepository<Worker> _workers)
 {
     public async Task<Result<GetWorkerByIdQueryResponse>> Handle(GetWorkerByIdQuery query, CancellationToken cancellationToken)
     {
-        var worker = _workers.All
+        var worker = await _workers.All
             .Where(worker => worker.Id == query.WorkerId)
             .Include(worker => worker.ProfilePicture)
-            .FirstOrDefault();
+            .FirstOrDefaultAsync();
 
         if (worker is null)
         {

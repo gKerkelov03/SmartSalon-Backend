@@ -7,6 +7,7 @@ public static class MappingExtensions
     public static DestinationType MapTo<DestinationType>(this object origin)
     {
         ArgumentNullException.ThrowIfNull(origin);
+        ArgumentNullException.ThrowIfNull(MapperFactory.MapperInstance);
 
         return MapperFactory.MapperInstance.Map<DestinationType>(origin);
     }
@@ -38,11 +39,13 @@ public static class MappingExtensions
         {
             var targetProperty = targetType.GetProperty(property.Name);
 
-            if (targetProperty is not null)
+            if (targetProperty is null)
             {
-                object valueToSet = property.GetValue(source)!;
-                targetProperty.SetValue(target, valueToSet);
+                return;
             }
+
+            object valueToSet = property.GetValue(source)!;
+            targetProperty.SetValue(target, valueToSet);
         });
 
         return target;

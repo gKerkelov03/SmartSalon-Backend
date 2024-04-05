@@ -20,10 +20,10 @@ internal class AddOwnerToSalonCommandHandler(IEfRepository<Owner> _owners, IEfRe
     public async Task<Result> Handle(AddOwnerToSalonCommand command, CancellationToken cancellationToken)
     {
         var owner = await _owners.GetByIdAsync(command.OwnerId);
-        var salon = _salons.All
+        var salon = await _salons.All
             .Where(salon => salon.Id == command.SalonId)
             .Include(salon => salon.Owners)
-            .FirstOrDefault();
+            .FirstOrDefaultAsync();
 
         if (owner is null || salon is null)
         {

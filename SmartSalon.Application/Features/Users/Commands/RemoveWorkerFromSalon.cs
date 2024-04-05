@@ -27,10 +27,10 @@ internal class RemoveWorkerFromSalonCommandHandler(IEfRepository<Worker> _worker
             return Error.NotFound;
         }
 
-        var salon = _salons.All
+        var salon = await _salons.All
             .Where(salon => salon.Id == worker.SalonId)
             .Include(salon => salon.Workers)
-            .FirstOrDefault();
+            .FirstOrDefaultAsync();
 
         if (salon is null)
         {
