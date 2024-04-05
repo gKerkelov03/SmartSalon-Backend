@@ -30,7 +30,7 @@ internal class AddOwnerToSalonCommandHandler(IEfRepository<Owner> _owners, IEfRe
             return Error.NotFound;
         }
 
-        salon?.Owners?.Add(owner);
+        salon.Owners!.Add(owner);
         await _unitOfWork.SaveAsync(cancellationToken);
 
         return Result.Success();

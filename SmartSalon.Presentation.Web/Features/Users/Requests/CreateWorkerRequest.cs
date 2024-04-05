@@ -3,7 +3,7 @@ using SmartSalon.Application.Features.Users.Commands;
 
 namespace SmartSalon.Presentation.Web.Features.Users.Requests;
 
-public class CreateWorkerRequest : IMapTo<AddWorkerToSalonCommand>
+public class CreateWorkerRequest : IMapTo<CreateWorkerCommand>
 {
     public Id SalonId { get; set; }
     public required string FirstName { get; set; }

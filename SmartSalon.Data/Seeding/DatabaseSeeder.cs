@@ -7,8 +7,7 @@ public class DatabaseSeeder : ISeeder
 {
     public async Task SeedAsync(SmartSalonDbContext dbContext, IServiceProvider serviceProvider)
     {
-        ArgumentNullException.ThrowIfNull(serviceProvider);
-
+        var logger = serviceProvider.GetService<ILogger<DatabaseSeeder>>();
         var seeders = new ISeeder[]
         {
             new RolesSeeder(),
@@ -16,7 +15,7 @@ public class DatabaseSeeder : ISeeder
             new UsersSeeder()
         };
 
-        var logger = serviceProvider.GetService<ILogger<DatabaseSeeder>>();
+        ArgumentNullException.ThrowIfNull(logger);
 
         foreach (var seeder in seeders)
         {
@@ -26,11 +25,11 @@ public class DatabaseSeeder : ISeeder
             {
                 await seeder.SeedAsync(dbContext, serviceProvider);
                 await dbContext.SaveChangesAsync();
-                logger?.LogInformation($"Seeder {seederName} done.");
+                logger.LogInformation($"Seeder {seederName} done.");
             }
             catch
             {
-                logger?.LogError($"Seeder {seederName} failed.");
+                logger.LogError($"Seeder {seederName} failed.");
             }
         };
     }

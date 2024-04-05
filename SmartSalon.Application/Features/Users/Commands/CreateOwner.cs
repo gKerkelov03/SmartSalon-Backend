@@ -35,8 +35,8 @@ internal class CreateOwnerCommandHandler(IEfRepository<User> _users, IUnitOfWork
         }
 
         var owner = command.MapTo<Owner>();
-
         owner.UserName = command.Email;
+
         await _users.AddAsync(owner);
         await _unitOfWork.SaveAsync(cancellationToken);
 

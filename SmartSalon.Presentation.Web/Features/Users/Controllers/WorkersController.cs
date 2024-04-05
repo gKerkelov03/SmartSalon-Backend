@@ -21,7 +21,7 @@ public class WorkersController(ISender _mediator) : ApiController
     [FailureResponse(Status409Conflict)]
     public async Task<IActionResult> CreateWorker(CreateWorkerRequest request)
     {
-        var command = request.MapTo<AddWorkerToSalonCommand>();
+        var command = request.MapTo<CreateWorkerCommand>();
         var result = await _mediator.Send(command);
 
         return ProblemDetailsOr(result =>
@@ -64,5 +64,15 @@ public class WorkersController(ISender _mediator) : ApiController
         var result = await _mediator.Send(command);
 
         return ProblemDetailsOr<NoContentResult>(result);
+    }
+
+    [HttpPost("Include")]
+    [SuccessResponse(Status200OK)]
+    public async Task<IActionResult> AddWorkerToSalon(AddWorkerToSalonRequest request)
+    {
+        var command = request.MapTo<AddWorkerToSalonCommand>();
+        var result = await _mediator.Send(command);
+
+        return ProblemDetailsOr<OkResult>(result);
     }
 }
