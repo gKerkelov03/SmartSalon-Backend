@@ -1,6 +1,9 @@
+using System.ComponentModel;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using SmartSalon.Application.Domain.Abstractions;
+using SmartSalon.Application.Domain.Base;
+using SmartSalon.Application.Errors;
+using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Data.Repositories;
 
@@ -16,7 +19,7 @@ public class Repository<TEntity> : IEfRepository<TEntity>
         _dbSet = dbContext.Set<TEntity>();
     }
 
-    public IQueryable<TEntity> All() => _dbSet;
+    public IQueryable<TEntity> All => _dbSet;
 
     public async Task<TEntity?> GetByIdAsync(Id id) => await _dbSet.FindAsync(id);
 
@@ -30,33 +33,32 @@ public class Repository<TEntity> : IEfRepository<TEntity>
 
     public async Task AddRangeAsync(IEnumerable<TEntity> entities) => await _dbSet.AddRangeAsync(entities);
 
-    public async Task RemoveByIdAsync(Id id)
+    public async Task<Result> RemoveByIdAsync(Id id)
     {
         var entity = await GetByIdAsync(id);
 
         if (entity is null)
         {
-            return;
+            return Error.NotFound;
         }
 
         _dbSet.Remove(entity);
+
+        return Result.Success();
     }
 
-    public void Remove(TEntity entity) => _dbSet.Remove(entity);
-
-    public void RemoveRange(IEnumerable<TEntity> entities) => _dbSet.RemoveRange(entities);
-
-    public void Update(TEntity entity) => _dbContext.Entry(entity).State = EntityState.Modified;
-
-    public async Task UpdateByIdAsync(Id id, TEntity newEntity)
+    public async Task<Result> UpdateByIdAsync(Id id, TEntity newEntity)
     {
         var entity = await GetByIdAsync(id);
 
         if (entity is null)
         {
-            return;
+            return Error.NotFound;
         }
 
         _dbContext.Entry(entity).CurrentValues.SetValues(newEntity);
+        return Result.Success();
     }
+
+    public void Update(TEntity newEntity) => _dbSet.Update(newEntity);
 }

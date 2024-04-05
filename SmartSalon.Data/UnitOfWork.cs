@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
 using SmartSalon.Application.Abstractions;
-using SmartSalon.Application.Domain.Abstractions;
+using SmartSalon.Application.Domain.Base;
 using SmartSalon.Application.Extensions;
 
 namespace SmartSalon.Data;
@@ -13,13 +13,14 @@ public class UnitOfWork(SmartSalonDbContext _dbContext, ICurrentUserAccessor _cu
 
     public Task<int> SaveAsync(CancellationToken cancellationToken = default)
     {
-        if (_currentUser.Id is null)
-        {
-            throw new InvalidOperationException("Current user's id is null when it shouldn't be!");
-        }
+        //TODO:fix this 
+        // if (_currentUser.Id is null)
+        // {
+        //     throw new InvalidOperationException("Current user's id is null when it shouldn't be!");
+        // }
 
-        var UserIdNonNullable = _currentUser.Id.CastTo<Id>();
-        ApplyAuditInfoRules(_dbContext.ChangeTracker, UserIdNonNullable);
+        var userIdNonNullable = new Id("ec05c91b-b11d-41a6-e732-08dc549969d9");//think _currentUser.Id.CastTo<Id>();
+        ApplyAuditInfoRules(_dbContext.ChangeTracker, userIdNonNullable);
 
         return _dbContext.SaveChangesAsync(cancellationToken);
     }

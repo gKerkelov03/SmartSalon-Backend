@@ -2,10 +2,11 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using SmartSalon.Application.Domain;
 using Microsoft.EntityFrameworkCore.Metadata;
-using SmartSalon.Application.Domain.Abstractions;
+using SmartSalon.Application.Domain.Base;
 using System.Reflection;
 using SmartSalon.Application.Extensions;
 using Microsoft.AspNetCore.Identity;
+using SmartSalon.Application.Domain.Users;
 
 namespace SmartSalon.Data;
 
@@ -70,30 +71,20 @@ public class SmartSalonDbContext : IdentityDbContext<User, Role, Id>
     }
 
     public new DbSet<User> Users { get; set; }
-
     public new DbSet<Role> Roles { get; set; }
-
     public DbSet<Owner> Owners { get; set; }
-
     public DbSet<Worker> Workers { get; set; }
-
     public DbSet<Customer> Customers { get; set; }
-
     public DbSet<Salon> Salons { get; set; }
-
-    public DbSet<SalonService> SalonServices { get; set; }
-
-    public DbSet<SalonSpecialty> SalonSpecialties { get; set; }
-
+    public DbSet<Service> Services { get; set; }
+    public DbSet<Specialty> SalonSpecialties { get; set; }
     public DbSet<SpecialSlot> SpecialSlots { get; set; }
-
     public DbSet<Subscription> Subscriptions { get; set; }
-
     public DbSet<Booking> Bookings { get; set; }
-
-    public DbSet<BookingTime> BookingTimes { get; set; }
-
+    public DbSet<TimePeriod> TimePeriods { get; set; }
     public DbSet<Image> Images { get; set; }
-
     public DbSet<Token> Tokens { get; set; }
+    public DbSet<Category> Categories { get; set; }
+    public DbSet<Section> Sections { get; set; }
+    public DbSet<WorkingTime> WorkingTimes { get; set; }
 }

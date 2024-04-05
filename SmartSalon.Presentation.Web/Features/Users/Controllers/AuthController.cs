@@ -7,13 +7,13 @@ using SmartSalon.Presentation.Web.Features.Users.Responses;
 
 namespace SmartSalon.Presentation.Web.Features.Users.Controllers;
 
-public class AuthController(ISender _sender) : ApiController
+public class AuthController(ISender _mediator) : ApiController
 {
     [HttpPost("Login")]
     public async Task<IActionResult> Login(LoginRequest request)
     {
         var command = request.MapTo<LoginCommand>();
-        var result = await _sender.Send(command);
+        var result = await _mediator.Send(command);
 
         return ProblemDetailsOr(result =>
             Ok(result.Value.MapTo<LoginResponse>()),
@@ -25,7 +25,7 @@ public class AuthController(ISender _sender) : ApiController
     public async Task<IActionResult> Register(RegisterRequest request)
     {
         var command = request.MapTo<RegisterCommand>();
-        var result = await _sender.Send(command);
+        var result = await _mediator.Send(command);
 
         return ProblemDetailsOr(result =>
             Ok(result.Value.MapTo<LoginResponse>()),

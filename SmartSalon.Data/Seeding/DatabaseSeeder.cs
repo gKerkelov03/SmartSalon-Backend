@@ -9,9 +9,16 @@ public class DatabaseSeeder : ISeeder
     {
         ArgumentNullException.ThrowIfNull(serviceProvider);
 
+        var seeders = new ISeeder[]
+        {
+            new RolesSeeder(),
+            new SalonsSeeder(),
+            new UsersSeeder()
+        };
+
         var logger = serviceProvider.GetService<ILogger<DatabaseSeeder>>();
 
-        foreach (var seeder in GetAllSeeders())
+        foreach (var seeder in seeders)
         {
             var seederName = seeder.GetType().Name;
 
@@ -26,23 +33,5 @@ public class DatabaseSeeder : ISeeder
                 logger?.LogError($"Seeder {seederName} failed.");
             }
         };
-    }
-
-    private static IEnumerable<ISeeder> GetAllSeeders()
-    {
-        return [new RolesSeeder(), new UsersSeeder()];
-        // var mainSeeder = typeof(SmartSalonDbContextSeeder);
-
-        // return mainSeeder
-        //         .Assembly
-        //         .GetTypes()
-        //         .Where(type =>
-        //             typeof(ISeeder).IsAssignableFrom(type) &&
-        //             type.IsNotAbsctractOrInterface() &&
-        //             type != mainSeeder)
-        //         .Select(seederType => Activator
-        //             .CreateInstance(seederType)
-        //             !.CastTo<ISeeder>()
-        //         );
     }
 }

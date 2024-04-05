@@ -1,18 +1,15 @@
 ﻿
-using SmartSalon.Application.Domain.Abstractions;
+using SmartSalon.Application.Domain.Base;
 using SmartSalon.Application.Domain.Enums;
+using SmartSalon.Application.Domain.Users;
 
 namespace SmartSalon.Application.Domain;
 
 public class Token : IBaseEntity
 {
-    public Id Id { get; set; } = Id.NewGuid();
-
-    public Id UserId { get; set; } = Id.NewGuid();
-
+    public Id Id { get; set; }
+    public Id UserId { get; set; }
     public virtual User? User { get; set; }
-
     public TokenType Type { get; set; }
-
     public required string Value { get; set; }
 }

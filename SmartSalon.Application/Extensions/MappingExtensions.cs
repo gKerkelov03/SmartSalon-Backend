@@ -28,4 +28,23 @@ public static class MappingExtensions
 
         return target;
     }
+
+    public static TObject MapAgainst<TObject>(this TObject target, object source)
+    {
+        var propertiesToChange = source.GetType().GetProperties();
+        var targetType = target!.GetType();
+
+        propertiesToChange.ForEach(property =>
+        {
+            var targetProperty = targetType.GetProperty(property.Name);
+
+            if (targetProperty is not null)
+            {
+                object valueToSet = property.GetValue(source)!;
+                targetProperty.SetValue(target, valueToSet);
+            }
+        });
+
+        return target;
+    }
 }

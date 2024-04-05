@@ -9,4 +9,15 @@ public static class EnumerableExtensions
             action(element);
         }
     }
+
+    public static void ForEach<TElement>(this IEnumerable<TElement> enumerable, Action<TElement, int> action)
+    {
+        var index = 0;
+
+        foreach (var element in enumerable)
+        {
+            action(element, index);
+            index++;
+        }
+    }
 }

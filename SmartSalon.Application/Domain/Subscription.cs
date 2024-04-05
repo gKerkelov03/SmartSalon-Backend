@@ -1,5 +1,6 @@
-﻿using SmartSalon.Application.Domain.Abstractions;
+﻿using SmartSalon.Application.Domain.Base;
 using SmartSalon.Application.Domain.Enums;
+using SmartSalon.Application.Domain.Users;
 
 namespace SmartSalon.Application.Domain;
 
@@ -21,5 +22,5 @@ public class Subscription : BaseEntity
 
     public virtual ICollection<Customer>? ActiveCustomers { get; set; }
 
-    public virtual ICollection<SalonService>? ServicesIncluded { get; set; }
+    public virtual ICollection<Service>? ServicesIncluded { get; set; }
 }

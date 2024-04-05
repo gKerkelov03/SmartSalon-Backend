@@ -1,5 +1,4 @@
-﻿global using UsersManager = Microsoft.AspNetCore.Identity.UserManager<SmartSalon.Application.Domain.User>;
-
+﻿global using UsersManager = Microsoft.AspNetCore.Identity.UserManager<SmartSalon.Application.Domain.Users.User>;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.MediatR;
 using SmartSalon.Application.Errors;
@@ -10,7 +9,6 @@ namespace SmartSalon.Application.Features.Users.Commands;
 public class LoginCommand : ICommand<LoginCommandResponse>
 {
     public required string Email { get; set; }
-
     public required string Password { get; set; }
 }
 
@@ -19,7 +17,7 @@ public class LoginCommandResponse
     public required string JwtToken { get; set; }
 }
 
-internal class LoginCommandHandler(IJwtTokensGenerator _jwtGenerator, UsersManager _usersManager)
+internal class LoginCommandHandler(UsersManager _usersManager, IJwtTokensGenerator _jwtGenerator)
     : ICommandHandler<LoginCommand, LoginCommandResponse>
 {
     public async Task<Result<LoginCommandResponse>> Handle(LoginCommand command, CancellationToken cancellationToken)
@@ -29,11 +27,11 @@ internal class LoginCommandHandler(IJwtTokensGenerator _jwtGenerator, UsersManag
 
         if (user is null || !isPasswordCorrect)
         {
-            return Error.Unauthorized("Invalid email or password");
+            return Error.Unauthorized;
         }
 
         var jwt = _jwtGenerator.GenerateFor(user.Id);
 
-        return new LoginCommandResponse() { JwtToken = jwt };
+        return new LoginCommandResponse { JwtToken = jwt };
     }
 }

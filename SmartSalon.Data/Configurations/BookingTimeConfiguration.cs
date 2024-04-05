@@ -4,8 +4,8 @@ using SmartSalon.Application.Domain;
 
 namespace SmartSalon.Data.Configurations;
 
-public class BookingTimeConfiguration : IEntityTypeConfiguration<BookingTime>
+public class TimePeriodConfiguration : IEntityTypeConfiguration<TimePeriod>
 {
-    public void Configure(EntityTypeBuilder<BookingTime> builder)
+    public void Configure(EntityTypeBuilder<TimePeriod> builder)
         => builder.HasKey(bookingTime => new { bookingTime.From, bookingTime.To });
 }

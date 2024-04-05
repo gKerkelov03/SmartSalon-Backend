@@ -1,6 +1,6 @@
-﻿using MediatR;
-using SmartSalon.Application.Abstractions.MediatR;
-using SmartSalon.Application.Features.Users.Notifications;
+﻿using SmartSalon.Application.Abstractions.MediatR;
+using SmartSalon.Application.Errors;
+using SmartSalon.Application.Extensions;
 using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Users.Commands;
@@ -8,19 +8,28 @@ namespace SmartSalon.Application.Features.Users.Commands;
 public class ChangePasswordCommand : ICommand
 {
     public Id UserId { get; set; }
-
-    public Id CurrentPassword { get; set; }
-
-    public Id NewPassword { get; set; }
+    public required string CurrentPassword { get; set; }
+    public required string NewPassword { get; set; }
 }
 
-internal class ChangePasswordCommandHandler(UsersManager _usersManager, IPublisher _publisher)
-    : ICommandHandler<ChangePasswordCommand>
+internal class ChangePasswordCommandHandler(UsersManager _usersManager) : ICommandHandler<ChangePasswordCommand>
 {
     public async Task<Result> Handle(ChangePasswordCommand command, CancellationToken cancellationToken)
     {
-        await _publisher.Publish(new UserChangedNotification() { Id = command.UserId });
+        var user = await _usersManager.FindByIdAsync(command.UserId.ToString());
 
-        return await Task.FromResult(Result.Success());
+        if (user is null)
+        {
+            return Error.NotFound;
+        }
+
+        var identityResult = await _usersManager.ChangePasswordAsync(user, command.CurrentPassword, command.NewPassword);
+
+        if (identityResult.Failure())
+        {
+            return Error.Unknown;
+        }
+
+        return Result.Success();
     }
 }

@@ -1,43 +1,40 @@
 ﻿using SmartSalon.Application.Abstractions;
-using SmartSalon.Application.Abstractions.MediatR;
+using SmartSalon.Application.Domain.Users;
+using SmartSalon.Application.Errors;
+using SmartSalon.Application.Extensions;
 using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Users.Queries;
 
-public class GetUserByIdQuery : ICachedQuery<GetUserByIdQueryResponse>
-{
-    public Id UserId { get; set; }
-
-    public string CachingKey => UserId.ToString();
-}
-
-public class GetUserByIdQueryResponse
-{
-    public required string UserName { get; set; }
-
-    public required string FirstName { get; set; }
-
-    public required string LastName { get; set; }
-
-    public required string Email { get; set; }
-
-    public required string PictureUrl { get; set; }
-}
-
-internal class GetUserByIdQueryHandler(IUnitOfWork _unitOfWork, UsersManager _usersManager)
+internal class GetUserByIdQueryHandler(IEfRepository<User> _users)
     : IQueryHandler<GetUserByIdQuery, GetUserByIdQueryResponse>
 {
     public async Task<Result<GetUserByIdQueryResponse>> Handle(GetUserByIdQuery query, CancellationToken cancellationToken)
     {
-        var response = new GetUserByIdQueryResponse()
-        {
-            UserName = "Shabi",
-            FirstName = "Shalabi",
-            LastName = "Shabililibi",
-            Email = "shabi@abv.bg",
-            PictureUrl = "somepictureurl"
-        };
+        var user = await _users.GetByIdAsync(query.UserId);
 
-        return await Task.FromResult(response);
+        if (user is null)
+        {
+            return Error.NotFound;
+        }
+
+        return user.MapTo<GetUserByIdQueryResponse>();
     }
+}
+
+public class GetUserByIdQuery : IQuery<GetUserByIdQueryResponse>
+{
+    public Id UserId { get; set; }
+
+    public GetUserByIdQuery(Id userId) => UserId = userId;
+}
+
+public class GetUserByIdQueryResponse
+{
+    public required string FirstName { get; set; }
+    public required string LastName { get; set; }
+    public required string UserName { get; set; }
+    public required string PhoneNumber { get; set; }
+    public required string Email { get; set; }
+    public required string PictureUrl { get; set; }
 }

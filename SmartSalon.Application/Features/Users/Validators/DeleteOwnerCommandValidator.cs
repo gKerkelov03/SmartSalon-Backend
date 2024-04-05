@@ -3,7 +3,7 @@ using SmartSalon.Application.Features.Users.Commands;
 
 namespace SmartSalon.Application.Features.Users.Validators;
 
-internal class DeleteOwnerCommandValidator : AbstractValidator<DeleteOwnerCommand>
+internal class DeleteOwnerCommandValidator : AbstractValidator<RemoveOwnerFromSalonCommand>
 {
     public DeleteOwnerCommandValidator()
     {

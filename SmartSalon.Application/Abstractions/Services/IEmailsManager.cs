@@ -1,5 +1,5 @@
 
-using SmartSalon.Application.Abstractions.Lifetimes;
+using SmartSalon.Application.Abstractions.Lifetime;
 
 namespace SmartSalon.Application.Abstractions;
 

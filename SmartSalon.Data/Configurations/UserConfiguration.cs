@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SmartSalon.Application.Domain;
+using SmartSalon.Application.Domain.Users;
 using static SmartSalon.Application.ApplicationConstants.Validation.User;
 
 namespace SmartSalon.Data.Configurations;
@@ -23,5 +23,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasValue<Customer>(CustomerRoleName)
             .HasValue<Owner>(OwnerRoleName)
             .HasValue<Worker>(WorkerRoleName);
+        // .HasValue<User>(AdminRoleName);
     }
 }

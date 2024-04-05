@@ -26,19 +26,30 @@ public static class ApplicationConstants
         }
     }
 
-    public class Validation
+    public static class Validation
     {
-        public class User
+        public static class User
         {
             public const int FirstNameLength = 30;
-
             public const int LastNameLength = 30;
-
-            public const int UserNameLength = 30;
-
+            public const int UserNameLength = 50;
             public const int PhoneNumberLength = 30;
+            public const int EmailLength = 50;
+        }
 
-            public const int EmailLength = 30;
+        public static class Worker
+        {
+            public const int JobTitleLength = 30;
+            public const int NicknameLength = 30;
+        }
+
+        public static class Salon
+        {
+            public const int NameLength = 30;
+            public const int DescriptionLength = 30;
+            public const int LocationLength = 30;
+            public const int MaximumDefaultTimePenalty = 20;
+            public const int MaximumDefaultBookingsInAdvance = 20;
         }
     }
 }

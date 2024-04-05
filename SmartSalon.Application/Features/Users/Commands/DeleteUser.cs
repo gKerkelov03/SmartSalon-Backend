@@ -1,21 +1,29 @@
-﻿using MediatR;
-using SmartSalon.Application.Abstractions.MediatR;
-using SmartSalon.Application.Features.Users.Notifications;
+﻿using SmartSalon.Application.Abstractions.MediatR;
+using SmartSalon.Application.Errors;
 using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Users.Commands;
 
 public class DeleteUserCommand : ICommand
 {
-    public required Id UserId { get; set; }
+    public Id UserId { get; set; }
+
+    public DeleteUserCommand(Id userId) => UserId = userId;
 }
 
-internal class DeleteUserCommandHandler(UsersManager _usersManager, IPublisher _publisher)
+internal class DeleteUserCommandHandler(UsersManager _usersManager)
     : ICommandHandler<DeleteUserCommand>
 {
     public async Task<Result> Handle(DeleteUserCommand command, CancellationToken cancellationToken)
     {
-        await _publisher.Publish(new UserChangedNotification() { Id = command.UserId });
+        var user = await _usersManager.FindByIdAsync(command.UserId.ToString());
+
+        if (user is null)
+        {
+            return Error.NotFound;
+        }
+
+        await _usersManager.DeleteAsync(user);
 
         return await Task.FromResult(Result.Success());
     }

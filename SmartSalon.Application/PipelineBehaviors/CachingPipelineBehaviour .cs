@@ -23,7 +23,10 @@ internal class CachingPipelineBehaviour<TQuery, TResult>(IDistributedCache _cach
         {
             var result = await next();
 
-            await AddResultValueToTheCacheAsync(result, query.CachingKey, query.Expiration);
+            if (result.IsSuccess)
+            {
+                await AddResultValueToTheCacheAsync(result, query.CachingKey, query.Expiration);
+            }
 
             return result;
         }

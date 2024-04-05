@@ -5,7 +5,6 @@ namespace SmartSalon.Presentation.Web.Features.Users.Requests;
 
 public class ChangePasswordRequest : IMapTo<ChangePasswordCommand>
 {
-    public string CurrentPassword { get; set; }
-
-    public string NewPassword { get; set; }
+    public required string CurrentPassword { get; set; }
+    public required string NewPassword { get; set; }
 }

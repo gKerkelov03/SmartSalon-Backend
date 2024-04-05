@@ -1,12 +1,13 @@
-﻿using SmartSalon.Application.Domain.Abstractions;
+﻿using SmartSalon.Application.Domain.Base;
 
 namespace SmartSalon.Application.Domain;
 
 public class SpecialSlot : BaseEntity
 {
-    public Id BookingTimeId { get; set; }
-
-    public virtual BookingTime? BookingTime { get; set; }
-
-    public virtual ICollection<Subscription>? Subscription { get; set; }
+    public DayOfWeek DayOfWeek { get; set; }
+    public Id ExpirationInDays { get; set; }
+    public Id TimePeriodId { get; set; }
+    public TimePeriod? TimePeriod { get; set; }
+    public Id ServiceId { get; set; }
+    public Service? Service { get; set; }
 }

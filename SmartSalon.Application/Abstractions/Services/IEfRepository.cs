@@ -1,29 +1,20 @@
 using System.Linq.Expressions;
-using SmartSalon.Application.Abstractions.Lifetimes;
-using SmartSalon.Application.Domain.Abstractions;
+using SmartSalon.Application.Abstractions.Lifetime;
+using SmartSalon.Application.Domain.Base;
+using SmartSalon.Application.ResultObject;
 
-public interface IEfRepository<TEntity> : IScopedLifetime
-    where TEntity : IBaseEntity
+public interface IEfRepository<TEntity> : IScopedLifetime where TEntity : IBaseEntity
 {
-    IQueryable<TEntity> All();
-
-    Task<TEntity?> GetByIdAsync(Id id);
-
-    Task<TEntity?> FirstAsync(Expression<Func<TEntity, bool>> predicate);
-
-    Task<IEnumerable<TEntity>> FindAllAsync(Expression<Func<TEntity, bool>> predicate);
-
     Task AddAsync(TEntity entity);
-
     Task AddRangeAsync(IEnumerable<TEntity> entities);
 
-    void Remove(TEntity entity);
+    IQueryable<TEntity> All { get; }
+    Task<TEntity?> GetByIdAsync(Id id);
+    Task<TEntity?> FirstAsync(Expression<Func<TEntity, bool>> predicate);
+    Task<IEnumerable<TEntity>> FindAllAsync(Expression<Func<TEntity, bool>> predicate);
 
-    Task RemoveByIdAsync(Id id);
+    void Update(TEntity newEntity);
+    Task<Result> UpdateByIdAsync(Id id, TEntity newEntity);
 
-    void RemoveRange(IEnumerable<TEntity> entities);
-
-    Task UpdateByIdAsync(Id id, TEntity newEntity);
-
-    void Update(TEntity entity);
+    Task<Result> RemoveByIdAsync(Id id);
 }

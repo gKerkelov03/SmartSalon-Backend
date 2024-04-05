@@ -4,7 +4,7 @@ using SmartSalon.Application.Features.Users.Commands;
 
 namespace SmartSalon.Presentation.Web.Features.Users.Responses;
 
-public class CreateOwnerResponse : IMapFrom<CreateWorkerCommandResponse>
+public class CreateOwnerResponse : IMapFrom<AddWorkerToSalonCommandResponse>
 {
     public required Id CreatedOwnerId { get; set; }
 }

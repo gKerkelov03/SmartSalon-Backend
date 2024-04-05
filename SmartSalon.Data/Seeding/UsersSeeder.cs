@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
 using SmartSalon.Application.Domain;
+using SmartSalon.Application.Domain.Users;
 
 namespace SmartSalon.Data.Seeding;
 
@@ -33,7 +34,6 @@ internal class UsersSeeder : ISeeder
         {
             await userManager.CreateAsync(owner, password);
             await userManager.AddToRoleAsync(owner, OwnerRoleName);
-
         };
     }
 
@@ -41,10 +41,9 @@ internal class UsersSeeder : ISeeder
         new() {
                 FirstName = "Ivan",
                 LastName = "Stefanov",
-                UserName= "Ivo",
                 PhoneNumber = "1234567890",
+                UserName= "Ivo",
                 Email = "ivan@abv.bg",
-                IsDeleted = false,
         }
     ];
 
@@ -53,19 +52,23 @@ internal class UsersSeeder : ISeeder
         {
                 FirstName = "Gancho",
                 LastName = "Papazov",
-                UserName= "Ganio",
+                JobTitle = "Barber",
                 PhoneNumber = "1234567890",
+                Nickname = "Ganio",
+                UserName = "gancho@abv.bg",
                 Email = "gancho@abv.bg",
-                IsDeleted = false,
+                ProfilePicture = new Image("https://res.cloudinary.com/donhvedgr/image/upload/v1663928763/mlnxqpbwatsjlobnqbwl.jpg")
         },
         new()
         {
                 FirstName = "Shabi",
                 LastName = "Shalmani",
-                UserName= "Shabi",
+                JobTitle = "Barber",
                 PhoneNumber = "1234567890",
+                Nickname = "Shabi",
+                UserName= "shabi@abv.bg",
                 Email = "shabi@abv.bg",
-                IsDeleted = false,
+                ProfilePicture = new Image("https://res.cloudinary.com/donhvedgr/image/upload/v1663928319/l9hpu65c6t6mkbaktz3e.jpg")
         }
     ];
 
@@ -74,10 +77,10 @@ internal class UsersSeeder : ISeeder
         {
                 FirstName = "Mladen",
                 LastName = "Petrov",
-                UserName= "Mlado",
                 PhoneNumber = "1234567890",
+                UserName= "mladen@abv.bg",
                 Email = "mladen@abv.bg",
-                IsDeleted = false,
+                ProfilePicture = new Image("https://res.cloudinary.com/donhvedgr/image/upload/v1663915155/gaxbdvdgfxqklct4ezpm.jpg")
         }
     ];
 
@@ -86,19 +89,17 @@ internal class UsersSeeder : ISeeder
         {
             FirstName = "Georgi",
             LastName = "Kerkelov",
-            UserName= "Kerkelov",
             PhoneNumber = "0895105609",
+            UserName= "gkerkelov03@abv.bg",
             Email = "gkerkelov03@abv.bg",
-            IsDeleted = false,
         },
         new()
         {
             FirstName = "Petar",
             LastName = "Ivanov",
-            UserName= "Peca",
             PhoneNumber = "0899829897",
-            Email = "pivanov03@abv.bg",
-            IsDeleted = false,
+            UserName= "pivanov03@abv.bg",
+            Email = "pivanov03@abv.bg"
         }
     ];
 }
