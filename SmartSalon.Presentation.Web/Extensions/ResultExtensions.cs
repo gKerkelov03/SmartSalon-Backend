@@ -50,6 +50,7 @@ internal static class ResultExtensions
             UnauthorizedError => ("Unauthorized", Status401Unauthorized, "https://datatracker.ietf.org/doc/html/rfc7235#section-3.1"),
             NotFoundError => ("Resource not found", Status404NotFound, "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4"),
             ConflictError => ("Conflicting resources", Status409Conflict, "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.8"),
+            Error => ("Bad Request", Status400BadRequest, "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.1"),
             _ => throw new ArgumentException("Such an Error type is not recognized when trying to construct ProblemDetails response")
         };
 

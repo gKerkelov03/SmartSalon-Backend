@@ -11,13 +11,12 @@ namespace SmartSalon.Presentation.Web.Features.Users.Controllers;
 
 public class UsersController(ISender _mediator) : ApiController
 {
-    [HttpGet]
-    [Route(IdRoute)]
+    [HttpGet(IdRoute)]
     [SuccessResponse<GetUserByIdResponse>(Status200OK)]
     [FailureResponse(Status404NotFound)]
-    public async Task<IActionResult> GetUserById([FromRoute] Id goshoId)
+    public async Task<IActionResult> GetUserById(Id userId)
     {
-        var query = new GetUserByIdQuery(goshoId);
+        var query = new GetUserByIdQuery(userId);
         var result = await _mediator.Send(query);
 
         return ProblemDetailsOr((result) =>
@@ -26,18 +25,20 @@ public class UsersController(ISender _mediator) : ApiController
         );
     }
 
-    [HttpPatch]
+    [HttpPatch(IdRoute)]
     [SuccessResponse(Status200OK)]
     [FailureResponse(Status404NotFound)]
-    public async Task<IActionResult> UpdateUser(UpdateUserRequest request)
+    public async Task<IActionResult> UpdateUser(Id userId, UpdateUserRequest request)
     {
         var command = request.MapTo<UpdateUserCommand>();
+        command.UserId = userId;
+
         var result = await _mediator.Send(command);
 
         return ProblemDetailsOr<OkResult>(result);
     }
 
-    [HttpPatch("ChangePassword")]
+    [HttpPatch($"{IdRoute}/ChangePassword")]
     [SuccessResponse(Status200OK)]
     public async Task<IActionResult> ChangePassword(ChangePasswordRequest request)
     {
@@ -47,7 +48,7 @@ public class UsersController(ISender _mediator) : ApiController
         return ProblemDetailsOr<OkResult>(result);
     }
 
-    [HttpPatch("ChangeEmail")]
+    [HttpPatch($"{IdRoute}/ChangeEmail")]
     [SuccessResponse(Status200OK)]
     [FailureResponse(Status409Conflict)]
     public async Task<IActionResult> ChangeEmail(ChangeEmailRequest request)

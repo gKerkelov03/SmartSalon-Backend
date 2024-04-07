@@ -28,8 +28,21 @@ public class WorkersController(ISender _mediator) : ApiController
         );
     }
 
-    [HttpGet]
-    [Route(IdRoute)]
+    [HttpGet("Search")]
+    [SuccessResponse(Status200OK)]
+    [FailureResponse(Status404NotFound)]
+    public async Task<IActionResult> SearchForUnemployedWorker(string searchTerm)
+    {
+        var query = new SearchForUnemployedWorkerQuery(searchTerm);
+        var result = await _mediator.Send(query);
+
+        return ProblemDetailsOr(result =>
+            Ok(result.Value.ToListOf<GetWorkerByIdResponse>()),
+            result
+        );
+    }
+
+    [HttpGet(IdRoute)]
     [SuccessResponse(Status200OK)]
     [FailureResponse(Status404NotFound)]
     public async Task<IActionResult> GetWorkerById(Id workerId)
@@ -43,18 +56,20 @@ public class WorkersController(ISender _mediator) : ApiController
         );
     }
 
-    [HttpPatch]
+    [HttpPatch(IdRoute)]
     [SuccessResponse(Status200OK)]
     [FailureResponse(Status409Conflict)]
-    public async Task<IActionResult> UpdateWorker(UpdateWorkerRequest request)
+    public async Task<IActionResult> UpdateWorker(Id workerId, UpdateWorkerRequest request)
     {
         var command = request.MapTo<UpdateWorkerCommand>();
+        command.WorkerId = workerId;
+
         var result = await _mediator.Send(command);
 
         return ProblemDetailsOr<OkResult>(result);
     }
 
-    [HttpDelete(IdRoute)]
+    [HttpPatch("RemoveFromSalon")]
     [SuccessResponse(Status204NoContent)]
     public async Task<IActionResult> RemoveWorkerFromSalon(Id workerId)
     {
@@ -64,7 +79,7 @@ public class WorkersController(ISender _mediator) : ApiController
         return ProblemDetailsOr<NoContentResult>(result);
     }
 
-    [HttpPost("Include")]
+    [HttpPatch("AddToSalon")]
     [SuccessResponse(Status200OK)]
     public async Task<IActionResult> AddWorkerToSalon(AddWorkerToSalonRequest request)
     {

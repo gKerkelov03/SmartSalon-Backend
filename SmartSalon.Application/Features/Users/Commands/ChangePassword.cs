@@ -34,7 +34,7 @@ internal class ChangePasswordCommandHandler(UsersManager _usersManager, ICurrent
 
         if (identityResult.Failure())
         {
-            return Error.Unknown;
+            return new Error(identityResult.ErrorDescription());
         }
 
         return Result.Success();

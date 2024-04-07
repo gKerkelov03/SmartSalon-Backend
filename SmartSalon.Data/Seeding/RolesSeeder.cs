@@ -28,7 +28,7 @@ internal class RolesSeeder : ISeeder
 
             if (!result.Succeeded)
             {
-                throw new Exception(result.GetErrorMessage());
+                throw new Exception(result.ErrorDescription());
             }
         }
     }

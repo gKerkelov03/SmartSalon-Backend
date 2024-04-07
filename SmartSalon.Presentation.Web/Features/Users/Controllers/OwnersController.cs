@@ -25,8 +25,21 @@ public class OwnersController(ISender _mediator) : ApiController
         );
     }
 
-    [HttpPost]
-    [Route(IdRoute)]
+    [HttpGet("Search")]
+    [SuccessResponse(Status200OK)]
+    [FailureResponse(Status404NotFound)]
+    public async Task<IActionResult> SearchForOwner(string searchTerm)
+    {
+        var query = new SearchForOwnerQuery(searchTerm);
+        var result = await _mediator.Send(query);
+
+        return ProblemDetailsOr(result =>
+            Ok(result.Value.ToListOf<GetOwnerByIdResponse>()),
+            result
+        );
+    }
+
+    [HttpGet(IdRoute)]
     [SuccessResponse(Status200OK)]
     [FailureResponse(Status404NotFound)]
     public async Task<IActionResult> GetOwnerById(Id ownerId)
@@ -40,7 +53,7 @@ public class OwnersController(ISender _mediator) : ApiController
         );
     }
 
-    [HttpDelete(IdRoute)]
+    [HttpPatch("RemoveFromSalon")]
     [SuccessResponse(Status204NoContent)]
     public async Task<IActionResult> RemoveOwnerFromSalon(RemoveOwnerFromSalonRequest request)
     {
@@ -50,7 +63,7 @@ public class OwnersController(ISender _mediator) : ApiController
         return ProblemDetailsOr<NoContentResult>(result);
     }
 
-    [HttpPost("Include")]
+    [HttpPatch("AddToSalon")]
     [SuccessResponse(Status200OK)]
     public async Task<IActionResult> AddOwnerToSalon(AddOwnerToSalonRequest request)
     {

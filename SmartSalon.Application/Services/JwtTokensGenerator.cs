@@ -22,7 +22,7 @@ public class JwtTokensGenerator(JwtSecurityTokenHandler _jwtHelper, IOptions<Jwt
             jwtOptions.Issuer,
             jwtOptions.Audience,
             claims: [new Claim(JwtRegisteredClaimNames.Sub, userId.ToString())],
-            expires: expirationTime.CastTo<DateTime>(),
+            expires: expirationTime.DateTime,
             signingCredentials: new(new SymmetricSecurityKey(signingKeyBytes), SecurityAlgorithms.HmacSha256)
         );
 

@@ -55,7 +55,7 @@ public class SmartSalonDbContext : IdentityDbContext<User, Role, Id>
 
     private static void SetupDeletedQueryFilter(ModelBuilder builder, IEnumerable<IMutableEntityType> entities)
     {
-        var dontShowIfDeleted = typeof(UnitOfWork).GetMethod(
+        var dontShowIfDeleted = typeof(SmartSalonDbContext).GetMethod(
             nameof(DontShowIfDeleted),
             BindingFlags.NonPublic | BindingFlags.Static
         );
@@ -63,7 +63,8 @@ public class SmartSalonDbContext : IdentityDbContext<User, Role, Id>
         entities
             .Where(entity =>
                 entity.ClrType is not null &&
-                typeof(IDeletableEntity).IsAssignableFrom(entity.ClrType)
+                typeof(IDeletableEntity).IsAssignableFrom(entity.ClrType) &&
+                entity.ClrType.BaseType != typeof(User)
             )
             .ForEach(deletableEntityType =>
                 //TODO: debug why SetIsDeletedQueryFilterMethodInfo is null sometimes
@@ -86,6 +87,6 @@ public class SmartSalonDbContext : IdentityDbContext<User, Role, Id>
     public DbSet<Token> Tokens { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Section> Sections { get; set; }
-    public DbSet<WorkingTime> WorkingTimes { get; set; }
+    public DbSet<SalonWorkingTime> WorkingTimes { get; set; }
     public DbSet<Currency> Currencies { get; set; }
 }

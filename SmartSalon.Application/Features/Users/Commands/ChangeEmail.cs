@@ -35,7 +35,7 @@ internal class ChangeEmailCommandHandler(UsersManager _usersManager, ICurrentUse
 
         if (identityResult.Failure())
         {
-            return Error.Unknown;
+            return new Error(identityResult.ErrorDescription());
         }
 
         return Result.Success();

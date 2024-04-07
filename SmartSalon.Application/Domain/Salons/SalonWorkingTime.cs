@@ -1,9 +1,8 @@
 using SmartSalon.Application.Domain.Base;
-using SmartSalon.Application.Domain.Salons;
 
-namespace SmartSalon.Application.Domain;
+namespace SmartSalon.Application.Domain.Salons;
 
-public class WorkingTime : BaseEntity
+public class SalonWorkingTime : BaseEntity
 {
     public Id SalonId { get; set; }
     public virtual Salon? Salon { get; set; }

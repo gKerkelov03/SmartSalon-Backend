@@ -12,7 +12,7 @@ using SmartSalon.Data;
 namespace SmartSalon.Data.Migrations
 {
     [DbContext(typeof(SmartSalonDbContext))]
-    [Migration("20240407143339_Initial")]
+    [Migration("20240407183409_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -294,6 +294,65 @@ namespace SmartSalon.Data.Migrations
                     b.ToTable("SalonSpecialties");
                 });
 
+            modelBuilder.Entity("SmartSalon.Application.Domain.Salons.SalonWorkingTime", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<TimeOnly>("FridayFrom")
+                        .HasColumnType("time");
+
+                    b.Property<TimeOnly>("FridayTo")
+                        .HasColumnType("time");
+
+                    b.Property<TimeOnly>("MondayFrom")
+                        .HasColumnType("time");
+
+                    b.Property<TimeOnly>("MondayTo")
+                        .HasColumnType("time");
+
+                    b.Property<Guid>("SalonId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<TimeOnly>("SaturdayFrom")
+                        .HasColumnType("time");
+
+                    b.Property<TimeOnly>("SaturdayTo")
+                        .HasColumnType("time");
+
+                    b.Property<TimeOnly>("SundayFrom")
+                        .HasColumnType("time");
+
+                    b.Property<TimeOnly>("SundayTo")
+                        .HasColumnType("time");
+
+                    b.Property<TimeOnly>("ThursdayFrom")
+                        .HasColumnType("time");
+
+                    b.Property<TimeOnly>("ThursdayTo")
+                        .HasColumnType("time");
+
+                    b.Property<TimeOnly>("TuesdayFrom")
+                        .HasColumnType("time");
+
+                    b.Property<TimeOnly>("TuesdayTo")
+                        .HasColumnType("time");
+
+                    b.Property<TimeOnly>("WednesdayFrom")
+                        .HasColumnType("time");
+
+                    b.Property<TimeOnly>("WednesdayTo")
+                        .HasColumnType("time");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SalonId")
+                        .IsUnique();
+
+                    b.ToTable("WorkingTimes");
+                });
+
             modelBuilder.Entity("SmartSalon.Application.Domain.Section", b =>
                 {
                     b.Property<Guid>("Id")
@@ -561,65 +620,6 @@ namespace SmartSalon.Data.Migrations
                     b.UseTphMappingStrategy();
                 });
 
-            modelBuilder.Entity("SmartSalon.Application.Domain.WorkingTime", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<TimeOnly>("FridayFrom")
-                        .HasColumnType("time");
-
-                    b.Property<TimeOnly>("FridayTo")
-                        .HasColumnType("time");
-
-                    b.Property<TimeOnly>("MondayFrom")
-                        .HasColumnType("time");
-
-                    b.Property<TimeOnly>("MondayTo")
-                        .HasColumnType("time");
-
-                    b.Property<Guid>("SalonId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<TimeOnly>("SaturdayFrom")
-                        .HasColumnType("time");
-
-                    b.Property<TimeOnly>("SaturdayTo")
-                        .HasColumnType("time");
-
-                    b.Property<TimeOnly>("SundayFrom")
-                        .HasColumnType("time");
-
-                    b.Property<TimeOnly>("SundayTo")
-                        .HasColumnType("time");
-
-                    b.Property<TimeOnly>("ThursdayFrom")
-                        .HasColumnType("time");
-
-                    b.Property<TimeOnly>("ThursdayTo")
-                        .HasColumnType("time");
-
-                    b.Property<TimeOnly>("TuesdayFrom")
-                        .HasColumnType("time");
-
-                    b.Property<TimeOnly>("TuesdayTo")
-                        .HasColumnType("time");
-
-                    b.Property<TimeOnly>("WednesdayFrom")
-                        .HasColumnType("time");
-
-                    b.Property<TimeOnly>("WednesdayTo")
-                        .HasColumnType("time");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SalonId")
-                        .IsUnique();
-
-                    b.ToTable("WorkingTimes");
-                });
-
             modelBuilder.Entity("SmartSalon.Application.Domain.Users.Customer", b =>
                 {
                     b.HasBaseType("SmartSalon.Application.Domain.Users.User");
@@ -800,6 +800,17 @@ namespace SmartSalon.Data.Migrations
                     b.Navigation("Salon");
                 });
 
+            modelBuilder.Entity("SmartSalon.Application.Domain.Salons.SalonWorkingTime", b =>
+                {
+                    b.HasOne("SmartSalon.Application.Domain.Salons.Salon", "Salon")
+                        .WithOne("WorkingTime")
+                        .HasForeignKey("SmartSalon.Application.Domain.Salons.SalonWorkingTime", "SalonId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Salon");
+                });
+
             modelBuilder.Entity("SmartSalon.Application.Domain.Service", b =>
                 {
                     b.HasOne("SmartSalon.Application.Domain.Salons.Salon", "Salon")
@@ -852,17 +863,6 @@ namespace SmartSalon.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("SmartSalon.Application.Domain.WorkingTime", b =>
-                {
-                    b.HasOne("SmartSalon.Application.Domain.Salons.Salon", "Salon")
-                        .WithOne("WorkingTime")
-                        .HasForeignKey("SmartSalon.Application.Domain.WorkingTime", "SalonId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Salon");
                 });
 
             modelBuilder.Entity("SmartSalon.Application.Domain.Users.Worker", b =>

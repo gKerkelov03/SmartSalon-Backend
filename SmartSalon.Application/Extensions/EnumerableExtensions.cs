@@ -20,4 +20,6 @@ public static class EnumerableExtensions
             index++;
         }
     }
+
+    public static bool IsEmpty<TElement>(this IEnumerable<TElement> enumerable) => !enumerable.Any();
 }

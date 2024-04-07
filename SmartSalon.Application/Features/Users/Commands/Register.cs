@@ -1,5 +1,4 @@
-﻿using SmartSalon.Application.Abstractions;
-using SmartSalon.Application.Abstractions.Mapping;
+﻿using SmartSalon.Application.Abstractions.Mapping;
 using SmartSalon.Application.Abstractions.MediatR;
 using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Errors;
@@ -13,8 +12,9 @@ public class RegisterCommand : ICommand<RegisterCommandResponse>, IMapTo<Custome
     public required string FirstName { get; set; }
     public required string LastName { get; set; }
     public required string Email { get; set; }
+    public required string PhoneNumber { get; set; }
     public required string Password { get; set; }
-    public required string PictureUrl { get; set; }
+    public required string ProfilePictureUrl { get; set; }
 }
 
 public class RegisterCommandResponse
@@ -24,12 +24,12 @@ public class RegisterCommandResponse
     public RegisterCommandResponse(Id id) => RegisteredUserId = id;
 }
 
-internal class RegisterCommandHandler(IEfRepository<User> _users, IEfRepository<Customer> _customers, IUnitOfWork _unitOfWork)
+internal class RegisterCommandHandler(UsersManager _users)
     : ICommandHandler<RegisterCommand, RegisterCommandResponse>
 {
     public async Task<Result<RegisterCommandResponse>> Handle(RegisterCommand command, CancellationToken cancellationToken)
     {
-        var userWithTheSameEmail = await _users.FirstAsync(user => user.Email == command.Email);
+        var userWithTheSameEmail = await _users.FindByEmailAsync(command.Email);
 
         if (userWithTheSameEmail is not null)
         {
@@ -39,8 +39,12 @@ internal class RegisterCommandHandler(IEfRepository<User> _users, IEfRepository<
         var customer = command.MapTo<Customer>();
         customer.UserName = command.Email;
 
-        await _customers.AddAsync(customer);
-        await _unitOfWork.SaveAsync(cancellationToken);
+        var identityResult = await _users.CreateAsync(customer, command.Password);
+
+        if (identityResult.Failure())
+        {
+            return new Error(identityResult.ErrorDescription());
+        }
 
         return new RegisterCommandResponse(customer.Id);
     }

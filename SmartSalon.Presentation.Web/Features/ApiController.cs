@@ -8,7 +8,7 @@ namespace SmartSalon.Presentation.Web.Features;
 
 [ApiController]
 [ApiVersion("1.0")]
-[Route("api/v{version:apiVersion}/[controller]")]
+[Route("Api/V{version:apiVersion}/[controller]")]
 [FailureResponse(Status401Unauthorized)]
 [FailureResponse(Status400BadRequest)]
 // [Authorize]

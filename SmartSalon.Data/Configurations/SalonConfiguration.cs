@@ -45,7 +45,7 @@ public class SalonConfiguration : IEntityTypeConfiguration<Salon>
         builder
             .HasOne(salon => salon.WorkingTime)
             .WithOne(workingTime => workingTime.Salon)
-            .HasForeignKey<WorkingTime>(workingTime => workingTime.SalonId);
+            .HasForeignKey<SalonWorkingTime>(workingTime => workingTime.SalonId);
 
         // builder
         // .HasMany(s => s.Images);

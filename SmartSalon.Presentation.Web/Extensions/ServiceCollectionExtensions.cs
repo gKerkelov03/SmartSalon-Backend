@@ -12,6 +12,7 @@ using SmartSalon.Application.Abstractions.Lifetime;
 using SmartSalon.Application.Domain;
 using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Errors;
+using SmartSalon.Application.Extensions;
 using SmartSalon.Application.Mapping;
 using SmartSalon.Application.Options;
 using SmartSalon.Application.ResultObject;
@@ -148,6 +149,7 @@ public static class ServiceCollectionExtensions
             .AddControllers()
             .ConfigureApiBehaviorOptions(options => options.InvalidModelStateResponseFactory = context =>
                 {
+                    var identifierForTheJsonObjectAsAWhole = "$";
                     var validationErrors = context
                         .ModelState
                         .Where(kvp => kvp.Value?.Errors.Count > 0)
@@ -158,12 +160,19 @@ public static class ServiceCollectionExtensions
                         })
                         .SelectMany(validationViolations =>
                             validationViolations.Errors.Select(error =>
-                                Error.Validation(validationViolations.PropertyName, error)));
+                                Error.Validation(validationViolations.PropertyName, error)
+                            )
+                        );
 
                     var result = Result.Failure(validationErrors);
-                    var traceId = context.HttpContext.TraceIdentifier;
+                    var requestId = context.HttpContext.TraceIdentifier;
 
-                    return new ObjectResult(result.ToProblemDetails(traceId));
+                    if (result.Errors!.Any(error => error.CastTo<ValidationError>().PropertyName == identifierForTheJsonObjectAsAWhole))
+                    {
+                        result = Result.Failure(new Error("Invalid JSON"));
+                    }
+
+                    return new ObjectResult(result.ToProblemDetails(requestId));
                 }
             );
 

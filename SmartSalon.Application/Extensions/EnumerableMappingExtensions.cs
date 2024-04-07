@@ -5,14 +5,18 @@ namespace SmartSalon.Application.Extensions;
 
 public static class EnumerableMappingExtensions
 {
-    public static IEnumerable<TDestination> To<TDestination>(this IEnumerable source)
+    public static List<TDestination> ToListOf<TDestination>(this IEnumerable enumerable)
     {
-        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(enumerable);
         ArgumentNullException.ThrowIfNull(MapperFactory.MapperInstance);
 
-        foreach (var item in source)
+        var list = new List<TDestination>();
+
+        foreach (var item in enumerable)
         {
-            yield return MapperFactory.MapperInstance.Map<TDestination>(item);
+            list.Add(MapperFactory.MapperInstance.Map<TDestination>(item));
         }
+
+        return list;
     }
 }

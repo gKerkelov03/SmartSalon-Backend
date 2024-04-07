@@ -1,4 +1,6 @@
-﻿using SmartSalon.Application.Abstractions.MediatR;
+﻿using SmartSalon.Application.Abstractions;
+using SmartSalon.Application.Abstractions.MediatR;
+using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Errors;
 using SmartSalon.Application.ResultObject;
 
@@ -11,19 +13,20 @@ public class DeleteUserCommand : ICommand
     public DeleteUserCommand(Id userId) => UserId = userId;
 }
 
-internal class DeleteUserCommandHandler(UsersManager _usersManager)
+internal class DeleteUserCommandHandler(IEfRepository<User> _users, IUnitOfWork _unitOfWork)
     : ICommandHandler<DeleteUserCommand>
 {
     public async Task<Result> Handle(DeleteUserCommand command, CancellationToken cancellationToken)
     {
-        var user = await _usersManager.FindByIdAsync(command.UserId.ToString());
+        var user = await _users.GetByIdAsync(command.UserId);
 
         if (user is null)
         {
             return Error.NotFound;
         }
 
-        await _usersManager.DeleteAsync(user);
+        await _users.RemoveByIdAsync(user.Id);
+        await _unitOfWork.SaveAsync(cancellationToken);
 
         return await Task.FromResult(Result.Success());
     }
