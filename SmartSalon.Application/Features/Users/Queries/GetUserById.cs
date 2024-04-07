@@ -1,4 +1,6 @@
-﻿using SmartSalon.Application.Abstractions;
+﻿using Microsoft.EntityFrameworkCore;
+using SmartSalon.Application.Abstractions;
+using SmartSalon.Application.Abstractions.Mapping;
 using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Errors;
 using SmartSalon.Application.Extensions;
@@ -11,7 +13,10 @@ internal class GetUserByIdQueryHandler(IEfRepository<User> _users)
 {
     public async Task<Result<GetUserByIdQueryResponse>> Handle(GetUserByIdQuery query, CancellationToken cancellationToken)
     {
-        var user = await _users.GetByIdAsync(query.UserId);
+        var user = await _users.All
+            .Where(user => user.Id == query.UserId)
+            .Include(user => user.ProfilePicture)
+            .FirstOrDefaultAsync();
 
         if (user is null)
         {
@@ -29,12 +34,11 @@ public class GetUserByIdQuery : IQuery<GetUserByIdQueryResponse>
     public GetUserByIdQuery(Id userId) => UserId = userId;
 }
 
-public class GetUserByIdQueryResponse
+public class GetUserByIdQueryResponse : IMapFrom<User>
 {
     public required string FirstName { get; set; }
     public required string LastName { get; set; }
-    public required string UserName { get; set; }
     public required string PhoneNumber { get; set; }
     public required string Email { get; set; }
-    public required string PictureUrl { get; set; }
+    public required string ProfilePictureUrl { get; set; }
 }

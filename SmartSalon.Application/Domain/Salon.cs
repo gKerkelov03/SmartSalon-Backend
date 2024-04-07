@@ -13,9 +13,12 @@ public class Salon : BaseEntity
     public bool SubscriptionsEnabled { get; set; }
     public bool WorkersCanMoveBookings { get; set; }
     public bool WorkersCanSetNonWorkingPeriods { get; set; }
-    public Id WorkingTimeId { get; set; }
+    public Id? WorkingTimeId { get; set; }
+    public WorkingTime? WorkingTime { get; set; }
     public Id? MainPictureId { get; set; }
     public virtual Image? MainPicture { get; set; }
+    public Id? CurrencyId { get; set; }
+    public Currency? Currency { get; set; }
     public virtual ICollection<Owner>? Owners { get; set; }
     public virtual ICollection<Worker>? Workers { get; set; }
     public virtual ICollection<Specialty>? Specialties { get; set; }

@@ -11,8 +11,9 @@ public class DatabaseSeeder : ISeeder
         var seeders = new ISeeder[]
         {
             new RolesSeeder(),
+            new UsersSeeder(),
             new SalonsSeeder(),
-            new UsersSeeder()
+            new WorkingTimesSeeder(),
         };
 
         ArgumentNullException.ThrowIfNull(logger);
@@ -25,11 +26,12 @@ public class DatabaseSeeder : ISeeder
             {
                 await seeder.SeedAsync(dbContext, serviceProvider);
                 await dbContext.SaveChangesAsync();
+
                 logger.LogInformation($"Seeder {seederName} done.");
             }
-            catch
+            catch (Exception ex)
             {
-                logger.LogError($"Seeder {seederName} failed.");
+                logger.LogError($"Seeder {seederName} failed. Message: {ex.Message}");
             }
         };
     }

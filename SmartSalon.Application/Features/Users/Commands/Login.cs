@@ -25,9 +25,14 @@ internal class LoginCommandHandler(UsersManager _usersManager, IJwtTokensGenerat
         var user = await _usersManager.FindByEmailAsync(command.Email);
         var isPasswordCorrect = await _usersManager.CheckPasswordAsync(user!, command.Password);
 
-        if (user is null || !isPasswordCorrect)
+        if (!isPasswordCorrect)
         {
             return Error.Unauthorized;
+        }
+
+        if (user is null)
+        {
+            return Error.NotFound;
         }
 
         var jwt = _jwtGenerator.GenerateFor(user.Id);

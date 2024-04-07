@@ -1,4 +1,5 @@
-﻿using SmartSalon.Application.Abstractions.MediatR;
+﻿using SmartSalon.Application.Abstractions;
+using SmartSalon.Application.Abstractions.MediatR;
 using SmartSalon.Application.Errors;
 using SmartSalon.Application.Extensions;
 using SmartSalon.Application.ResultObject;
@@ -12,10 +13,16 @@ public class ChangePasswordCommand : ICommand
     public required string NewPassword { get; set; }
 }
 
-internal class ChangePasswordCommandHandler(UsersManager _usersManager) : ICommandHandler<ChangePasswordCommand>
+internal class ChangePasswordCommandHandler(UsersManager _usersManager, ICurrentUserAccessor _currentUser)
+    : ICommandHandler<ChangePasswordCommand>
 {
     public async Task<Result> Handle(ChangePasswordCommand command, CancellationToken cancellationToken)
     {
+        if (_currentUser.Id != command.UserId)
+        {
+            return Error.Unauthorized;
+        }
+
         var user = await _usersManager.FindByIdAsync(command.UserId.ToString());
 
         if (user is null)

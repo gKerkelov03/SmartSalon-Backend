@@ -4,4 +4,11 @@ namespace SmartSalon.Application.Extensions;
 public static class StringExtensions
 {
     public static Id ToId(this string idAsString) => new Id(idAsString);
+
+    public static string Remove(this string text, IEnumerable<char> charsToRemove)
+    {
+        charsToRemove.ForEach(@char => text = text.Replace(@char.ToString(), string.Empty));
+
+        return text;
+    }
 }

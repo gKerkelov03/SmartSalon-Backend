@@ -39,48 +39,48 @@ internal class UsersSeeder : ISeeder
 
     private IEnumerable<Customer> GetCustomersToSeed() => [
         new() {
-                FirstName = "Ivan",
-                LastName = "Stefanov",
-                PhoneNumber = "1234567890",
-                UserName= "Ivo",
-                Email = "ivan@abv.bg",
+            FirstName = "Ivan",
+            LastName = "Stefanov",
+            PhoneNumber = "1234567890",
+            UserName= "ivan@abv.bg",
+            Email = "ivan@abv.bg",
         }
     ];
 
     private IEnumerable<Worker> GetWorkersToSeed() => [
         new()
         {
-                FirstName = "Gancho",
-                LastName = "Papazov",
-                JobTitle = "Barber",
-                PhoneNumber = "1234567890",
-                Nickname = "Ganio",
-                UserName = "gancho@abv.bg",
-                Email = "gancho@abv.bg",
-                ProfilePicture = new Image("https://res.cloudinary.com/donhvedgr/image/upload/v1663928763/mlnxqpbwatsjlobnqbwl.jpg")
+            FirstName = "Gancho",
+            LastName = "Papazov",
+            JobTitle = "Barber",
+            PhoneNumber = "1234567890",
+            Nickname = "Ganio",
+            UserName = "gancho@abv.bg",
+            Email = "gancho@abv.bg",
+            ProfilePicture = new Image("https://res.cloudinary.com/donhvedgr/image/upload/v1663928763/mlnxqpbwatsjlobnqbwl.jpg")
         },
         new()
         {
-                FirstName = "Shabi",
-                LastName = "Shalmani",
-                JobTitle = "Barber",
-                PhoneNumber = "1234567890",
-                Nickname = "Shabi",
-                UserName= "shabi@abv.bg",
-                Email = "shabi@abv.bg",
-                ProfilePicture = new Image("https://res.cloudinary.com/donhvedgr/image/upload/v1663928319/l9hpu65c6t6mkbaktz3e.jpg")
+            FirstName = "Shabi",
+            LastName = "Shalmani",
+            JobTitle = "Barber",
+            PhoneNumber = "1234567890",
+            Nickname = "Shabi",
+            UserName= "shabi@abv.bg",
+            Email = "shabi@abv.bg",
+            ProfilePicture = new Image("https://res.cloudinary.com/donhvedgr/image/upload/v1663928319/l9hpu65c6t6mkbaktz3e.jpg")
         }
     ];
 
     private IEnumerable<Owner> GetOwnersToSeed() => [
         new()
         {
-                FirstName = "Mladen",
-                LastName = "Petrov",
-                PhoneNumber = "1234567890",
-                UserName= "mladen@abv.bg",
-                Email = "mladen@abv.bg",
-                ProfilePicture = new Image("https://res.cloudinary.com/donhvedgr/image/upload/v1663915155/gaxbdvdgfxqklct4ezpm.jpg")
+            FirstName = "Mladen",
+            LastName = "Petrov",
+            PhoneNumber = "1234567890",
+            UserName= "mladen@abv.bg",
+            Email = "mladen@abv.bg",
+            ProfilePicture = new Image("https://res.cloudinary.com/donhvedgr/image/upload/v1663915155/gaxbdvdgfxqklct4ezpm.jpg")
         }
     ];
 

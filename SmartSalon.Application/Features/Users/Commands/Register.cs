@@ -8,9 +8,8 @@ using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Users.Commands;
 
-public class RegisterCommand : ICommand<RegisterCommandResponse>, IMapTo<User>
+public class RegisterCommand : ICommand<RegisterCommandResponse>, IMapTo<Customer>
 {
-    public required string UserName { get; set; }
     public required string FirstName { get; set; }
     public required string LastName { get; set; }
     public required string Email { get; set; }
@@ -20,10 +19,12 @@ public class RegisterCommand : ICommand<RegisterCommandResponse>, IMapTo<User>
 
 public class RegisterCommandResponse
 {
-    public Id Id { get; set; }
+    public Id RegisteredUserId { get; set; }
+
+    public RegisterCommandResponse(Id id) => RegisteredUserId = id;
 }
 
-internal class RegisterCommandHandler(IEfRepository<User> _users, IUnitOfWork _unitOfWork)
+internal class RegisterCommandHandler(IEfRepository<User> _users, IEfRepository<Customer> _customers, IUnitOfWork _unitOfWork)
     : ICommandHandler<RegisterCommand, RegisterCommandResponse>
 {
     public async Task<Result<RegisterCommandResponse>> Handle(RegisterCommand command, CancellationToken cancellationToken)
@@ -38,9 +39,9 @@ internal class RegisterCommandHandler(IEfRepository<User> _users, IUnitOfWork _u
         var customer = command.MapTo<Customer>();
         customer.UserName = command.Email;
 
-        await _users.AddAsync(customer);
+        await _customers.AddAsync(customer);
         await _unitOfWork.SaveAsync(cancellationToken);
 
-        return new RegisterCommandResponse { Id = customer.Id };
+        return new RegisterCommandResponse(customer.Id);
     }
 }

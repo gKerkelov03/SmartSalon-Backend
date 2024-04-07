@@ -6,8 +6,8 @@ namespace SmartSalon.Application.Domain;
 public class Booking : BaseEntity
 {
     public DateOnly Date { get; set; }
-    public Id TimePeriodId { get; set; }
-    public virtual TimePeriod? TimePeriod { get; set; }
+    public TimeOnly From { get; set; }
+    public TimeOnly To { get; set; }
     public Id ServiceId { get; set; }
     public virtual Service? Service { get; set; }
     public Id CustomerId { get; set; }

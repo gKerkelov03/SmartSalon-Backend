@@ -5,18 +5,20 @@ namespace SmartSalon.Application.Domain;
 
 public class WorkingTime : BaseEntity
 {
-    public Id MondayId { get; set; }
-    public virtual TimePeriod? Monday { get; set; }
-    public Id TuesdayId { get; set; }
-    public virtual TimePeriod? Tuesday { get; set; }
-    public Id WednesdayId { get; set; }
-    public virtual TimePeriod? Wednesday { get; set; }
-    public Id ThursdayId { get; set; }
-    public virtual TimePeriod? Thursday { get; set; }
-    public Id FridayId { get; set; }
-    public virtual TimePeriod? Friday { get; set; }
-    public Id SaturdayId { get; set; }
-    public virtual TimePeriod? Saturday { get; set; }
-    public Id SundayId { get; set; }
-    public virtual TimePeriod? Sunday { get; set; }
+    public Id SalonId { get; set; }
+    public virtual Salon? Salon { get; set; }
+    public TimeOnly MondayFrom { get; set; }
+    public TimeOnly MondayTo { get; set; }
+    public TimeOnly TuesdayFrom { get; set; }
+    public TimeOnly TuesdayTo { get; set; }
+    public TimeOnly WednesdayFrom { get; set; }
+    public TimeOnly WednesdayTo { get; set; }
+    public TimeOnly ThursdayFrom { get; set; }
+    public TimeOnly ThursdayTo { get; set; }
+    public TimeOnly FridayFrom { get; set; }
+    public TimeOnly FridayTo { get; set; }
+    public TimeOnly SaturdayFrom { get; set; }
+    public TimeOnly SaturdayTo { get; set; }
+    public TimeOnly SundayFrom { get; set; }
+    public TimeOnly SundayTo { get; set; }
 }
