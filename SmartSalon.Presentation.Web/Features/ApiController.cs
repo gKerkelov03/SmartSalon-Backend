@@ -17,8 +17,8 @@ public abstract class ApiController() : ControllerBase
     protected IActionResult CreatedAndLocatedAt(string controllerName, string actionName, Id createdResourceId, object? response = null)
         => CreatedAtAction(
             actionName,
-            controllerName,
-            new { Id = createdResourceId },
+            controllerName.Replace(nameof(Controller), string.Empty),
+            new RouteValueDictionary { [IdRoute.Remove(['{', '}'])] = createdResourceId },
             response ?? new { createdResourceId }
         );
 

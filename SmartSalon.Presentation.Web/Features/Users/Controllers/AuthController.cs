@@ -28,7 +28,7 @@ public class AuthController(ISender _mediator) : ApiController
         var result = await _mediator.Send(command);
 
         return ProblemDetailsOr(result =>
-            Ok(result.Value.MapTo<LoginResponse>()),
+            CreatedAndLocatedAt(nameof(UsersController), "GetUserById", result.Value.RegisteredUserId),
             result
         );
     }

@@ -6,7 +6,6 @@ namespace SmartSalon.Presentation.Web.Features.Users.Requests;
 public class UpdateUserRequest : IMapTo<UpdateUserCommand>
 {
     public Id UserId { get; set; }
-    public required string UserName { get; set; }
     public required string FirstName { get; set; }
     public required string LastName { get; set; }
     public required string PictureUrl { get; set; }

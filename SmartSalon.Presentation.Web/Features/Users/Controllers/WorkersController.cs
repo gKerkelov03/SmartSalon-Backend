@@ -14,8 +14,6 @@ namespace SmartSalon.Presentation.Web.Users.Controllers;
 
 public class WorkersController(ISender _mediator) : ApiController
 {
-    private const string IdRouteParameter = "{workerId}";
-
     [HttpPost]
     [SuccessResponse(Status201Created)]
     [FailureResponse(Status409Conflict)]
@@ -31,7 +29,7 @@ public class WorkersController(ISender _mediator) : ApiController
     }
 
     [HttpGet]
-    [Route(IdRouteParameter)]
+    [Route(IdRoute)]
     [SuccessResponse(Status200OK)]
     [FailureResponse(Status404NotFound)]
     public async Task<IActionResult> GetWorkerById(Id workerId)
@@ -56,7 +54,7 @@ public class WorkersController(ISender _mediator) : ApiController
         return ProblemDetailsOr<OkResult>(result);
     }
 
-    [HttpDelete(IdRouteParameter)]
+    [HttpDelete(IdRoute)]
     [SuccessResponse(Status204NoContent)]
     public async Task<IActionResult> RemoveWorkerFromSalon(Id workerId)
     {

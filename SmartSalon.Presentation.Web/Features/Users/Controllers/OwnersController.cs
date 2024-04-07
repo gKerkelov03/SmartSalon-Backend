@@ -11,8 +11,6 @@ namespace SmartSalon.Presentation.Web.Features.Users.Controllers;
 
 public class OwnersController(ISender _mediator) : ApiController
 {
-    private const string IdRouteParameter = "{ownerId}";
-
     [HttpPost]
     [SuccessResponse(Status201Created)]
     [FailureResponse(Status409Conflict)]
@@ -28,7 +26,7 @@ public class OwnersController(ISender _mediator) : ApiController
     }
 
     [HttpPost]
-    [Route(IdRouteParameter)]
+    [Route(IdRoute)]
     [SuccessResponse(Status200OK)]
     [FailureResponse(Status404NotFound)]
     public async Task<IActionResult> GetOwnerById(Id ownerId)
@@ -42,7 +40,7 @@ public class OwnersController(ISender _mediator) : ApiController
         );
     }
 
-    [HttpDelete(IdRouteParameter)]
+    [HttpDelete(IdRoute)]
     [SuccessResponse(Status204NoContent)]
     public async Task<IActionResult> RemoveOwnerFromSalon(RemoveOwnerFromSalonRequest request)
     {

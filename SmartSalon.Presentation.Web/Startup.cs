@@ -35,6 +35,7 @@ builder
     .RegisterUnconventionalServices()
     .RegisterMappings(applicationLayer, dataLayer, presentationLayer)
     .RegisterInvalidModelStateResponseFactory()
+    .RegisterModelBinders()
     .AddSwaggerGeneration();
 
 var app = builder.Build();

@@ -170,6 +170,16 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
+    public static IServiceCollection RegisterModelBinders(this IServiceCollection services)
+    {
+        services.AddControllers(options =>
+        {
+            options.ModelBinderProviders.Insert(0, new IdModelBinder());
+        });
+
+        return services;
+    }
+
     public static IServiceCollection AddVersioning(this IServiceCollection services)
         => services
             .AddApiVersioning(options =>
@@ -199,6 +209,7 @@ public static class ServiceCollectionExtensions
                 }
             };
 
+            options.OperationFilter<HideIdParametersFilter>();
             options.AddSecurityDefinition(schemeName, new()
             {
                 Name = "Authorization",

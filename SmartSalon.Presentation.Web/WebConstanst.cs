@@ -15,4 +15,6 @@ internal static class WebConstants
     public const string OwnerPolicyName = "owner-role-policy";
 
     public const string AdminPolicyName = "admin-role-policy";
+
+    public const string IdRoute = "{Id}";
 }

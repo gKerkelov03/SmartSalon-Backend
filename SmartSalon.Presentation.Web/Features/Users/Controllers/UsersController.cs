@@ -11,15 +11,13 @@ namespace SmartSalon.Presentation.Web.Features.Users.Controllers;
 
 public class UsersController(ISender _mediator) : ApiController
 {
-    private const string IdRouteParameter = "{userId}";
-
     [HttpGet]
-    [Route(IdRouteParameter)]
+    [Route(IdRoute)]
     [SuccessResponse<GetUserByIdResponse>(Status200OK)]
     [FailureResponse(Status404NotFound)]
-    public async Task<IActionResult> GetUserById(Id userId)
+    public async Task<IActionResult> GetUserById([FromRoute] Id goshoId)
     {
-        var query = new GetUserByIdQuery(userId);
+        var query = new GetUserByIdQuery(goshoId);
         var result = await _mediator.Send(query);
 
         return ProblemDetailsOr((result) =>
@@ -60,7 +58,7 @@ public class UsersController(ISender _mediator) : ApiController
         return ProblemDetailsOr<OkResult>(result);
     }
 
-    [HttpDelete(IdRouteParameter)]
+    [HttpDelete(IdRoute)]
     [SuccessResponse(Status204NoContent)]
     public async Task<IActionResult> DeleteUser(Id userId)
     {
