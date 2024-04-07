@@ -12,12 +12,26 @@ namespace SmartSalon.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Currencies",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    Country = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Currencies", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    NormalizedName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -35,6 +49,34 @@ namespace SmartSalon.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Sections", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Salons",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    Location = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    ProfilePictureUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DefaultTimePenalty = table.Column<int>(type: "int", maxLength: 20, nullable: false),
+                    DefaultBookingsInAdvance = table.Column<int>(type: "int", maxLength: 20, nullable: false),
+                    SubscriptionsEnabled = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    WorkersCanMoveBookings = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    WorkersCanSetNonWorkingPeriods = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    WorkingTimeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CurrencyId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Salons", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Salons_Currencies_CurrencyId",
+                        column: x => x.CurrencyId,
+                        principalTable: "Currencies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -57,89 +99,20 @@ namespace SmartSalon.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Bookings",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Date = table.Column<DateOnly>(type: "date", nullable: false),
-                    From = table.Column<TimeOnly>(type: "time", nullable: false),
-                    To = table.Column<TimeOnly>(type: "time", nullable: false),
-                    ServiceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SalonId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    WorkerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Bookings", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CategoryService",
-                columns: table => new
-                {
-                    CategoriesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ServicesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CategoryService", x => new { x.CategoriesId, x.ServicesId });
-                    table.ForeignKey(
-                        name: "FK_CategoryService_Categories_CategoriesId",
-                        column: x => x.CategoriesId,
-                        principalTable: "Categories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CustomerSubscription",
-                columns: table => new
-                {
-                    ActiveCustomersId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SubscriptionsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CustomerSubscription", x => new { x.ActiveCustomersId, x.SubscriptionsId });
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Images",
+                name: "SalonImages",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Url = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    SalonId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    SalonId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Images", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Salons",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    Location = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    DefaultTimePenalty = table.Column<int>(type: "int", maxLength: 20, nullable: false),
-                    DefaultBookingsInAdvance = table.Column<int>(type: "int", maxLength: 20, nullable: false),
-                    SubscriptionsEnabled = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
-                    WorkersCanMoveBookings = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
-                    WorkersCanSetNonWorkingPeriods = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
-                    WorkingTimeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    MainPictureId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Salons", x => x.Id);
+                    table.PrimaryKey("PK_SalonImages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Salons_Images_MainPictureId",
-                        column: x => x.MainPictureId,
-                        principalTable: "Images",
+                        name: "FK_SalonImages_Salons_SalonId",
+                        column: x => x.SalonId,
+                        principalTable: "Salons",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -149,7 +122,7 @@ namespace SmartSalon.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Text = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     SalonId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -192,7 +165,7 @@ namespace SmartSalon.Data.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    ProfilePictureId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ProfilePictureUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     DeletedOn = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -218,12 +191,6 @@ namespace SmartSalon.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Users_Images_ProfilePictureId",
-                        column: x => x.ProfilePictureId,
-                        principalTable: "Images",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Users_Salons_SalonId",
                         column: x => x.SalonId,
@@ -269,8 +236,8 @@ namespace SmartSalon.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     Price = table.Column<double>(type: "float", nullable: false),
                     DurationInMinutes = table.Column<int>(type: "int", nullable: false),
                     SalonId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -289,6 +256,30 @@ namespace SmartSalon.Data.Migrations
                         name: "FK_Services_Subscriptions_SubscriptionId",
                         column: x => x.SubscriptionId,
                         principalTable: "Subscriptions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CustomerSubscription",
+                columns: table => new
+                {
+                    ActiveCustomersId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SubscriptionsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CustomerSubscription", x => new { x.ActiveCustomersId, x.SubscriptionsId });
+                    table.ForeignKey(
+                        name: "FK_CustomerSubscription_Subscriptions_SubscriptionsId",
+                        column: x => x.SubscriptionsId,
+                        principalTable: "Subscriptions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_CustomerSubscription_Users_ActiveCustomersId",
+                        column: x => x.ActiveCustomersId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -382,6 +373,72 @@ namespace SmartSalon.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Bookings",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Date = table.Column<DateOnly>(type: "date", nullable: false),
+                    From = table.Column<TimeOnly>(type: "time", nullable: false),
+                    To = table.Column<TimeOnly>(type: "time", nullable: false),
+                    ServiceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SalonId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    WorkerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Bookings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Bookings_Salons_SalonId",
+                        column: x => x.SalonId,
+                        principalTable: "Salons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Bookings_Services_ServiceId",
+                        column: x => x.ServiceId,
+                        principalTable: "Services",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Bookings_Users_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Bookings_Users_WorkerId",
+                        column: x => x.WorkerId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CategoryService",
+                columns: table => new
+                {
+                    CategoriesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ServicesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CategoryService", x => new { x.CategoriesId, x.ServicesId });
+                    table.ForeignKey(
+                        name: "FK_CategoryService_Categories_CategoriesId",
+                        column: x => x.CategoriesId,
+                        principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_CategoryService_Services_ServicesId",
+                        column: x => x.ServicesId,
+                        principalTable: "Services",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SpecialSlots",
                 columns: table => new
                 {
@@ -389,7 +446,7 @@ namespace SmartSalon.Data.Migrations
                     From = table.Column<TimeOnly>(type: "time", nullable: false),
                     To = table.Column<TimeOnly>(type: "time", nullable: false),
                     DayOfWeek = table.Column<int>(type: "int", nullable: false),
-                    ExpirationInDays = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ExpirationInDays = table.Column<int>(type: "int", nullable: false),
                     ServiceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     SubscriptionId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
@@ -446,11 +503,6 @@ namespace SmartSalon.Data.Migrations
                 column: "SubscriptionsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Images_SalonId",
-                table: "Images",
-                column: "SalonId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Logins_UserId",
                 table: "Logins",
                 column: "UserId");
@@ -464,15 +516,17 @@ namespace SmartSalon.Data.Migrations
                 name: "RoleNameIndex",
                 table: "Roles",
                 column: "NormalizedName",
-                unique: true,
-                filter: "[NormalizedName] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Salons_MainPictureId",
+                name: "IX_SalonImages_SalonId",
+                table: "SalonImages",
+                column: "SalonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Salons_CurrencyId",
                 table: "Salons",
-                column: "MainPictureId",
-                unique: true,
-                filter: "[MainPictureId] IS NOT NULL");
+                column: "CurrencyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SalonSpecialties_SalonId",
@@ -520,11 +574,6 @@ namespace SmartSalon.Data.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_ProfilePictureId",
-                table: "Users",
-                column: "ProfilePictureId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Users_SalonId",
                 table: "Users",
                 column: "SalonId");
@@ -540,79 +589,11 @@ namespace SmartSalon.Data.Migrations
                 table: "WorkingTimes",
                 column: "SalonId",
                 unique: true);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Bookings_Salons_SalonId",
-                table: "Bookings",
-                column: "SalonId",
-                principalTable: "Salons",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Bookings_Services_ServiceId",
-                table: "Bookings",
-                column: "ServiceId",
-                principalTable: "Services",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Bookings_Users_CustomerId",
-                table: "Bookings",
-                column: "CustomerId",
-                principalTable: "Users",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Bookings_Users_WorkerId",
-                table: "Bookings",
-                column: "WorkerId",
-                principalTable: "Users",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_CategoryService_Services_ServicesId",
-                table: "CategoryService",
-                column: "ServicesId",
-                principalTable: "Services",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_CustomerSubscription_Subscriptions_SubscriptionsId",
-                table: "CustomerSubscription",
-                column: "SubscriptionsId",
-                principalTable: "Subscriptions",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_CustomerSubscription_Users_ActiveCustomersId",
-                table: "CustomerSubscription",
-                column: "ActiveCustomersId",
-                principalTable: "Users",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Images_Salons_SalonId",
-                table: "Images",
-                column: "SalonId",
-                principalTable: "Salons",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Images_Salons_SalonId",
-                table: "Images");
-
             migrationBuilder.DropTable(
                 name: "Bookings");
 
@@ -627,6 +608,9 @@ namespace SmartSalon.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "OwnerSalon");
+
+            migrationBuilder.DropTable(
+                name: "SalonImages");
 
             migrationBuilder.DropTable(
                 name: "SalonSpecialties");
@@ -665,7 +649,7 @@ namespace SmartSalon.Data.Migrations
                 name: "Salons");
 
             migrationBuilder.DropTable(
-                name: "Images");
+                name: "Currencies");
         }
     }
 }

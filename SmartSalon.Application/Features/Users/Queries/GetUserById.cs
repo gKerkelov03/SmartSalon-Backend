@@ -13,10 +13,7 @@ internal class GetUserByIdQueryHandler(IEfRepository<User> _users)
 {
     public async Task<Result<GetUserByIdQueryResponse>> Handle(GetUserByIdQuery query, CancellationToken cancellationToken)
     {
-        var user = await _users.All
-            .Where(user => user.Id == query.UserId)
-            .Include(user => user.ProfilePicture)
-            .FirstOrDefaultAsync();
+        var user = await _users.GetByIdAsync(query.UserId);
 
         if (user is null)
         {

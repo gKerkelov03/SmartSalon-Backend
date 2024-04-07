@@ -1,4 +1,5 @@
 ﻿using SmartSalon.Application.Domain.Base;
+using SmartSalon.Application.Domain.Salons;
 using SmartSalon.Application.Domain.Users;
 
 namespace SmartSalon.Application.Domain;

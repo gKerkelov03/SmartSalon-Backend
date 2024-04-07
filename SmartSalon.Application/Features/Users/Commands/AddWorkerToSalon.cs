@@ -2,6 +2,7 @@
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.MediatR;
 using SmartSalon.Application.Domain;
+using SmartSalon.Application.Domain.Salons;
 using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Errors;
 using SmartSalon.Application.ResultObject;

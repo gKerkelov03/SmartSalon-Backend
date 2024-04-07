@@ -1,8 +1,8 @@
 ﻿using SmartSalon.Application.Domain.Base;
 
-namespace SmartSalon.Application.Domain;
+namespace SmartSalon.Application.Domain.Salons;
 
-public class Specialty : BaseEntity
+public class SalonSpecialty : BaseEntity
 {
     public required string Text { get; set; }
 

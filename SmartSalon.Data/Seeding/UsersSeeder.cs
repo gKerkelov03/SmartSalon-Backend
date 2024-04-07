@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using SmartSalon.Application.Domain;
 using SmartSalon.Application.Domain.Users;
+using SmartSalon.Application.Domain.Salons;
 
 namespace SmartSalon.Data.Seeding;
 
@@ -57,7 +58,7 @@ internal class UsersSeeder : ISeeder
             Nickname = "Ganio",
             UserName = "gancho@abv.bg",
             Email = "gancho@abv.bg",
-            ProfilePicture = new Image("https://res.cloudinary.com/donhvedgr/image/upload/v1663928763/mlnxqpbwatsjlobnqbwl.jpg")
+            ProfilePictureUrl = "https://res.cloudinary.com/donhvedgr/image/upload/v1663928763/mlnxqpbwatsjlobnqbwl.jpg"
         },
         new()
         {
@@ -68,7 +69,7 @@ internal class UsersSeeder : ISeeder
             Nickname = "Shabi",
             UserName= "shabi@abv.bg",
             Email = "shabi@abv.bg",
-            ProfilePicture = new Image("https://res.cloudinary.com/donhvedgr/image/upload/v1663928319/l9hpu65c6t6mkbaktz3e.jpg")
+            ProfilePictureUrl = "https://res.cloudinary.com/donhvedgr/image/upload/v1663928319/l9hpu65c6t6mkbaktz3e.jpg"
         }
     ];
 
@@ -80,7 +81,7 @@ internal class UsersSeeder : ISeeder
             PhoneNumber = "1234567890",
             UserName= "mladen@abv.bg",
             Email = "mladen@abv.bg",
-            ProfilePicture = new Image("https://res.cloudinary.com/donhvedgr/image/upload/v1663915155/gaxbdvdgfxqklct4ezpm.jpg")
+            ProfilePictureUrl = "https://res.cloudinary.com/donhvedgr/image/upload/v1663915155/gaxbdvdgfxqklct4ezpm.jpg"
         }
     ];
 

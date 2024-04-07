@@ -7,6 +7,7 @@ using System.Reflection;
 using SmartSalon.Application.Extensions;
 using Microsoft.AspNetCore.Identity;
 using SmartSalon.Application.Domain.Users;
+using SmartSalon.Application.Domain.Salons;
 
 namespace SmartSalon.Data;
 
@@ -76,12 +77,12 @@ public class SmartSalonDbContext : IdentityDbContext<User, Role, Id>
     public DbSet<Worker> Workers { get; set; }
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Salon> Salons { get; set; }
+    public DbSet<SalonSpecialty> SalonSpecialties { get; set; }
+    public DbSet<SalonImage> SalonImages { get; set; }
     public DbSet<Service> Services { get; set; }
-    public DbSet<Specialty> SalonSpecialties { get; set; }
     public DbSet<SpecialSlot> SpecialSlots { get; set; }
     public DbSet<Subscription> Subscriptions { get; set; }
     public DbSet<Booking> Bookings { get; set; }
-    public DbSet<Image> Images { get; set; }
     public DbSet<Token> Tokens { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Section> Sections { get; set; }
