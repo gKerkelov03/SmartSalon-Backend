@@ -5,9 +5,8 @@ using SmartSalon.Application.Domain.Users;
 
 namespace SmartSalon.Application.Domain;
 
-public class Token : IBaseEntity
+public class Token : DeletableEntity
 {
-    public Id Id { get; set; }
     public Id UserId { get; set; }
     public virtual User? User { get; set; }
     public TokenType Type { get; set; }

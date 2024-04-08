@@ -22,21 +22,6 @@ namespace SmartSalon.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CategoryService", b =>
-                {
-                    b.Property<Guid>("CategoriesId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ServicesId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("CategoriesId", "ServicesId");
-
-                    b.HasIndex("ServicesId");
-
-                    b.ToTable("CategoryService");
-                });
-
             modelBuilder.Entity("CustomerSubscription", b =>
                 {
                     b.Property<Guid>("ActiveCustomersId")
@@ -115,8 +100,17 @@ namespace SmartSalon.Data.Migrations
                     b.Property<DateOnly>("Date")
                         .HasColumnType("date");
 
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("DeletedOn")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<TimeOnly>("From")
                         .HasColumnType("time");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<Guid>("SalonId")
                         .HasColumnType("uniqueidentifier");
@@ -153,10 +147,15 @@ namespace SmartSalon.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("SalonId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid?>("SectionId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SalonId");
 
                     b.HasIndex("SectionId");
 
@@ -223,6 +222,9 @@ namespace SmartSalon.Data.Migrations
 
                     b.Property<string>("ProfilePictureUrl")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("SectionsEnabled")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("SubscriptionsEnabled")
                         .ValueGeneratedOnAdd()
@@ -360,7 +362,12 @@ namespace SmartSalon.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("SalonId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("SalonId");
 
                     b.ToTable("Sections");
                 });
@@ -369,6 +376,9 @@ namespace SmartSalon.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CategoryId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
@@ -394,6 +404,8 @@ namespace SmartSalon.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("SalonId");
 
@@ -468,6 +480,15 @@ namespace SmartSalon.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("DeletedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
@@ -653,21 +674,6 @@ namespace SmartSalon.Data.Migrations
                     b.HasDiscriminator().HasValue("Worker");
                 });
 
-            modelBuilder.Entity("CategoryService", b =>
-                {
-                    b.HasOne("SmartSalon.Application.Domain.Category", null)
-                        .WithMany()
-                        .HasForeignKey("CategoriesId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("SmartSalon.Application.Domain.Service", null)
-                        .WithMany()
-                        .HasForeignKey("ServicesId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("CustomerSubscription", b =>
                 {
                     b.HasOne("SmartSalon.Application.Domain.Users.Customer", null)
@@ -759,10 +765,20 @@ namespace SmartSalon.Data.Migrations
 
             modelBuilder.Entity("SmartSalon.Application.Domain.Category", b =>
                 {
-                    b.HasOne("SmartSalon.Application.Domain.Section", null)
+                    b.HasOne("SmartSalon.Application.Domain.Salons.Salon", "Salon")
+                        .WithMany("Categories")
+                        .HasForeignKey("SalonId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SmartSalon.Application.Domain.Section", "Section")
                         .WithMany("Categories")
                         .HasForeignKey("SectionId")
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Salon");
+
+                    b.Navigation("Section");
                 });
 
             modelBuilder.Entity("SmartSalon.Application.Domain.Salons.Salon", b =>
@@ -808,8 +824,25 @@ namespace SmartSalon.Data.Migrations
                     b.Navigation("Salon");
                 });
 
+            modelBuilder.Entity("SmartSalon.Application.Domain.Section", b =>
+                {
+                    b.HasOne("SmartSalon.Application.Domain.Salons.Salon", "Salon")
+                        .WithMany("Sections")
+                        .HasForeignKey("SalonId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Salon");
+                });
+
             modelBuilder.Entity("SmartSalon.Application.Domain.Service", b =>
                 {
+                    b.HasOne("SmartSalon.Application.Domain.Category", "Categorie")
+                        .WithMany("Services")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("SmartSalon.Application.Domain.Salons.Salon", "Salon")
                         .WithMany("Services")
                         .HasForeignKey("SalonId")
@@ -820,6 +853,8 @@ namespace SmartSalon.Data.Migrations
                         .WithMany("ServicesIncluded")
                         .HasForeignKey("SubscriptionId")
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Categorie");
 
                     b.Navigation("Salon");
                 });
@@ -872,9 +907,18 @@ namespace SmartSalon.Data.Migrations
                     b.Navigation("Salon");
                 });
 
+            modelBuilder.Entity("SmartSalon.Application.Domain.Category", b =>
+                {
+                    b.Navigation("Services");
+                });
+
             modelBuilder.Entity("SmartSalon.Application.Domain.Salons.Salon", b =>
                 {
+                    b.Navigation("Categories");
+
                     b.Navigation("Images");
+
+                    b.Navigation("Sections");
 
                     b.Navigation("Services");
 

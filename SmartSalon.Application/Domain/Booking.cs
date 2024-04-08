@@ -4,7 +4,7 @@ using SmartSalon.Application.Domain.Users;
 
 namespace SmartSalon.Application.Domain;
 
-public class Booking : BaseEntity
+public class Booking : DeletableEntity
 {
     public DateOnly Date { get; set; }
     public TimeOnly From { get; set; }

@@ -11,5 +11,6 @@ public class Service : BaseEntity
     public required int DurationInMinutes { get; set; }
     public Id SalonId { get; set; }
     public virtual Salon? Salon { get; set; }
-    public virtual ICollection<Category>? Categories { get; set; }
+    public Id CategoryId { get; set; }
+    public virtual Category? Categorie { get; set; }
 }
