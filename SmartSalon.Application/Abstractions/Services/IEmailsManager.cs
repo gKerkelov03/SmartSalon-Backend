@@ -5,5 +5,7 @@ namespace SmartSalon.Application.Abstractions;
 
 public interface IEmailsManager : ISingletonLifetime
 {
-    Task SendConfirmationEmailAsync(string recipientEmail, object model);
+    Task SendEmailConfirmationEmailAsync(string recipientEmail, object model);
+    Task SendWorkerInvitationEmailAsync(string recipientEmail, object model);
+    Task SendOwnerInvitationEmailAsync(string recipientEmail, object model);
 }
