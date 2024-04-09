@@ -1,7 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
+using SmartSalon.Presentation.Web.Attributes;
 
 namespace SmartSalon.Presentation.Web.Controllers;
 
-[ApiVersion("1.0.0")]
+[APIVersion(1)]
 public abstract class V1ApiController : ApiController { }
 

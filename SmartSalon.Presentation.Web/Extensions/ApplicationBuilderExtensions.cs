@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Asp.Versioning.ApiExplorer;
 
 namespace SmartSalon.Presentation.Web.Extensions;
 
@@ -14,11 +14,7 @@ public static class IApplicationBuilderExtensions
         return app.UseExceptionHandler("/Error");
     }
 
-    public static IApplicationBuilder AddSwaggerUI(
-        this IApplicationBuilder app,
-        IWebHostEnvironment environment,
-        IServiceProvider serviceProvider
-    )
+    public static IApplicationBuilder UseSwagger(this IApplicationBuilder app, IWebHostEnvironment environment, IServiceProvider serviceProvider)
     {
         if (!environment.IsDevelopment())
         {

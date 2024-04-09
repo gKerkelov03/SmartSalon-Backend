@@ -19,8 +19,12 @@ builder
 
 builder
     .Services
-    .AddEndpointsApiExplorer()
-    .AddVersionedApiExplorer()
+    .AddApplication(builder.Configuration)
+    .AddIntegrations(builder.Configuration)
+    .ConfigureAllOptions(builder.Configuration)
+
+    .AddVersioning()
+    .AddSwaggerGen()
     .AddExceptionHandler<GlobalExceptionHandler>()
     .AddCors()
     .AddHttpContextAccessor()
@@ -31,13 +35,6 @@ builder
     .RegisterUnconventionalServices()
     .RegisterMapper(applicationLayer, dataLayer, presentationLayer)
 
-    .AddApiVersioning()
-    .AddSwaggerGen()
-
-    .ConfigureAllOptions(builder.Configuration)
-
-    .AddApplication(builder.Configuration)
-    .AddIntegrations(builder.Configuration)
     .AddAuthorization()
     .AddAuthentication()
     .AddJwtBearer();
@@ -46,7 +43,7 @@ var app = builder.Build();
 
 app
     .UseCors()
-    .AddSwaggerUI(app.Environment, app.Services)
+    .UseSwagger(app.Environment, app.Services)
     .UseSerilogRequestLogging()
     .UseHttpsRedirection()
     .UseAuthorization()

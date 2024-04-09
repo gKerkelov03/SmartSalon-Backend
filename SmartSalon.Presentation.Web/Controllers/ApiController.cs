@@ -8,7 +8,7 @@ using SmartSalon.Presentation.Web.Extensions;
 namespace SmartSalon.Presentation.Web.Controllers;
 
 [ApiController]
-[Route("Api/V{version:apiVersion}/[controller]")]
+[Route("Api/V{apiVersion:apiVersion}/[controller]")]
 [FailureResponse(Status401Unauthorized)]
 [FailureResponse(Status400BadRequest)]
 [Authorize]

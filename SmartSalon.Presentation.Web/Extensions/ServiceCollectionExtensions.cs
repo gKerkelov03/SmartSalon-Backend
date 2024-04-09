@@ -30,13 +30,19 @@ public static class ServiceCollectionExtensions
             .ConfigureOptions<IdentityOptionsConfigurator>()
             .ConfigureOptions<JwtBearerOptionsConfigurator>()
 
-            .ConfigureOptions<ApiVersioningOptionsConfigurator>()
             .ConfigureOptions<ApiExplorerOptionsConfigurator>()
+            .ConfigureOptions<ApiVersioningOptionsConfigurator>()
             .ConfigureOptions<SwaggerGenOptionsConfigurator>()
 
             .ConfigureOptions<ApiBehaviorOptionsConfigurator>()
             .ConfigureOptions<MvcOptionsConfigurator>()
             .ConfigureOptions<CorsOptionsConfigurator>();
+
+    public static IServiceCollection AddVersioning(this IServiceCollection services)
+    {
+        services.AddApiVersioning().AddApiExplorer();
+        return services;
+    }
 
     public static IServiceCollection RegisterMapper(this IServiceCollection services, params Assembly[] assemblies)
         => services.AddAutoMapper(expression =>
