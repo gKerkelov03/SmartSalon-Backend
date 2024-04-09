@@ -1,15 +1,16 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SmartSalon.Application.Extensions;
 using SmartSalon.Presentation.Web.Features.Users.Requests;
 using SmartSalon.Application.Features.Users.Commands;
 using SmartSalon.Presentation.Web.Attributes;
 using SmartSalon.Application.Features.Users.Queries;
 using SmartSalon.Presentation.Web.Features.Users.Responses;
+using AutoMapper;
+using SmartSalon.Presentation.Web.Controllers;
 
 namespace SmartSalon.Presentation.Web.Features.Users.Controllers;
 
-public class UsersController(ISender _mediator) : ApiController
+public class UsersController(ISender _mediator, IMapper _mapper) : V1ApiController
 {
     [HttpGet(IdRoute)]
     [SuccessResponse<GetUserByIdResponse>(Status200OK)]
@@ -20,7 +21,7 @@ public class UsersController(ISender _mediator) : ApiController
         var result = await _mediator.Send(query);
 
         return ProblemDetailsOr((result) =>
-            Ok(result.Value.MapTo<GetUserByIdResponse>()),
+            Ok(_mapper.Map<GetUserByIdResponse>(result.Value)),
             result
         );
     }
@@ -30,7 +31,7 @@ public class UsersController(ISender _mediator) : ApiController
     [FailureResponse(Status404NotFound)]
     public async Task<IActionResult> UpdateUser(Id userId, UpdateUserRequest request)
     {
-        var command = request.MapTo<UpdateUserCommand>();
+        var command = _mapper.Map<UpdateUserCommand>(request);
         command.UserId = userId;
 
         var result = await _mediator.Send(command);
@@ -40,9 +41,11 @@ public class UsersController(ISender _mediator) : ApiController
 
     [HttpPatch($"{IdRoute}/ChangePassword")]
     [SuccessResponse(Status200OK)]
-    public async Task<IActionResult> ChangePassword(ChangePasswordRequest request)
+    public async Task<IActionResult> ChangePassword(Id userId, ChangePasswordRequest request)
     {
-        var command = request.MapTo<ChangePasswordCommand>();
+        var command = _mapper.Map<ChangePasswordCommand>(request);
+        command.UserId = userId;
+
         var result = await _mediator.Send(command);
 
         return ProblemDetailsOr<OkResult>(result);
@@ -53,7 +56,7 @@ public class UsersController(ISender _mediator) : ApiController
     [FailureResponse(Status409Conflict)]
     public async Task<IActionResult> ChangeEmail(ChangeEmailRequest request)
     {
-        var command = request.MapTo<ChangeEmailCommand>();
+        var command = _mapper.Map<ChangeEmailCommand>(request);
         var result = await _mediator.Send(command);
 
         return ProblemDetailsOr<OkResult>(result);

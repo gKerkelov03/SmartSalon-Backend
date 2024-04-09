@@ -1,119 +1,124 @@
+using TypeAndInterfacePair = (System.Type Type, System.Type Interface);
+using SourceAndDestinationPair = (System.Type Source, System.Type Destination);
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using SmartSalon.Application.Abstractions.Lifetime;
-using SmartSalon.Application.Domain;
+using SmartSalon.Application.Abstractions.Mapping;
 using SmartSalon.Application.Domain.Users;
-using SmartSalon.Application.Errors;
-using SmartSalon.Application.Extensions;
-using SmartSalon.Application.Mapping;
 using SmartSalon.Application.Options;
-using SmartSalon.Application.ResultObject;
+using SmartSalon.Application.Extensions;
 using SmartSalon.Data;
 using SmartSalon.Data.Seeding;
 using SmartSalon.Presentation.Web.Options;
+using SmartSalon.Presentation.Web.Options.Versioning;
+using SmartSalon.Presentation.Web.Options.Auth;
 
 namespace SmartSalon.Presentation.Web.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection RegisterMappings(this IServiceCollection services, params Assembly[] assemblies)
-        => services.AddSingleton(new MapperFactory().CreateMapper(assemblies));
+    public static IServiceCollection ConfigureAllOptions(this IServiceCollection services, IConfiguration config)
+        => services
+            .Configure<ConnectionStringsOptions>(config.GetSection(ConnectionStringsOptions.SectionName))
+            .Configure<JwtOptions>(config.GetSection(JwtOptions.SectionName))
+            .Configure<EmailsOptions>(config.GetSection(EmailsOptions.SectionName))
+
+            .ConfigureOptions<AuthenticationOptionsConfigurator>()
+            .ConfigureOptions<AuthorizationOptionsConfigurator>()
+            .ConfigureOptions<IdentityOptionsConfigurator>()
+            .ConfigureOptions<JwtBearerOptionsConfigurator>()
+
+            .ConfigureOptions<ApiVersioningOptionsConfigurator>()
+            .ConfigureOptions<ApiExplorerOptionsConfigurator>()
+            .ConfigureOptions<SwaggerGenOptionsConfigurator>()
+
+            .ConfigureOptions<ApiBehaviorOptionsConfigurator>()
+            .ConfigureOptions<MvcOptionsConfigurator>()
+            .ConfigureOptions<CorsOptionsConfigurator>();
+
+    public static IServiceCollection RegisterMapper(this IServiceCollection services, params Assembly[] assemblies)
+        => services.AddAutoMapper(expression =>
+        {
+            var allTypesFromTheAssemblies = assemblies.SelectMany(assembly => assembly.GetExportedTypes());
+
+            expression.CreateProfile
+            (
+                "ReflectionProfile",
+                options =>
+                {
+                    GetFromMapsFrom(allTypesFromTheAssemblies)
+                        .ForEach(map => options.CreateMap(map.Source, map.Destination));
+
+                    GetToMapsFrom(allTypesFromTheAssemblies)
+                        .ForEach(map => options.CreateMap(map.Source, map.Destination));
+
+                    GetCustomMappingsFrom(allTypesFromTheAssemblies)
+                        .ForEach(map => map.CreateMappings(options));
+                }
+            );
+
+            static IEnumerable<TypeAndInterfacePair> GetPairs(IEnumerable<Type> types)
+                => types.SelectMany(
+                    type => type.GetTypeInfo().GetInterfaces(),
+                    (type, @interface) => (Type: type, Interface: @interface)
+                );
+
+            static IEnumerable<TypeAndInterfacePair> GetMaps(IEnumerable<Type> types, Func<TypeAndInterfacePair, bool> predicate)
+                => GetPairs(types)
+                    .Where(pair =>
+                        pair.Interface.GetTypeInfo().IsGenericType &&
+                        pair.Type.IsNotAbsctractOrInterface() &&
+                        predicate(pair)
+                    );
+
+            static IEnumerable<SourceAndDestinationPair> GetFromMapsFrom(IEnumerable<Type> types)
+                => GetMaps(types, pair => pair.Interface.GetGenericTypeDefinition() == typeof(IMapFrom<>))
+                    .Select(pair => (
+                        Source: pair.Interface
+                            .GetTypeInfo()
+                            .GetGenericArguments()[0],
+
+                        Destination: pair.Type
+                    ));
+
+            static IEnumerable<SourceAndDestinationPair> GetToMapsFrom(IEnumerable<Type> types)
+                => GetMaps(types, pair => pair.Interface.GetGenericTypeDefinition() == typeof(IMapTo<>))
+                    .Select(pair => (
+                        Source: pair.Type,
+                        Destination: pair.Interface
+                            .GetTypeInfo()
+                            .GetGenericArguments()[0]
+                    ));
+
+            static IEnumerable<IHaveCustomMappings> GetCustomMappingsFrom(IEnumerable<Type> types)
+                => GetPairs(types)
+                    .Where(pair =>
+                        typeof(IHaveCustomMappings).IsAssignableFrom(pair.Type) &&
+                        pair.Type.IsNotAbsctractOrInterface()
+                    )
+                    .Select(typeAndInterfacePair =>
+                        Activator
+                            .CreateInstance(typeAndInterfacePair.Type)!
+                            .CastTo<IHaveCustomMappings>()
+                    );
+        });
 
     public static IServiceCollection RegisterDbContext(this IServiceCollection services, IConfiguration configuration)
         => services.AddDbContext<SmartSalonDbContext>(
             options => options.UseSqlServer(configuration.GetConnectionString("Sql")));
 
-    public static IServiceCollection RegisterTheOptionsClasses(this IServiceCollection services, IConfiguration config)
-        => services
-            .Configure<ConnectionStringsOptions>(config.GetSection(ConnectionStringsOptions.SectionName))
-            .Configure<JwtOptions>(config.GetSection(JwtOptions.SectionName))
-            .ConfigureOptions<SwaggerGenOptionsConfigurator>();
-
-    public static IServiceCollection AddIdentity(this IServiceCollection services)
+    public static IServiceCollection RegisterIdentityServices(this IServiceCollection services)
     {
         services
-            .AddIdentity<User, Role>(options =>
-            {
-                options.Password.RequireDigit = false;
-                options.Password.RequireLowercase = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequiredLength = 6;
-
-                options.User.RequireUniqueEmail = true;
-            })
+            .AddIdentityCore<User>()
             .AddRoles<Role>()
             .AddEntityFrameworkStores<SmartSalonDbContext>()
             .AddDefaultTokenProviders();
 
         return services;
     }
-
-    public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration config)
-    {
-        var jwtOptions = config.GetSection(JwtOptions.SectionName)?.Get<JwtOptions>();
-        var signingKeyBytes = Encoding.ASCII.GetBytes(jwtOptions!.SecretKey);
-
-        services
-            .AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new()
-                {
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwtOptions!.Issuer,
-                    ValidAudience = jwtOptions!.Audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(signingKeyBytes),
-                    NameClaimType = JwtRegisteredClaimNames.Sub
-                };
-            });
-
-        return services;
-    }
-
-    public static IServiceCollection AddAuthorizationPolicies(this IServiceCollection services)
-        => services.AddAuthorization(options =>
-        {
-            options.AddPolicy(
-                CustomerPolicyName,
-                policy => policy.RequireRole(CustomerRoleName)
-            );
-
-            options.AddPolicy(
-                WorkerPolicyName,
-                policy => policy.RequireRole(WorkerRoleName)
-            );
-
-            options.AddPolicy(
-                OwnerPolicyName,
-                policy => policy.RequireRole(OwnerRoleName)
-            );
-
-            options.AddPolicy(
-                AdminPolicyName,
-                policy => policy.RequireRole(AdminRoleName)
-            );
-        });
-
-    public static IServiceCollection AddCorsPolicies(this IServiceCollection services)
-        => services.AddCors(options => options.AddPolicy(AngularLocalhostCorsPolicyName,
-                policy => policy
-                    .WithOrigins(AngularLocalhostUrl)
-                    .AllowAnyHeader()
-                    .AllowAnyMethod()
-            ));
 
     public static IServiceCollection RegisterConventionalServicesFrom(this IServiceCollection services, params Assembly[] assemblies)
         => services.Scan(types =>
@@ -137,106 +142,7 @@ public static class ServiceCollectionExtensions
         });
 
     public static IServiceCollection RegisterUnconventionalServices(this IServiceCollection services)
-    {
-        return services
+        => services
             .AddSingleton<ISeeder, DatabaseSeeder>()
             .AddSingleton<JwtSecurityTokenHandler>();
-    }
-
-    public static IServiceCollection RegisterInvalidModelStateResponseFactory(this IServiceCollection services)
-    {
-        services
-            .AddControllers()
-            .ConfigureApiBehaviorOptions(options => options.InvalidModelStateResponseFactory = context =>
-                {
-                    var identifierForTheJsonObjectAsAWhole = "$";
-                    var validationErrors = context
-                        .ModelState
-                        .Where(kvp => kvp.Value?.Errors.Count > 0)
-                        .Select(kvp => new
-                        {
-                            PropertyName = kvp.Key,
-                            Errors = kvp.Value!.Errors.Select(error => error.ErrorMessage)
-                        })
-                        .SelectMany(validationViolations =>
-                            validationViolations.Errors.Select(error =>
-                                Error.Validation(validationViolations.PropertyName, error)
-                            )
-                        );
-
-                    var result = Result.Failure(validationErrors);
-                    var requestId = context.HttpContext.TraceIdentifier;
-
-                    if (result.Errors!.Any(error => error.CastTo<ValidationError>().PropertyName == identifierForTheJsonObjectAsAWhole))
-                    {
-                        result = Result.Failure(new Error("Invalid JSON"));
-                    }
-
-                    return new ObjectResult(result.ToProblemDetails(requestId));
-                }
-            );
-
-        return services;
-    }
-
-    public static IServiceCollection RegisterModelBinders(this IServiceCollection services)
-    {
-        services.AddControllers(options =>
-        {
-            options.ModelBinderProviders.Insert(0, new IdModelBinder());
-        });
-
-        return services;
-    }
-
-    public static IServiceCollection AddVersioning(this IServiceCollection services)
-        => services
-            .AddApiVersioning(options =>
-            {
-                options.DefaultApiVersion = new(1, 0);
-                options.AssumeDefaultVersionWhenUnspecified = true;
-                options.ReportApiVersions = true;
-                options.ApiVersionReader = new UrlSegmentApiVersionReader();
-            })
-            .AddVersionedApiExplorer(options =>
-            {
-                //VVV means major.minor.patch => v1.2.3
-                options.GroupNameFormat = "'v'VVV";
-                options.SubstituteApiVersionInUrl = true;
-            });
-
-    public static IServiceCollection AddSwaggerGeneration(this IServiceCollection services)
-        => services.AddSwaggerGen(options =>
-        {
-            var schemeName = "Bearer";
-            var securityScheme = new OpenApiSecurityScheme()
-            {
-                Reference = new()
-                {
-                    Id = schemeName,
-                    Type = ReferenceType.SecurityScheme
-                }
-            };
-
-            options.OperationFilter<HideIdParametersFilter>();
-            options.AddSecurityDefinition(schemeName, new()
-            {
-                Name = "Authorization",
-                Type = SecuritySchemeType.ApiKey,
-                Scheme = schemeName,
-                BearerFormat = "JWT",
-                In = ParameterLocation.Header,
-                Description = $"""
-                    JWT Authorization header using the Bearer scheme.
-                    Enter 'Bearer' [space] and then your token 
-
-                    Example: '{schemeName} 1a2b3c4d5e6f7g'
-                """,
-            });
-
-            options.AddSecurityRequirement(new()
-            {
-                [securityScheme] = []
-            });
-        });
 }

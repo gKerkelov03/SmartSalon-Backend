@@ -14,18 +14,22 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddEmailSending(this IServiceCollection services, IConfiguration config)
     {
         var emailsOptions = config.GetSection(EmailsOptions.SectionName).Get<EmailsOptions>();
-        var senderEmail = "barbers.baybg@gmail.com";
+
+        if (emailsOptions is null)
+        {
+            throw new InvalidOperationException($"The section {EmailsOptions.SectionName} is missing from the settings files");
+        }
 
         services
-            .AddFluentEmail(senderEmail)
+            .AddFluentEmail(emailsOptions.Email)
             .AddRazorRenderer()
             .AddSmtpSender(() =>
                 new()
                 {
-                    Host = emailsOptions!.SmtpHost,
-                    Port = 587,
+                    Host = emailsOptions.Host,
+                    Port = emailsOptions.Port,
                     UseDefaultCredentials = false,
-                    Credentials = new NetworkCredential(senderEmail, emailsOptions!.Password),
+                    Credentials = new NetworkCredential(emailsOptions.Email, emailsOptions.Password),
                     EnableSsl = true,
                     DeliveryMethod = SmtpDeliveryMethod.Network,
                 }

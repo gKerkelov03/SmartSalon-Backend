@@ -4,13 +4,15 @@
         "Redis": "localhost:6379"
     },
     "Jwt": {
-        "SecretKey": "Some magic horses from tu sofia generated this string",
-        "Issuer": "SmartSalon",
-        "Audience": "some string that will be changed"
+        "SecretKey": "Some magic horses generated this string",
+        "Issuer": "SmartSalon-Backend",
+        "Audience": "SmartSalon-Frontend"
     },
     "Emails": {
-        "SmtpHost": "smtp.gmail.com",
-        "Password": "dngd roit xigx pmmk"
+        "Email": "barbers.baybg@gmail.com",
+        "Password": "dngd roit xigx pmmk",
+        "Host": "smtp.gmail.com",
+        "Port": "587"
     },
     "Serilog": {
         "Using": ["Serilog.Sinks.Seq", "Serilog.Sinks.Console"],

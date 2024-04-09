@@ -1,4 +1,5 @@
-﻿using SmartSalon.Application.Abstractions;
+﻿using AutoMapper;
+using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.MediatR;
 using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Errors;
@@ -24,7 +25,7 @@ public class CreateWorkerCommandResponse
     public CreateWorkerCommandResponse(Id createdWorkerId) => CreatedWorkerId = createdWorkerId;
 }
 
-internal class CreateWorkerCommandHandler(IEfRepository<User> _users, IUnitOfWork _unitOfWork)
+internal class CreateWorkerCommandHandler(IEfRepository<User> _users, IUnitOfWork _unitOfWork, IMapper _mapper)
     : ICommandHandler<CreateWorkerCommand, CreateWorkerCommandResponse>
 {
     public async Task<Result<CreateWorkerCommandResponse>> Handle(CreateWorkerCommand command, CancellationToken cancellationToken)
@@ -36,7 +37,7 @@ internal class CreateWorkerCommandHandler(IEfRepository<User> _users, IUnitOfWor
             return Error.Conflict;
         }
 
-        var worker = command.MapTo<Worker>();
+        var worker = _mapper.Map<Worker>(command);
         worker.UserName = command.Email;
 
         await _users.AddAsync(worker);

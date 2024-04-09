@@ -1,22 +1,24 @@
+using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SmartSalon.Application.Extensions;
 using SmartSalon.Application.Features.Users.Commands;
 using SmartSalon.Application.Features.Users.Queries;
 using SmartSalon.Presentation.Web.Attributes;
+using SmartSalon.Presentation.Web.Controllers;
 using SmartSalon.Presentation.Web.Features.Users.Requests;
 using SmartSalon.Presentation.Web.Features.Users.Responses;
 
 namespace SmartSalon.Presentation.Web.Features.Users.Controllers;
 
-public class OwnersController(ISender _mediator) : ApiController
+public class OwnersController(ISender _mediator, IMapper _mapper) : V1ApiController
 {
     [HttpPost]
     [SuccessResponse(Status201Created)]
     [FailureResponse(Status409Conflict)]
     public async Task<IActionResult> CreateOwner(CreateOwnerRequest request)
     {
-        var command = request.MapTo<CreateOwnerCommand>();
+        var command = _mapper.Map<CreateOwnerCommand>(request);
         var result = await _mediator.Send(command);
 
         return ProblemDetailsOr(result =>
@@ -34,7 +36,7 @@ public class OwnersController(ISender _mediator) : ApiController
         var result = await _mediator.Send(query);
 
         return ProblemDetailsOr(result =>
-            Ok(result.Value.ToListOf<GetOwnerByIdResponse>()),
+            Ok(result.Value.ToListOf<GetOwnerByIdResponse>(_mapper)),
             result
         );
     }
@@ -48,7 +50,7 @@ public class OwnersController(ISender _mediator) : ApiController
         var result = await _mediator.Send(query);
 
         return ProblemDetailsOr(result =>
-            Ok(result.Value.MapTo<GetOwnerByIdResponse>()),
+            Ok(_mapper.Map<GetOwnerByIdResponse>(result.Value)),
             result
         );
     }
@@ -57,7 +59,7 @@ public class OwnersController(ISender _mediator) : ApiController
     [SuccessResponse(Status204NoContent)]
     public async Task<IActionResult> RemoveOwnerFromSalon(RemoveOwnerFromSalonRequest request)
     {
-        var command = request.MapTo<RemoveOwnerFromSalonCommand>();
+        var command = _mapper.Map<RemoveOwnerFromSalonCommand>(request);
         var result = await _mediator.Send(command);
 
         return ProblemDetailsOr<NoContentResult>(result);
@@ -67,7 +69,7 @@ public class OwnersController(ISender _mediator) : ApiController
     [SuccessResponse(Status200OK)]
     public async Task<IActionResult> AddOwnerToSalon(AddOwnerToSalonRequest request)
     {
-        var command = request.MapTo<AddOwnerToSalonCommand>();
+        var command = _mapper.Map<AddOwnerToSalonCommand>(request);
         var result = await _mediator.Send(command);
 
         return ProblemDetailsOr<OkResult>(result);

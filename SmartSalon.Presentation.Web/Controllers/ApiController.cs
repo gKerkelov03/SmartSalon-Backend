@@ -1,18 +1,18 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartSalon.Application.Extensions;
 using SmartSalon.Application.ResultObject;
 using SmartSalon.Presentation.Web.Attributes;
 using SmartSalon.Presentation.Web.Extensions;
 
-namespace SmartSalon.Presentation.Web.Features;
+namespace SmartSalon.Presentation.Web.Controllers;
 
 [ApiController]
-[ApiVersion("1.0")]
 [Route("Api/V{version:apiVersion}/[controller]")]
 [FailureResponse(Status401Unauthorized)]
 [FailureResponse(Status400BadRequest)]
-// [Authorize]
-public abstract class ApiController() : ControllerBase
+[Authorize]
+public abstract class ApiController : ControllerBase
 {
     protected IActionResult CreatedAndLocatedAt(string controllerName, string actionName, Id createdResourceId, object? response = null)
         => CreatedAtAction(

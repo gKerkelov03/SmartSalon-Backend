@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.Mapping;
 using SmartSalon.Application.Domain.Users;
@@ -26,7 +27,7 @@ public class GetWorkerByIdQueryResponse : IMapFrom<Worker>
     public required string FirstName { get; set; }
 }
 
-internal class GetWorkerByIdQueryHandler(IEfRepository<Worker> _workers)
+internal class GetWorkerByIdQueryHandler(IEfRepository<Worker> _workers, IMapper _mapper)
     : IQueryHandler<GetWorkerByIdQuery, GetWorkerByIdQueryResponse>
 {
     public async Task<Result<GetWorkerByIdQueryResponse>> Handle(GetWorkerByIdQuery query, CancellationToken cancellationToken)
@@ -38,6 +39,6 @@ internal class GetWorkerByIdQueryHandler(IEfRepository<Worker> _workers)
             return Error.NotFound;
         }
 
-        return worker.MapTo<GetWorkerByIdQueryResponse>();
+        return _mapper.Map<GetWorkerByIdQueryResponse>(worker);
     }
 }

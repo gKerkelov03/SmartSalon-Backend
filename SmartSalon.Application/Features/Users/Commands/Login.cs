@@ -1,8 +1,10 @@
 ﻿global using UsersManager = Microsoft.AspNetCore.Identity.UserManager<SmartSalon.Application.Domain.Users.User>;
-using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.MediatR;
 using SmartSalon.Application.Errors;
 using SmartSalon.Application.ResultObject;
+using SmartSalon.Application.Abstractions;
+using SmartSalon.Application.Domain.Users;
+using Microsoft.AspNetCore.Identity;
 
 namespace SmartSalon.Application.Features.Users.Commands;
 
@@ -23,6 +25,7 @@ internal class LoginCommandHandler(UsersManager _usersManager, IJwtTokensGenerat
     public async Task<Result<LoginCommandResponse>> Handle(LoginCommand command, CancellationToken cancellationToken)
     {
         var user = await _usersManager.FindByEmailAsync(command.Email);
+
         var isPasswordCorrect = await _usersManager.CheckPasswordAsync(user!, command.Password);
 
         if (!isPasswordCorrect)
@@ -35,7 +38,8 @@ internal class LoginCommandHandler(UsersManager _usersManager, IJwtTokensGenerat
             return Error.NotFound;
         }
 
-        var jwt = _jwtGenerator.GenerateFor(user.Id);
+        var roles = await _usersManager.GetRolesAsync(user);
+        var jwt = _jwtGenerator.GenerateJwt(user.Id, roles);
 
         return new LoginCommandResponse { JwtToken = jwt };
     }

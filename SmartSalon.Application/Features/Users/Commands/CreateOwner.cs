@@ -1,8 +1,8 @@
-﻿using SmartSalon.Application.Abstractions;
+﻿using AutoMapper;
+using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.MediatR;
 using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Errors;
-using SmartSalon.Application.Extensions;
 using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Users.Commands;
@@ -21,7 +21,7 @@ public class CreateOwnerCommandResponse
     public Id CreatedOwnerId { get; set; }
 }
 
-internal class CreateOwnerCommandHandler(IEfRepository<User> _users, IUnitOfWork _unitOfWork)
+internal class CreateOwnerCommandHandler(IEfRepository<User> _users, IUnitOfWork _unitOfWork, IMapper _mapper)
     : ICommandHandler<CreateOwnerCommand, CreateOwnerCommandResponse>
 {
     public async Task<Result<CreateOwnerCommandResponse>> Handle(CreateOwnerCommand command, CancellationToken cancellationToken)
@@ -33,7 +33,7 @@ internal class CreateOwnerCommandHandler(IEfRepository<User> _users, IUnitOfWork
             return Error.Conflict;
         }
 
-        var owner = command.MapTo<Owner>();
+        var owner = _mapper.Map<Owner>(command);
         owner.UserName = command.Email;
 
         await _users.AddAsync(owner);

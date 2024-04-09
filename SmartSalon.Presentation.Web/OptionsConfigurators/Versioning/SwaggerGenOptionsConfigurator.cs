@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace SmartSalon.Presentation.Web.Options;
+namespace SmartSalon.Presentation.Web.Options.Versioning;
 
 public class SwaggerGenOptionsConfigurator : IConfigureOptions<SwaggerGenOptions>
 {
@@ -14,6 +14,38 @@ public class SwaggerGenOptionsConfigurator : IConfigureOptions<SwaggerGenOptions
 
     public void Configure(SwaggerGenOptions options)
     {
+        var schemeName = "Bearer";
+        var scheme = new OpenApiSecurityScheme()
+        {
+            Reference = new()
+            {
+                Id = schemeName,
+                Type = ReferenceType.SecurityScheme
+            }
+        };
+
+        options.OperationFilter<HideIdParametersFilter>();
+
+        options.AddSecurityDefinition(schemeName, new()
+        {
+            Name = "Authorization",
+            Type = SecuritySchemeType.ApiKey,
+            Scheme = schemeName,
+            BearerFormat = "JWT",
+            In = ParameterLocation.Header,
+            Description = $"""
+                JWT Authorization header using the Bearer scheme.
+                Enter 'Bearer' [space] and then your token 
+
+                Example: '{schemeName} 1a2b3c4d5e6f7g'
+            """,
+        });
+
+        options.AddSecurityRequirement(new()
+        {
+            [scheme] = []
+        });
+
         foreach (var versionDescription in _apiVersionsInfo.ApiVersionDescriptions)
         {
             options.SwaggerDoc(versionDescription.GroupName, GenerateVersionInfo(versionDescription));
@@ -24,7 +56,7 @@ public class SwaggerGenOptionsConfigurator : IConfigureOptions<SwaggerGenOptions
     {
         var info = new OpenApiInfo()
         {
-            Title = SystemName,
+            Title = $"SmartSalon {versionDescription.GroupName}",
             Version = versionDescription.ApiVersion.ToString()
         };
 

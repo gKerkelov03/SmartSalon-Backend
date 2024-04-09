@@ -13,14 +13,7 @@ public class UnitOfWork(SmartSalonDbContext _dbContext, ICurrentUserAccessor _cu
 
     public Task<int> SaveAsync(CancellationToken cancellationToken = default)
     {
-        //TODO:fix this 
-        // if (_currentUser.Id is null)
-        // {
-        //     throw new InvalidOperationException("Current user's id is null when it shouldn't be!");
-        // }
-
-        var userIdNonNullable = new Id("ec05c91b-b11d-41a6-e732-08dc549969d9");//think _currentUser.Id.CastTo<Id>();
-        ApplyAuditInfoRules(_dbContext.ChangeTracker, userIdNonNullable);
+        ApplyAuditInfoRules(_dbContext.ChangeTracker, _currentUser.Id);
 
         return _dbContext.SaveChangesAsync(cancellationToken);
     }

@@ -54,5 +54,13 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder
             .Property(user => user.PasswordHash)
             .IsRequired();
+
+        builder
+            .Property(user => user.SecurityStamp)
+            .IsRequired();
+
+        builder
+            .Property(user => user.ConcurrencyStamp)
+            .IsRequired();
     }
 }

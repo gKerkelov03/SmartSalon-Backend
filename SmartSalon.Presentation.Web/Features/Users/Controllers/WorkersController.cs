@@ -3,23 +3,24 @@ using Microsoft.AspNetCore.Mvc;
 using SmartSalon.Presentation.Web.Features.Users.Requests;
 using SmartSalon.Application.Extensions;
 using SmartSalon.Presentation.Web.Features.Users.Responses;
-using SmartSalon.Presentation.Web.Features;
 using SmartSalon.Application.Features.Users.Commands;
 using SmartSalon.Presentation.Web.Attributes;
 using SmartSalon.Presentation.Web.Users.Requests;
 using SmartSalon.Application.Features.Users.Queries;
 using SmartSalon.Application.Features.Workers.Commands;
+using AutoMapper;
+using SmartSalon.Presentation.Web.Controllers;
 
 namespace SmartSalon.Presentation.Web.Users.Controllers;
 
-public class WorkersController(ISender _mediator) : ApiController
+public class WorkersController(ISender _mediator, IMapper _mapper) : V1ApiController
 {
     [HttpPost]
     [SuccessResponse(Status201Created)]
     [FailureResponse(Status409Conflict)]
     public async Task<IActionResult> CreateWorker(CreateWorkerRequest request)
     {
-        var command = request.MapTo<CreateWorkerCommand>();
+        var command = _mapper.Map<CreateWorkerCommand>(request);
         var result = await _mediator.Send(command);
 
         return ProblemDetailsOr(result =>
@@ -37,7 +38,7 @@ public class WorkersController(ISender _mediator) : ApiController
         var result = await _mediator.Send(query);
 
         return ProblemDetailsOr(result =>
-            Ok(result.Value.ToListOf<GetWorkerByIdResponse>()),
+            Ok(result.Value.ToListOf<GetWorkerByIdResponse>(_mapper)),
             result
         );
     }
@@ -51,7 +52,7 @@ public class WorkersController(ISender _mediator) : ApiController
         var result = await _mediator.Send(query);
 
         return ProblemDetailsOr(result =>
-            Ok(result.Value.MapTo<GetWorkerByIdResponse>()),
+            Ok(_mapper.Map<GetWorkerByIdResponse>(result.Value)),
             result
         );
     }
@@ -61,7 +62,7 @@ public class WorkersController(ISender _mediator) : ApiController
     [FailureResponse(Status409Conflict)]
     public async Task<IActionResult> UpdateWorker(Id workerId, UpdateWorkerRequest request)
     {
-        var command = request.MapTo<UpdateWorkerCommand>();
+        var command = _mapper.Map<UpdateWorkerCommand>(request);
         command.WorkerId = workerId;
 
         var result = await _mediator.Send(command);
@@ -83,7 +84,7 @@ public class WorkersController(ISender _mediator) : ApiController
     [SuccessResponse(Status200OK)]
     public async Task<IActionResult> AddWorkerToSalon(AddWorkerToSalonRequest request)
     {
-        var command = request.MapTo<AddWorkerToSalonCommand>();
+        var command = _mapper.Map<AddWorkerToSalonCommand>(request);
         var result = await _mediator.Send(command);
 
         return ProblemDetailsOr<OkResult>(result);

@@ -1,14 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.Mapping;
 using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Errors;
-using SmartSalon.Application.Extensions;
 using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Users.Queries;
 
-internal class GetUserByIdQueryHandler(IEfRepository<User> _users)
+internal class GetUserByIdQueryHandler(IEfRepository<User> _users, IMapper _mapper)
     : IQueryHandler<GetUserByIdQuery, GetUserByIdQueryResponse>
 {
     public async Task<Result<GetUserByIdQueryResponse>> Handle(GetUserByIdQuery query, CancellationToken cancellationToken)
@@ -20,7 +19,7 @@ internal class GetUserByIdQueryHandler(IEfRepository<User> _users)
             return Error.NotFound;
         }
 
-        return user.MapTo<GetUserByIdQueryResponse>();
+        return _mapper.Map<GetUserByIdQueryResponse>(user);
     }
 }
 

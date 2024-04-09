@@ -1,4 +1,5 @@
-﻿using SmartSalon.Application.Abstractions;
+﻿using AutoMapper;
+using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Errors;
 using SmartSalon.Application.Extensions;
@@ -22,7 +23,7 @@ public class GetOwnerByIdQueryResponse
     public required string PictureUrl { get; set; }
 }
 
-internal class GetOwnerByIdQueryHandler(IEfRepository<Owner> _workers)
+internal class GetOwnerByIdQueryHandler(IEfRepository<Owner> _workers, IMapper _mapper)
     : IQueryHandler<GetOwnerByIdQuery, GetOwnerByIdQueryResponse>
 {
     public async Task<Result<GetOwnerByIdQueryResponse>> Handle(GetOwnerByIdQuery query, CancellationToken cancellationToken)
@@ -34,6 +35,6 @@ internal class GetOwnerByIdQueryHandler(IEfRepository<Owner> _workers)
             return Error.NotFound;
         }
 
-        return worker.MapTo<GetOwnerByIdQueryResponse>();
+        return _mapper.Map<GetOwnerByIdQueryResponse>(worker);
     }
 }

@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
-using SmartSalon.Application.Domain;
 using SmartSalon.Application.Domain.Users;
-using SmartSalon.Application.Domain.Salons;
 
 namespace SmartSalon.Data.Seeding;
 

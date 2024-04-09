@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Errors;
@@ -14,7 +15,7 @@ public class SearchForOwnerQuery : IQuery<IEnumerable<GetOwnerByIdQueryResponse>
     public SearchForOwnerQuery(string searchTerm) => this.searchTerm = searchTerm;
 }
 
-internal class SearchForOwnerQueryHandler(IEfRepository<Owner> _owners)
+internal class SearchForOwnerQueryHandler(IEfRepository<Owner> _owners, IMapper _mapper)
     : IQueryHandler<SearchForOwnerQuery, IEnumerable<GetOwnerByIdQueryResponse>>
 {
     public async Task<Result<IEnumerable<GetOwnerByIdQueryResponse>>> Handle(SearchForOwnerQuery query, CancellationToken cancellationToken)
@@ -30,6 +31,6 @@ internal class SearchForOwnerQueryHandler(IEfRepository<Owner> _owners)
             return Error.NotFound;
         }
 
-        return ownersMatchingTheSearchTerm.ToListOf<GetOwnerByIdQueryResponse>();
+        return ownersMatchingTheSearchTerm.ToListOf<GetOwnerByIdQueryResponse>(_mapper);
     }
 }

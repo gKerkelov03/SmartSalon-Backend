@@ -19,24 +19,28 @@ builder
 
 builder
     .Services
-    .AddVersioning()
     .AddEndpointsApiExplorer()
+    .AddVersionedApiExplorer()
     .AddExceptionHandler<GlobalExceptionHandler>()
-    .AddIdentity()
-    .AddJwtAuthentication(builder.Configuration)
-    .AddAuthorizationPolicies()
-    .AddApplication(builder.Configuration)
-    .AddIntegrations(builder.Configuration)
-    .AddCorsPolicies()
+    .AddCors()
     .AddHttpContextAccessor()
+
     .RegisterDbContext(builder.Configuration)
-    .RegisterTheOptionsClasses(builder.Configuration)
+    .RegisterIdentityServices()
     .RegisterConventionalServicesFrom(applicationLayer, dataLayer, integrationsLayer)
     .RegisterUnconventionalServices()
-    .RegisterMappings(applicationLayer, dataLayer, presentationLayer)
-    .RegisterInvalidModelStateResponseFactory()
-    .RegisterModelBinders()
-    .AddSwaggerGeneration();
+    .RegisterMapper(applicationLayer, dataLayer, presentationLayer)
+
+    .AddApiVersioning()
+    .AddSwaggerGen()
+
+    .ConfigureAllOptions(builder.Configuration)
+
+    .AddApplication(builder.Configuration)
+    .AddIntegrations(builder.Configuration)
+    .AddAuthorization()
+    .AddAuthentication()
+    .AddJwtBearer();
 
 var app = builder.Build();
 

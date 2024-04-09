@@ -1,4 +1,5 @@
-﻿using SmartSalon.Application.Abstractions.Mapping;
+﻿using AutoMapper;
+using SmartSalon.Application.Abstractions.Mapping;
 using SmartSalon.Application.Abstractions.MediatR;
 using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Errors;
@@ -24,7 +25,7 @@ public class RegisterCommandResponse
     public RegisterCommandResponse(Id id) => RegisteredUserId = id;
 }
 
-internal class RegisterCommandHandler(UsersManager _users)
+internal class RegisterCommandHandler(UsersManager _users, IMapper _mapper)
     : ICommandHandler<RegisterCommand, RegisterCommandResponse>
 {
     public async Task<Result<RegisterCommandResponse>> Handle(RegisterCommand command, CancellationToken cancellationToken)
@@ -36,7 +37,7 @@ internal class RegisterCommandHandler(UsersManager _users)
             return Error.Conflict;
         }
 
-        var customer = command.MapTo<Customer>();
+        var customer = _mapper.Map<Customer>(command);
         customer.UserName = command.Email;
 
         var identityResult = await _users.CreateAsync(customer, command.Password);
