@@ -21,7 +21,7 @@ builder
     .Services
     .AddApplication(builder.Configuration)
     .AddIntegrations(builder.Configuration)
-    .ConfigureAllOptions(builder.Configuration)
+    .ConfigureAllOptionsClasses(builder.Configuration, applicationLayer)
 
     .AddVersioning()
     .AddSwaggerGen()
@@ -31,7 +31,7 @@ builder
 
     .RegisterDbContext(builder.Configuration)
     .RegisterIdentityServices()
-    .RegisterConventionalServicesFrom(presentationLayer, applicationLayer, dataLayer, integrationsLayer)
+    .RegisterConventionalServices(presentationLayer, applicationLayer, dataLayer, integrationsLayer)
     .RegisterUnconventionalServices()
     .RegisterMapper(applicationLayer, dataLayer, presentationLayer)
 

@@ -7,20 +7,41 @@ using Microsoft.EntityFrameworkCore;
 using SmartSalon.Application.Abstractions.Lifetime;
 using SmartSalon.Application.Abstractions.Mapping;
 using SmartSalon.Application.Domain.Users;
-using SmartSalon.Application.Options;
 using SmartSalon.Application.Extensions;
 using SmartSalon.Data;
 using SmartSalon.Data.Seeding;
 
 namespace SmartSalon.Presentation.Web.Extensions;
 
-public static class ServiceCollectionExtensions
+public static partial class ServiceCollectionExtensions
 {
-    public static IServiceCollection ConfigureAllOptions(this IServiceCollection services, IConfiguration config)
-        => services
-            .Configure<ConnectionStringsOptions>(config.GetSection(ConnectionStringsOptions.SectionName))
-            .Configure<JwtOptions>(config.GetSection(JwtOptions.SectionName))
-            .Configure<EmailsOptions>(config.GetSection(EmailsOptions.SectionName));
+    public static IServiceCollection ConfigureAllOptionsClasses(this IServiceCollection services, IConfiguration config, params Assembly[] assemblies)
+    {
+        var optionsTypes = assemblies
+            .SelectMany(assembly => assembly.GetExportedTypes())
+            .Where(type => type.Name.EndsWith("Options") && type.IsNotAbsctractOrInterface());
+
+        var optionsExtensionType = typeof(OptionsConfigurationServiceCollectionExtensions);
+        var configureMethod = optionsExtensionType.GetMethods()
+            .Where(m => m.Name == "Configure" && m.IsGenericMethod && m.GetParameters().Length == 2)
+            .FirstOrDefault();
+
+        foreach (var optionType in optionsTypes)
+        {
+            var configure = configureMethod!.MakeGenericMethod(optionType);
+            var sectionField = optionType.GetField("SectionName", BindingFlags.Static | BindingFlags.Public);
+
+            if (sectionField is null)
+            {
+                throw new InvalidOperationException("Every Options class needs to end with Options and to have a public static not empty field SectionName");
+            }
+
+            var sectionName = sectionField.GetValue(null)!.CastTo<string>();
+            configure.Invoke(null, [services, config.GetSection(sectionName)]);
+        }
+
+        return services;
+    }
 
     public static IServiceCollection AddVersioning(this IServiceCollection services)
     {
@@ -100,7 +121,7 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection RegisterConventionalServicesFrom(this IServiceCollection services, params Assembly[] assemblies)
+    public static IServiceCollection RegisterConventionalServices(this IServiceCollection services, params Assembly[] assemblies)
         => services.Scan(types =>
         {
             var allTypes = types.FromAssemblies(assemblies);

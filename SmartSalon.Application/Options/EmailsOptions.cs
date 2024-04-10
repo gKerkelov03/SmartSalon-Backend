@@ -1,8 +1,9 @@
+
 namespace SmartSalon.Application.Options;
 
 public class EmailsOptions
 {
-    public const string SectionName = "Emails";
+    public static string SectionName = "Emails";
     public required string Email { get; set; }
     public required string Password { get; set; }
     public required string Host { get; set; }

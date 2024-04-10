@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace SmartSalon.Presentation.Web.Features.Users.Controllers;
 
-public class UsersController(ISender _mediator, IMapper _mapper) : V2ApiController
+public class UsersController(ISender _mediator, IMapper _mapper) : V1ApiController
 {
     [HttpGet(IdRoute)]
     [SuccessResponse<GetUserByIdResponse>(Status200OK)]
