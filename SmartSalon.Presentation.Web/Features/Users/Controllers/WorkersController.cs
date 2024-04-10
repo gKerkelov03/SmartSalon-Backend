@@ -10,6 +10,7 @@ using SmartSalon.Application.Features.Users.Queries;
 using SmartSalon.Application.Features.Workers.Commands;
 using AutoMapper;
 using SmartSalon.Presentation.Web.Controllers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SmartSalon.Presentation.Web.Users.Controllers;
 
@@ -18,6 +19,7 @@ public class WorkersController(ISender _mediator, IMapper _mapper) : V1ApiContro
     [HttpPost]
     [SuccessResponse(Status201Created)]
     [FailureResponse(Status409Conflict)]
+    [Authorize(Policy = IsOwnerOrAdminPolicy)]
     public async Task<IActionResult> CreateWorker(CreateWorkerRequest request)
     {
         var command = _mapper.Map<CreateWorkerCommand>(request);
@@ -32,6 +34,7 @@ public class WorkersController(ISender _mediator, IMapper _mapper) : V1ApiContro
     [HttpGet("Search")]
     [SuccessResponse(Status200OK)]
     [FailureResponse(Status404NotFound)]
+    [Authorize(Policy = IsOwnerOrAdminPolicy)]
     public async Task<IActionResult> SearchForUnemployedWorker(string searchTerm)
     {
         var query = new SearchForUnemployedWorkerQuery(searchTerm);
@@ -60,6 +63,7 @@ public class WorkersController(ISender _mediator, IMapper _mapper) : V1ApiContro
     [HttpPatch(IdRoute)]
     [SuccessResponse(Status200OK)]
     [FailureResponse(Status409Conflict)]
+    [Authorize(Policy = IsOwnerOfTheSalonOfTheWorkerOrIsTheWorkerPolicy)]
     public async Task<IActionResult> UpdateWorker(Id workerId, UpdateWorkerRequest request)
     {
         var command = _mapper.Map<UpdateWorkerCommand>(request);
@@ -72,6 +76,7 @@ public class WorkersController(ISender _mediator, IMapper _mapper) : V1ApiContro
 
     [HttpPatch("RemoveFromSalon")]
     [SuccessResponse(Status204NoContent)]
+    [Authorize(Policy = IsOwnerOfTheSalonOfTheWorkerOrIsTheWorkerPolicy)]
     public async Task<IActionResult> RemoveWorkerFromSalon(Id workerId)
     {
         var command = new RemoveWorkerFromSalonCommand(workerId);
@@ -82,6 +87,7 @@ public class WorkersController(ISender _mediator, IMapper _mapper) : V1ApiContro
 
     [HttpPatch("AddToSalon")]
     [SuccessResponse(Status200OK)]
+    [Authorize(Policy = IsOwnerOrAdminPolicy)]
     public async Task<IActionResult> AddWorkerToSalon(AddWorkerToSalonRequest request)
     {
         var command = _mapper.Map<AddWorkerToSalonCommand>(request);

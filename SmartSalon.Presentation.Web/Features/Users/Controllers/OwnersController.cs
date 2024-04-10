@@ -1,5 +1,6 @@
 using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartSalon.Application.Extensions;
 using SmartSalon.Application.Features.Users.Commands;
@@ -16,6 +17,8 @@ public class OwnersController(ISender _mediator, IMapper _mapper) : V1ApiControl
     [HttpPost]
     [SuccessResponse(Status201Created)]
     [FailureResponse(Status409Conflict)]
+    [Authorize(Policy = IsAdminPolicy)]
+
     public async Task<IActionResult> CreateOwner(CreateOwnerRequest request)
     {
         var command = _mapper.Map<CreateOwnerCommand>(request);
@@ -30,6 +33,7 @@ public class OwnersController(ISender _mediator, IMapper _mapper) : V1ApiControl
     [HttpGet("Search")]
     [SuccessResponse(Status200OK)]
     [FailureResponse(Status404NotFound)]
+    [Authorize(Policy = IsOwnerOrAdminPolicy)]
     public async Task<IActionResult> SearchForOwner(string searchTerm)
     {
         var query = new SearchForOwnerQuery(searchTerm);
@@ -57,6 +61,7 @@ public class OwnersController(ISender _mediator, IMapper _mapper) : V1ApiControl
 
     [HttpPatch("RemoveFromSalon")]
     [SuccessResponse(Status204NoContent)]
+    [Authorize(Policy = IsTheSameUserOrAdminPolicy)]
     public async Task<IActionResult> RemoveOwnerFromSalon(RemoveOwnerFromSalonRequest request)
     {
         var command = _mapper.Map<RemoveOwnerFromSalonCommand>(request);
@@ -67,6 +72,7 @@ public class OwnersController(ISender _mediator, IMapper _mapper) : V1ApiControl
 
     [HttpPatch("AddToSalon")]
     [SuccessResponse(Status200OK)]
+    [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]
     public async Task<IActionResult> AddOwnerToSalon(AddOwnerToSalonRequest request)
     {
         var command = _mapper.Map<AddOwnerToSalonCommand>(request);
