@@ -11,9 +11,6 @@ using SmartSalon.Application.Options;
 using SmartSalon.Application.Extensions;
 using SmartSalon.Data;
 using SmartSalon.Data.Seeding;
-using SmartSalon.Presentation.Web.Options;
-using SmartSalon.Presentation.Web.Options.Versioning;
-using SmartSalon.Presentation.Web.Options.Auth;
 
 namespace SmartSalon.Presentation.Web.Extensions;
 
@@ -23,20 +20,7 @@ public static class ServiceCollectionExtensions
         => services
             .Configure<ConnectionStringsOptions>(config.GetSection(ConnectionStringsOptions.SectionName))
             .Configure<JwtOptions>(config.GetSection(JwtOptions.SectionName))
-            .Configure<EmailsOptions>(config.GetSection(EmailsOptions.SectionName))
-
-            .ConfigureOptions<AuthenticationOptionsConfigurator>()
-            .ConfigureOptions<AuthorizationOptionsConfigurator>()
-            .ConfigureOptions<IdentityOptionsConfigurator>()
-            .ConfigureOptions<JwtBearerOptionsConfigurator>()
-
-            .ConfigureOptions<ApiExplorerOptionsConfigurator>()
-            .ConfigureOptions<ApiVersioningOptionsConfigurator>()
-            .ConfigureOptions<SwaggerGenOptionsConfigurator>()
-
-            .ConfigureOptions<ApiBehaviorOptionsConfigurator>()
-            .ConfigureOptions<MvcOptionsConfigurator>()
-            .ConfigureOptions<CorsOptionsConfigurator>();
+            .Configure<EmailsOptions>(config.GetSection(EmailsOptions.SectionName));
 
     public static IServiceCollection AddVersioning(this IServiceCollection services)
     {
@@ -49,8 +33,7 @@ public static class ServiceCollectionExtensions
         {
             var allTypesFromTheAssemblies = assemblies.SelectMany(assembly => assembly.GetExportedTypes());
 
-            expression.CreateProfile
-            (
+            expression.CreateProfile(
                 "ReflectionProfile",
                 options =>
                 {
@@ -82,10 +65,7 @@ public static class ServiceCollectionExtensions
             static IEnumerable<SourceAndDestinationPair> GetFromMapsFrom(IEnumerable<Type> types)
                 => GetMaps(types, pair => pair.Interface.GetGenericTypeDefinition() == typeof(IMapFrom<>))
                     .Select(pair => (
-                        Source: pair.Interface
-                            .GetTypeInfo()
-                            .GetGenericArguments()[0],
-
+                        Source: pair.Interface.GetTypeInfo().GetGenericArguments()[0],
                         Destination: pair.Type
                     ));
 
@@ -93,10 +73,8 @@ public static class ServiceCollectionExtensions
                 => GetMaps(types, pair => pair.Interface.GetGenericTypeDefinition() == typeof(IMapTo<>))
                     .Select(pair => (
                         Source: pair.Type,
-                        Destination: pair.Interface
-                            .GetTypeInfo()
-                            .GetGenericArguments()[0]
-                    ));
+                        Destination: pair.Interface.GetTypeInfo().GetGenericArguments()[0])
+                    );
 
             static IEnumerable<IHaveCustomMappings> GetCustomMappingsFrom(IEnumerable<Type> types)
                 => GetPairs(types)
@@ -104,11 +82,7 @@ public static class ServiceCollectionExtensions
                         typeof(IHaveCustomMappings).IsAssignableFrom(pair.Type) &&
                         pair.Type.IsNotAbsctractOrInterface()
                     )
-                    .Select(typeAndInterfacePair =>
-                        Activator
-                            .CreateInstance(typeAndInterfacePair.Type)!
-                            .CastTo<IHaveCustomMappings>()
-                    );
+                    .Select(typeAndInterfacePair => Activator.CreateInstance(typeAndInterfacePair.Type)!.CastTo<IHaveCustomMappings>());
         });
 
     public static IServiceCollection RegisterDbContext(this IServiceCollection services, IConfiguration configuration)

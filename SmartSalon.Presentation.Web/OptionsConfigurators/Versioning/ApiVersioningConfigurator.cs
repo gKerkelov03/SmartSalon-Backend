@@ -1,9 +1,10 @@
 ﻿using Asp.Versioning;
 using Microsoft.Extensions.Options;
+using SmartSalon.Application.Abstractions.Lifetime;
 
 namespace SmartSalon.Presentation.Web.Options.Versioning;
 
-public class ApiVersioningOptionsConfigurator : IConfigureOptions<ApiVersioningOptions>
+public class ApiVersioningOptionsConfigurator : IConfigureOptions<ApiVersioningOptions>, ISingletonLifetime
 {
     public void Configure(ApiVersioningOptions options)
     {

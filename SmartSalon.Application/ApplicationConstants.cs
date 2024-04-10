@@ -35,6 +35,7 @@ public static class ApplicationConstants
             public const int MaxUserNameLength = 50;
             public const int MaxPhoneNumberLength = 30;
             public const int MaxEmailLength = 50;
+            public const int MinPasswordLength = 6;
         }
 
         public static class Worker

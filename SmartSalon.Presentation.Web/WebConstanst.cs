@@ -2,15 +2,15 @@ namespace SmartSalon.Presentation.Web;
 
 internal static class WebConstants
 {
+    public const string IdRoute = "{Id}";
     public const string SettingsFilesFolderName = "Settings";
 
-    public const string CustomerPolicyName = "customer-role-policy";
-
-    public const string WorkerPolicyName = "worker-role-policy";
-
-    public const string OwnerPolicyName = "owner-role-policy";
-
-    public const string AdminPolicyName = "admin-role-policy";
-
-    public const string IdRoute = "{Id}";
+    internal static class PolicyNames
+    {
+        public const string IsAdminPolicy = nameof(IsOwnerOrAdminPolicy);
+        public const string IsOwnerOrAdminPolicy = nameof(IsOwnerOrAdminPolicy);
+        public const string IsTheSameUserOrAdminPolicy = nameof(IsTheSameUserOrAdminPolicy);
+        public const string IsOwnerOfTheSalonOfTheWorkerOrIsTheWorkerPolicy = nameof(IsOwnerOfTheSalonOfTheWorkerOrIsTheWorkerPolicy);
+        public const string IsOwnerOfTheSalonOrIsAdminPolicy = nameof(IsOwnerOfTheSalonOrIsAdminPolicy);
+    }
 }

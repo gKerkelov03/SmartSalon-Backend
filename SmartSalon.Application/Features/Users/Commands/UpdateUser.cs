@@ -22,6 +22,12 @@ internal class UpdateCommandHandler(UsersManager _users)
     public async Task<Result> Handle(UpdateUserCommand command, CancellationToken cancellationToken)
     {
         var user = await _users.FindByIdAsync(command.UserId.ToString());
+
+        if (user is null)
+        {
+            return Error.NotFound;
+        }
+
         user.MapAgainst(command);
         var identityResult = await _users.UpdateAsync(user);
 

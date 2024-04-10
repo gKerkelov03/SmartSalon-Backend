@@ -25,6 +25,7 @@
     <ItemGroup>
         <Using Include="SmartSalon.Application.ApplicationConstants" Static="True" />
         <Using Include="SmartSalon.Presentation.Web.WebConstants" Static="True" />
+        <Using Include="SmartSalon.Presentation.Web.WebConstants.PolicyNames" Static="True" />
         <Using Include="Microsoft.AspNetCore.Http.StatusCodes" Static="True" />
         <Using Include="System.Guid" Alias="Id" />
         <Using Remove="Microsoft.AspNetCore.Http" />

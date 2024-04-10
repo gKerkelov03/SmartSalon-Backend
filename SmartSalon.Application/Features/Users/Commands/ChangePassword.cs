@@ -18,11 +18,6 @@ internal class ChangePasswordCommandHandler(UsersManager _usersManager, ICurrent
 {
     public async Task<Result> Handle(ChangePasswordCommand command, CancellationToken cancellationToken)
     {
-        if (_currentUser.Id != command.UserId)
-        {
-            return Error.Unauthorized;
-        }
-
         var user = await _usersManager.FindByIdAsync(command.UserId.ToString());
 
         if (user is null)

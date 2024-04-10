@@ -13,7 +13,7 @@ public class JwtTokensGenerator(JwtSecurityTokenHandler _jwtHelper, IOptions<Jwt
     public string GenerateJwt(Id userId, IEnumerable<string> roles)
     {
         var jwtOptions = _jwtOptions.Value;
-        var signingKeyBytes = Encoding.UTF8.GetBytes(jwtOptions.SecretKey);
+        var signingKeyBytes = Encoding.UTF8.GetBytes(jwtOptions.EncryptionKey);
         var expirationTime = _timeProvider.GetUtcNow().AddDays(jwtOptions.TokenExpirationInDays);
 
         var token = new JwtSecurityToken(

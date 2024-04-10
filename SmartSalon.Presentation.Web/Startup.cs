@@ -31,7 +31,7 @@ builder
 
     .RegisterDbContext(builder.Configuration)
     .RegisterIdentityServices()
-    .RegisterConventionalServicesFrom(applicationLayer, dataLayer, integrationsLayer)
+    .RegisterConventionalServicesFrom(presentationLayer, applicationLayer, dataLayer, integrationsLayer)
     .RegisterUnconventionalServices()
     .RegisterMapper(applicationLayer, dataLayer, presentationLayer)
 

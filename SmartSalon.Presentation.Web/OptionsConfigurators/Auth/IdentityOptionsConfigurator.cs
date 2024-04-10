@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using SmartSalon.Application.Abstractions.Lifetime;
 
 namespace SmartSalon.Presentation.Web.Options.Auth;
 
-public class IdentityOptionsConfigurator : IConfigureOptions<IdentityOptions>
+public class IdentityOptionsConfigurator : IConfigureOptions<IdentityOptions>, ISingletonLifetime
 {
     public void Configure(IdentityOptions options)
     {
@@ -19,8 +20,5 @@ public class IdentityOptionsConfigurator : IConfigureOptions<IdentityOptions>
         options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
         options.Lockout.MaxFailedAccessAttempts = 10;
         options.Lockout.AllowedForNewUsers = true;
-        // PasswordResetTokenProvider
-        // ChangeEmailTokenProvider
-        // EmailConfirmationTokenProvider
     }
 }

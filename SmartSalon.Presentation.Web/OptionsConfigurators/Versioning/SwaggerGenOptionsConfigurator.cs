@@ -1,11 +1,12 @@
 ﻿using Asp.Versioning.ApiExplorer;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using SmartSalon.Application.Abstractions.Lifetime;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace SmartSalon.Presentation.Web.Options.Versioning;
 
-public class SwaggerGenOptionsConfigurator : IConfigureOptions<SwaggerGenOptions>
+public class SwaggerGenOptionsConfigurator : IConfigureOptions<SwaggerGenOptions>, ISingletonLifetime
 {
     private readonly IApiVersionDescriptionProvider _apiVersionsInfo;
 
@@ -25,6 +26,7 @@ public class SwaggerGenOptionsConfigurator : IConfigureOptions<SwaggerGenOptions
         };
 
         options.OperationFilter<HideIdParametersFilter>();
+        // options.OperationFilter<ShowUuidInsteadOfStringForIdsFilter>();
 
         options.AddSecurityDefinition(schemeName, new()
         {

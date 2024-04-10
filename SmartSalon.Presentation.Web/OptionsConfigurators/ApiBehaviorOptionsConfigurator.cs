@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using SmartSalon.Application.Abstractions.Lifetime;
 using SmartSalon.Application.Errors;
 using SmartSalon.Application.Extensions;
 using SmartSalon.Application.ResultObject;
@@ -7,7 +8,7 @@ using SmartSalon.Presentation.Web.Extensions;
 
 namespace SmartSalon.Presentation.Web.Options;
 
-public class ApiBehaviorOptionsConfigurator : IConfigureOptions<ApiBehaviorOptions>
+public class ApiBehaviorOptionsConfigurator : IConfigureOptions<ApiBehaviorOptions>, ISingletonLifetime
 {
     public void Configure(ApiBehaviorOptions options) => options.InvalidModelStateResponseFactory = context =>
     {

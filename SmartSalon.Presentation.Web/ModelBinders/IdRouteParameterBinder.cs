@@ -24,7 +24,8 @@ public class IdModelBinder : IModelBinder, IModelBinderProvider
             return Task.CompletedTask;
         }
 
-        bindingContext.Result = ModelBindingResult.Success(passedValueForId.ToId());
+        Guid.TryParse(passedValueForId, out var id);
+        bindingContext.Result = ModelBindingResult.Success(id);
 
         return Task.CompletedTask;
     }

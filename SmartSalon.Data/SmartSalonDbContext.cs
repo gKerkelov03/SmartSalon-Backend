@@ -84,7 +84,6 @@ public class SmartSalonDbContext : IdentityDbContext<User, Role, Id>
     public DbSet<SpecialSlot> SpecialSlots { get; set; }
     public DbSet<Subscription> Subscriptions { get; set; }
     public DbSet<Booking> Bookings { get; set; }
-    public DbSet<Token> Tokens { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Section> Sections { get; set; }
     public DbSet<SalonWorkingTime> WorkingTimes { get; set; }
