@@ -24,18 +24,6 @@ public class AuthController(ISender _mediator, IMapper _mapper) : V1ApiControlle
         );
     }
 
-    [HttpPost("Logout")]
-    public async Task<IActionResult> Logout()
-    {
-        return new OkResult();
-        // var result = await _mediator.Send();
-
-        // return ProblemDetailsOr(result =>
-        //     Ok(result.Value.MapTo<LoginResponse>()),
-        //     result
-        // );
-    }
-
     [HttpPost("Register")]
     [AllowAnonymous]
     public async Task<IActionResult> Register(RegisterRequest request)

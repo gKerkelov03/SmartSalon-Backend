@@ -6,6 +6,17 @@
     xmlns:v="urn:schemas-microsoft-com:vml"
 >
     <head>
+        <script>
+            function onButtonClick() {
+                fetch(`@Model.BackendEndpointUrl?token=@Model.Token`)
+                    .then(
+                        (response) =>
+                            (window.location.href =
+                                '@Model.FrontendRedirectUrl')
+                    )
+                    .catch((error) => console.error('Error occured'));
+            }
+        </script>
         <title></title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
@@ -275,7 +286,7 @@
                                                                         >
                                                                             <span
                                                                                 >Hello
-                                                                                @Model.Name
+                                                                                @Model.UserFirstName
                                                                                 you
                                                                                 have
                                                                                 successfully
@@ -341,7 +352,7 @@
 <center style="color:#ffffff; font-family:Arial, sans-serif; font-size:16px">
 <!
                                                                         [endif]--><a
-                                                                            href="https://www.example.com"
+                                                                            onclick="onButtonClick()"
                                                                             style="
                                                                                 text-decoration: none;
                                                                                 display: inline-block;

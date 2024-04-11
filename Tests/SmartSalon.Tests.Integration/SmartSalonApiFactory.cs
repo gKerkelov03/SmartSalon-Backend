@@ -7,7 +7,7 @@ using SmartSalon.Data;
 using Xunit;
 using Testcontainers.MsSql;
 using Microsoft.EntityFrameworkCore;
-using SmartSalon.Presentation.Web.Features;
+using SmartSalon.Presentation.Web.Controllers;
 
 namespace SmartSalon.Tests.Integration;
 

@@ -1,11 +1,26 @@
 
 using SmartSalon.Application.Abstractions.Lifetime;
+using SmartSalon.Application.Models.Emails;
 
-namespace SmartSalon.Application.Abstractions;
+namespace SmartSalon.Application.Abstractions.Services;
 
 public interface IEmailsManager : ISingletonLifetime
 {
-    Task SendEmailConfirmationEmailAsync(string recipientEmail, object model);
-    Task SendWorkerInvitationEmailAsync(string recipientEmail, object model);
-    Task SendOwnerInvitationEmailAsync(string recipientEmail, object model);
+    Task SendEmailConfirmationEmailAsync(
+        string recipientEmail,
+        EmailConfirmationEmailEncryptionModel encryptionModel,
+        EmailConfirmationEmailViewModel viewModel
+    );
+
+    Task SendWorkerInvitationEmailAsync(
+        string recipientEmail,
+        WorkerInvitationEmailEncryptionModel encryptionModel,
+        WorkerInvitationEmailViewModel viewModel
+    );
+
+    Task SendOwnerInvitationEmailAsync(
+        string recipientEmail,
+        OwnerInvitationEmailEncryptionModel encryptionModel,
+        OwnerInvitationEmailViewModel viewModel
+    );
 }

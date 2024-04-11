@@ -9,4 +9,5 @@ public class AddWorkerToSalonRequest : IMapTo<AddWorkerToSalonCommand>
     public Id SalonId { get; set; }
     public required string Nickname { get; set; }
     public required string JobTitle { get; set; }
+    public required string Token { get; set; }
 }

@@ -8,6 +8,7 @@ using SmartSalon.Presentation.Web.Features.Users.Responses;
 using AutoMapper;
 using SmartSalon.Presentation.Web.Controllers;
 using Microsoft.AspNetCore.Authorization;
+using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Presentation.Web.Features.Users.Controllers;
 
@@ -90,5 +91,30 @@ public class UsersController(ISender _mediator, IMapper _mapper) : V1ApiControll
         var result = await _mediator.Send(command);
 
         return ProblemDetailsOr<NoContentResult>(result);
+    }
+
+    [HttpPost($"{IdRoute}/SendEmailConfirmationEmail")]
+    [SuccessResponse(Status200OK)]
+    [FailureResponse(Status409Conflict)]
+    [Authorize(Policy = IsTheSameUserOrAdminPolicy)]
+    public async Task<IActionResult> SendEmailConfirmationEmail(SendEmailConfirmationEmailRequest request)
+    {
+        var command = _mapper.Map<SendEmailConfirmationEmailCommand>(request);
+
+        var result = await _mediator.Send(command);
+
+        return ProblemDetailsOr<OkResult>(result);
+    }
+
+    [HttpPost("ConfirmEmail")]
+    [SuccessResponse(Status200OK)]
+    [FailureResponse(Status409Conflict)]
+    [Authorize(Policy = IsTheSameUserOrAdminPolicy)]
+    public async Task<IActionResult> ConfirmEmail(string token)
+    {
+        var command = new ConfirmEmailCommand(token);
+        var result = await _mediator.Send(command);
+
+        return ProblemDetailsOr<OkResult>(result);
     }
 }
