@@ -2,16 +2,13 @@
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Errors;
-using SmartSalon.Application.Extensions;
 using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Users.Queries;
 
-public class GetOwnerByIdQuery : IQuery<GetOwnerByIdQueryResponse>
+public class GetOwnerByIdQuery(Id ownerId) : IQuery<GetOwnerByIdQueryResponse>
 {
-    public Id OwnerId { get; set; }
-
-    public GetOwnerByIdQuery(Id ownerId) => OwnerId = ownerId;
+    public Id OwnerId => ownerId;
 }
 
 public class GetOwnerByIdQueryResponse

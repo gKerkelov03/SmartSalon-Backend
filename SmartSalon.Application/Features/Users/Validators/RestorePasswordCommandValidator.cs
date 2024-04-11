@@ -1,23 +1,19 @@
 using FluentValidation;
-using SmartSalon.Application.Features.Users.Commands;
+using SmartSalon.Application.Extensions;
 using static SmartSalon.Application.ApplicationConstants.Validation.User;
 
 namespace SmartSalon.Application.Validators;
 
-internal class LoginCommandValidator : AbstractValidator<LoginCommand>
+internal class RestorePasswordCommandValidator : AbstractValidator<RestorePasswordCommand>
 {
-    public LoginCommandValidator()
+    public RestorePasswordCommandValidator()
     {
-        RuleFor(command => command.Password)
+        RuleFor(command => command.UserId).MustBeValidGuid();
+        RuleFor(command => command.NewPassword)
             .MinimumLength(MinPasswordLength)
             .Must(password => password.Any(char.IsUpper))
             .Must(password => password.Any(char.IsLower))
             .Must(password => password.Any(char.IsDigit))
             .Must(password => password.Any(char.IsSymbol));
-
-        RuleFor(command => command.Email)
-            .NotEmpty()
-            .EmailAddress()
-            .MaximumLength(MaxEmailLength);
     }
 }

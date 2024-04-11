@@ -7,11 +7,9 @@ using SmartSalon.Application.Features.Users.Commands;
 using SmartSalon.Presentation.Web.Attributes;
 using SmartSalon.Presentation.Web.Users.Requests;
 using SmartSalon.Application.Features.Users.Queries;
-using SmartSalon.Application.Features.Workers.Commands;
 using AutoMapper;
 using SmartSalon.Presentation.Web.Controllers;
 using Microsoft.AspNetCore.Authorization;
-using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Presentation.Web.Users.Controllers;
 

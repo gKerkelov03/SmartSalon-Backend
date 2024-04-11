@@ -11,7 +11,6 @@ namespace SmartSalon.Application.Features.Users.Commands;
 public class SendEmailConfirmationEmailCommand : ICommand
 {
     public required Id UserId { get; set; }
-    public required string Token { get; set; }
 }
 
 public class SendEmailConfirmationEmailHandler(

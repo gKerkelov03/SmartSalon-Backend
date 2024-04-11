@@ -3,8 +3,6 @@ using SmartSalon.Application.Abstractions.MediatR;
 using SmartSalon.Application.Errors;
 using SmartSalon.Application.ResultObject;
 using SmartSalon.Application.Abstractions;
-using SmartSalon.Application.Domain.Users;
-using Microsoft.AspNetCore.Identity;
 
 namespace SmartSalon.Application.Features.Users.Commands;
 

@@ -3,7 +3,6 @@ using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.MediatR;
 using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Errors;
-using SmartSalon.Application.Extensions;
 using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Users.Commands;
@@ -13,6 +12,7 @@ public class CreateWorkerCommand : ICommand<CreateWorkerCommandResponse>
     public required string FirstName { get; set; }
     public required string LastName { get; set; }
     public required string Nickname { get; set; }
+    public required string PhoneNumber { get; set; }
     public required string JobTitle { get; set; }
     public required string Email { get; set; }
     public required string Password { get; set; }

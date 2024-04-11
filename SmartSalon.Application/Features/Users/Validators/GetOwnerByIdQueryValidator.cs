@@ -4,10 +4,10 @@ using SmartSalon.Application.Features.Users.Queries;
 
 namespace SmartSalon.Application.Validators;
 
-internal class GetUserByIdQueryValidator : AbstractValidator<GetUserByIdQuery>
+internal class GetOwnerByIdQueryValidator : AbstractValidator<GetOwnerByIdQuery>
 {
-    public GetUserByIdQueryValidator()
+    public GetOwnerByIdQueryValidator()
     {
-        RuleFor(query => query.UserId).MustBeValidGuid();
+        RuleFor(query => query.OwnerId).MustBeValidGuid();
     }
 }

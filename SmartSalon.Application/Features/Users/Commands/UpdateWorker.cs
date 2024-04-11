@@ -6,7 +6,7 @@ using SmartSalon.Application.Errors;
 using SmartSalon.Application.Extensions;
 using SmartSalon.Application.ResultObject;
 
-namespace SmartSalon.Application.Features.Workers.Commands;
+namespace SmartSalon.Application.Features.Users.Commands;
 
 public class UpdateWorkerCommand : ICommand, IMapTo<Worker>
 {

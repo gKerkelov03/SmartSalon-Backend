@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using SmartSalon.Application.Abstractions;
+using SmartSalon.Application.Abstractions.Mapping;
 using SmartSalon.Application.Abstractions.MediatR;
 using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Errors;
@@ -7,11 +8,13 @@ using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Users.Commands;
 
-public class CreateOwnerCommand : ICommand<CreateOwnerCommandResponse>
+public class CreateOwnerCommand : ICommand<CreateOwnerCommandResponse>, IMapTo<Owner>
 {
     public Id SalonId { get; set; }
     public required string FirstName { get; set; }
     public required string LastName { get; set; }
+    public required string PhoneNumber { get; set; }
+    public required string ProfilePictureUrl { get; set; }
     public required string Email { get; set; }
     public required string Password { get; set; }
 }

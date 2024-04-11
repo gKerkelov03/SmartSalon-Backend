@@ -1,5 +1,5 @@
 using SmartSalon.Application.Abstractions.Mapping;
-using SmartSalon.Application.Features.Workers.Commands;
+using SmartSalon.Application.Features.Users.Commands;
 
 namespace SmartSalon.Presentation.Web.Users.Requests;
 
