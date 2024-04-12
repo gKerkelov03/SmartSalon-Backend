@@ -23,4 +23,10 @@ public interface IEmailsManager : ISingletonLifetime
         OwnerInvitationEmailEncryptionModel encryptionModel,
         OwnerInvitationEmailViewModel viewModel
     );
+
+    Task SendRestorePasswordEmailAsync(
+        string recipientEmail,
+        RestorePasswordEmailEncryptionModel encryptionModel,
+        RestorePasswordEmailViewModel viewModel
+    );
 }

@@ -62,7 +62,7 @@ public class UsersController(ISender _mediator, IMapper _mapper) : V1ApiControll
         return ProblemDetailsOr<OkResult>(result);
     }
 
-    [HttpPatch($"{IdRoute}/ResetPassword")]
+    [HttpPatch($"RestorePassword")]
     [SuccessResponse(Status200OK)]
     [AllowAnonymous]
     public async Task<IActionResult> RestorePassword(RestorePasswordRequest request)

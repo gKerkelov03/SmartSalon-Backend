@@ -89,6 +89,28 @@ public class EmailsManager(
         await SendEmailAsync(recipientEmail, subject, template, extendedViewModel);
     }
 
+    public async Task SendRestorePasswordEmailAsync(
+        string recipientEmail,
+        RestorePasswordEmailEncryptionModel encryptionModel,
+        RestorePasswordEmailViewModel viewModel
+    )
+    {
+        var templateName = "invite-owner.html";
+        var template = File.ReadAllText(Path.Combine(_templatesFolder, templateName));
+        var subject = "Join a salon invitation";
+        var frontendRedirectUrl = $"{_hostingOptions.Value.FrontendUrl}/public/reset-password";
+
+        var token = _encryptionHelper.Encrypt(encryptionModel, _emailsOptions.Value.EncryptionKey);
+        var extendedViewModel = new
+        {
+            viewModel.UserFirstName,
+            Token = token,
+            FrontendRedirectUrl = frontendRedirectUrl,
+        };
+
+        await SendEmailAsync(recipientEmail, subject, template, extendedViewModel);
+    }
+
     private async Task SendEmailAsync(string recipientEmail, string subject, string template, object viewModel)
         => await _emailSender
             .To(recipientEmail)

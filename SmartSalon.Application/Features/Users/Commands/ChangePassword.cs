@@ -1,7 +1,9 @@
 ﻿using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.MediatR;
+using SmartSalon.Application.Abstractions.Services;
 using SmartSalon.Application.Errors;
 using SmartSalon.Application.Extensions;
+using SmartSalon.Application.Models.Emails;
 using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Users.Commands;
@@ -13,7 +15,7 @@ public class ChangePasswordCommand : ICommand
     public required string NewPassword { get; set; }
 }
 
-internal class ChangePasswordCommandHandler(UsersManager _usersManager, ICurrentUserAccessor _currentUser)
+internal class ChangePasswordCommandHandler(UsersManager _usersManager, ICurrentUserAccessor _currentUser, IEmailsManager _emailsManager)
     : ICommandHandler<ChangePasswordCommand>
 {
     public async Task<Result> Handle(ChangePasswordCommand command, CancellationToken cancellationToken)
@@ -32,6 +34,17 @@ internal class ChangePasswordCommandHandler(UsersManager _usersManager, ICurrent
             return new Error(identityResult.ErrorDescription());
         }
 
+        var encryptionModel = new RestorePasswordEmailEncryptionModel
+        {
+            UserId = user.Id
+        };
+
+        var viewModel = new RestorePasswordEmailViewModel
+        {
+            UserFirstName = user.FirstName
+        };
+
+        await _emailsManager.SendRestorePasswordEmailAsync(user.Email!, encryptionModel, viewModel);
         return Result.Success();
     }
 }
