@@ -1,12 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
 
 namespace SmartSalon.Presentation.Web.Attributes;
 
 [AttributeUsage(AttributeTargets.Property)]
-public class IdRouteParameterAttribute : ApiExplorerSettingsAttribute
+public class IdRouteParameterAttribute : Attribute
 {
-    public IdRouteParameterAttribute()
-    {
-        this.IgnoreApi = true;
-    }
 }

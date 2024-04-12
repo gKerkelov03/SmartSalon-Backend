@@ -63,11 +63,9 @@ public class WorkersController(ISender _mediator, IMapper _mapper) : V1ApiContro
     [SuccessResponse(Status200OK)]
     [FailureResponse(Status409Conflict)]
     [Authorize(Policy = IsOwnerOfTheSalonOfTheWorkerOrIsTheWorkerPolicy)]
-    public async Task<IActionResult> UpdateWorker(Id workerId, UpdateWorkerRequest request)
+    public async Task<IActionResult> UpdateWorker(UpdateWorkerRequest request)
     {
         var command = _mapper.Map<UpdateWorkerCommand>(request);
-        command.WorkerId = workerId;
-
         var result = await _mediator.Send(command);
 
         return ProblemDetailsOr<OkResult>(result);

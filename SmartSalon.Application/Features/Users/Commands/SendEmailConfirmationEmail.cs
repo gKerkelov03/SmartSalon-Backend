@@ -5,7 +5,6 @@ using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Errors;
 using SmartSalon.Application.Models.Emails;
 using SmartSalon.Application.ResultObject;
-
 namespace SmartSalon.Application.Features.Users.Commands;
 
 public class SendEmailConfirmationEmailCommand : ICommand
