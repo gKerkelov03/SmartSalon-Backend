@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using SmartSalon.Application.Extensions;
 
-public class IdModelBinder : IModelBinder, IModelBinderProvider
+public class IdBinder : IModelBinder, IModelBinderProvider
 {
     public Task BindModelAsync(ModelBindingContext bindingContext)
     {
@@ -14,23 +14,30 @@ public class IdModelBinder : IModelBinder, IModelBinderProvider
             .First()
             !.Name;
 
-        var actionParameterContainsIdInItsName =
+        var containsIdInItsName =
             actionParameterName.Contains(IdRouteParameterName) ||
             actionParameterName == IdRouteParameterName.ToLower();
 
-        if (string.IsNullOrEmpty(passedValueForId) || !actionParameterContainsIdInItsName)
+        if (string.IsNullOrEmpty(passedValueForId) || !containsIdInItsName)
         {
             bindingContext.Result = ModelBindingResult.Failed();
             return Task.CompletedTask;
         }
 
-        Guid.TryParse(passedValueForId, out var id);
-        bindingContext.Result = ModelBindingResult.Success(id);
+        var isValidGuid = Guid.TryParse(passedValueForId, out var id);
+
+        if (!isValidGuid)
+        {
+            bindingContext.Result = ModelBindingResult.Failed();
+        }
+        else
+        {
+            bindingContext.Result = ModelBindingResult.Success(id);
+        }
 
         return Task.CompletedTask;
     }
 
     public IModelBinder? GetBinder(ModelBinderProviderContext context)
         => context.Metadata.ModelType == typeof(Id) ? this : null;
-
 }

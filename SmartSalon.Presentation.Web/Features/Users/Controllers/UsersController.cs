@@ -8,7 +8,6 @@ using SmartSalon.Presentation.Web.Features.Users.Responses;
 using AutoMapper;
 using SmartSalon.Presentation.Web.Controllers;
 using Microsoft.AspNetCore.Authorization;
-using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Presentation.Web.Features.Users.Controllers;
 
@@ -32,11 +31,9 @@ public class UsersController(ISender _mediator, IMapper _mapper) : V1ApiControll
     [SuccessResponse(Status200OK)]
     [FailureResponse(Status404NotFound)]
     [Authorize(Policy = IsTheSameUserOrAdminPolicy)]
-    public async Task<IActionResult> UpdateUser(Id userId, UpdateUserRequest request)
+    public async Task<IActionResult> UpdateUser(UpdateUserRequest request)
     {
         var command = _mapper.Map<UpdateUserCommand>(request);
-        command.UserId = userId;
-
         var result = await _mediator.Send(command);
 
         return ProblemDetailsOr<OkResult>(result);

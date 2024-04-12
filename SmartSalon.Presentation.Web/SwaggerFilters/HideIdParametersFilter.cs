@@ -1,6 +1,8 @@
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
+namespace SmartSalon.Presentation.Web.SwaggerFilters;
+
 public class HideIdParametersFilter : IOperationFilter
 {
     public void Apply(OpenApiOperation operation, OperationFilterContext context)

@@ -9,6 +9,7 @@ public class AuthorizationOptionsConfigurator : IConfigureOptions<AuthorizationO
 {
     public void Configure(AuthorizationOptions options)
     {
+        //TODO: make it register the policies with reflection
         options.AddPolicy(
             IsAdminPolicy,
             policy => policy.AddRequirements(new IsAdminRequirement())

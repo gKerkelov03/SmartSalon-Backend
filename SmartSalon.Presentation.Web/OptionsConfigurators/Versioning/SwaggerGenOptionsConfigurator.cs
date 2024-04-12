@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using SmartSalon.Application.Abstractions.Lifetime;
+using SmartSalon.Application.Extensions;
+using SmartSalon.Presentation.Web.SwaggerFilters;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace SmartSalon.Presentation.Web.Options.Versioning;
@@ -25,9 +27,6 @@ public class SwaggerGenOptionsConfigurator : IConfigureOptions<SwaggerGenOptions
             }
         };
 
-        options.OperationFilter<HideIdParametersFilter>();
-        // options.OperationFilter<ShowUuidInsteadOfStringForIdsFilter>();
-
         options.AddSecurityDefinition(schemeName, new()
         {
             Name = "Authorization",
@@ -45,13 +44,15 @@ public class SwaggerGenOptionsConfigurator : IConfigureOptions<SwaggerGenOptions
 
         options.AddSecurityRequirement(new()
         {
-            [scheme] = []
+            [scheme] = Array.Empty<string>()
         });
 
         foreach (var versionDescription in _apiVersionsInfo.ApiVersionDescriptions)
         {
             options.SwaggerDoc(versionDescription.GroupName, GenerateVersionInfo(versionDescription));
         }
+
+        RegisterAllFilters(options);
     }
 
     private OpenApiInfo GenerateVersionInfo(ApiVersionDescription versionDescription)
@@ -68,5 +69,32 @@ public class SwaggerGenOptionsConfigurator : IConfigureOptions<SwaggerGenOptions
         }
 
         return info;
+    }
+
+    private void RegisterAllFilters(SwaggerGenOptions options)
+    {
+        var allTypes = typeof(WebConstants).Assembly.GetTypes();
+
+        var operationFilterTypes = allTypes
+            .Where(type => typeof(IOperationFilter).IsAssignableFrom(type) && type.IsNotAbsctractOrInterface());
+        var schemaFilterTypes = allTypes
+            .Where(type => typeof(ISchemaFilter).IsAssignableFrom(type) && type.IsNotAbsctractOrInterface());
+
+        var operationFiltersRegistrationMethod = typeof(SwaggerGenOptionsExtensions)
+            .GetMethod(nameof(SwaggerGenOptionsExtensions.OperationFilter))!;
+        var schemaFiltersRegistrationMethod = typeof(SwaggerGenOptionsExtensions)
+            .GetMethod(nameof(SwaggerGenOptionsExtensions.SchemaFilter))!;
+
+        foreach (var operationFilter in operationFilterTypes)
+        {
+            var genericMethod = operationFiltersRegistrationMethod.MakeGenericMethod(operationFilter);
+            genericMethod.Invoke(null, [options, Array.Empty<object>()]);
+        }
+
+        foreach (var schemaFilter in schemaFilterTypes)
+        {
+            var genericMethod = schemaFiltersRegistrationMethod.MakeGenericMethod(schemaFilter);
+            genericMethod.Invoke(null, [options, Array.Empty<object>()]);
+        }
     }
 }

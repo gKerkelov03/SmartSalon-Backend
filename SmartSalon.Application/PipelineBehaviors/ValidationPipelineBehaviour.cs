@@ -34,8 +34,6 @@ internal class ValidationPipelineBehavior<TRequest, TResponse>(IEnumerable<IVali
         where TResult : IResult
     {
         var tResult = typeof(TResult);
-        var factoryMethod = nameof(Result.Failure);
-        var factoryMethodParameter = new[] { typeof(IEnumerable<Error>) };
 
         if (tResult == typeof(Result))
         {
@@ -47,7 +45,7 @@ internal class ValidationPipelineBehavior<TRequest, TResponse>(IEnumerable<IVali
         if (tResult == genericResult)
         {
             return genericResult
-                .GetMethod(factoryMethod, factoryMethodParameter)
+                .GetMethod(nameof(Result.Failure), [typeof(IEnumerable<Error>)])
                 !.Invoke(null, [errors])
                 !.CastTo<TResult>();
         }
