@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newtonsoft.Json;
 using SmartSalon.Application.Extensions;
 using SmartSalon.Presentation.Web.Attributes;
@@ -42,7 +43,20 @@ public class ObjectBinder : IModelBinder, IModelBinderProvider
                     throw new Exception();
                 }
 
-                var convertedValue = Convert.ChangeType(requestBodyMap[propertyName], property.PropertyType);
+                object convertedValue;
+                if (property.PropertyType == typeof(Id))
+                {
+                    convertedValue = requestBodyMap[propertyName].ToId();
+                }
+                else if (property.PropertyType == typeof(DateTimeOffset))
+                {
+                    convertedValue = DateTimeOffset.Parse(requestBodyMap[propertyName]);
+                }
+                else
+                {
+                    convertedValue = Convert.ChangeType(requestBodyMap[propertyName], property.PropertyType);
+                }
+
                 requestModel.GetType().GetProperty(property.Name)!.SetValue(requestModel, convertedValue);
             }
         }

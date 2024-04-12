@@ -1,5 +1,6 @@
 using System.Reflection;
 using Microsoft.OpenApi.Models;
+using SmartSalon.Application.Extensions;
 using SmartSalon.Presentation.Web.Attributes;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -15,9 +16,10 @@ public class HideParametersWithIdRouteAttributeFilter : ISchemaFilter
 
         foreach (var propertyName in excludedProperties)
         {
-            if (schema.Properties.ContainsKey(propertyName))
+            if (schema.Properties.ContainsKey(propertyName) || schema.Properties.ContainsKey(propertyName.WithFirstLetterToLower()))
             {
                 schema.Properties.Remove(propertyName);
+                schema.Properties.Remove(propertyName.WithFirstLetterToLower());
             }
         }
     }
