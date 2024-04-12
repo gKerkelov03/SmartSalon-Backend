@@ -11,12 +11,7 @@ internal class CreateOwnerCommandValidator : AbstractValidator<CreateOwnerComman
     {
         RuleFor(command => command.SalonId).MustBeValidGuid();
 
-        RuleFor(command => command.Password)
-            .MinimumLength(MinPasswordLength)
-            .Must(password => password.Any(char.IsUpper))
-            .Must(password => password.Any(char.IsLower))
-            .Must(password => password.Any(char.IsDigit))
-            .Must(password => password.Any(char.IsSymbol));
+        RuleFor(command => command.Password).MustBeValidPassword();
 
         RuleFor(command => command.FirstName)
             .NotEmpty()
