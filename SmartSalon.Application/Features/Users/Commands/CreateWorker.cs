@@ -41,7 +41,7 @@ internal class CreateWorkerCommandHandler(IEfRepository<User> _users, IUnitOfWor
         worker.UserName = command.Email;
 
         await _users.AddAsync(worker);
-        await _unitOfWork.SaveAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return new CreateWorkerCommandResponse(worker.Id);
     }

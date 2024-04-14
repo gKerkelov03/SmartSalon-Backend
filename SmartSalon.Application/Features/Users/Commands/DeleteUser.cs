@@ -26,7 +26,7 @@ internal class DeleteUserCommandHandler(IEfRepository<User> _users, IUnitOfWork 
         }
 
         await _users.RemoveByIdAsync(user.Id);
-        await _unitOfWork.SaveAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return await Task.FromResult(Result.Success());
     }

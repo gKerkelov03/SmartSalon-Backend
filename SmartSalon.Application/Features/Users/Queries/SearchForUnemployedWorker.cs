@@ -16,14 +16,17 @@ public class SearchForUnemployedWorkerQuery(string searchTerm) : IQuery<IEnumera
 internal class SearchForUnemployedWorkerQueryHandler(IEfRepository<Worker> _workers, IMapper _mapper)
     : IQueryHandler<SearchForUnemployedWorkerQuery, IEnumerable<GetWorkerByIdQueryResponse>>
 {
-    public async Task<Result<IEnumerable<GetWorkerByIdQueryResponse>>> Handle(SearchForUnemployedWorkerQuery query, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<GetWorkerByIdQueryResponse>>> Handle(
+        SearchForUnemployedWorkerQuery query,
+        CancellationToken cancellationToken
+    )
     {
-        var matchingUnemployedWorkers = _workers.All
+        var matchingUnemployedWorkers = await _workers.All
             .Where(worker => worker.SalonId == null && (
                 worker.NormalizedEmail!.Contains(query.SearchTerm.ToUpper()) ||
                 worker.PhoneNumber!.Contains(query.SearchTerm) ||
                 (worker.FirstName.ToUpper() + " " + worker.LastName.ToUpper()).Contains(query.SearchTerm.ToUpper()))
-            );
+            ).ToListAsync();
 
         if (matchingUnemployedWorkers.IsEmpty())
         {

@@ -10,6 +10,10 @@ using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Extensions;
 using SmartSalon.Data;
 using SmartSalon.Data.Seeding;
+using SmartSalon.Application.Options;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace SmartSalon.Presentation.Web.Extensions;
 
@@ -117,6 +121,27 @@ public static partial class ServiceCollectionExtensions
             .AddRoles<Role>()
             .AddEntityFrameworkStores<SmartSalonDbContext>()
             .AddDefaultTokenProviders();
+
+        return services;
+    }
+
+    public static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration config)
+    {
+        var jwtOptions = config.GetSection(JwtOptions.SectionName).Get<JwtOptions>()!;
+        var signingKey = Encoding.ASCII.GetBytes(jwtOptions.EncryptionKey);
+
+        services
+            .AddAuthorization()
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+                options.TokenValidationParameters = new()
+                {
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtOptions.Issuer,
+                    ValidAudience = jwtOptions.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(signingKey),
+                }
+            );
 
         return services;
     }

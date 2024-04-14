@@ -11,10 +11,12 @@ internal class RolesSeeder : ISeeder
     {
         var roleManager = serviceProvider.GetRequiredService<RolesManager>();
 
-        await SeedRoleAsync(roleManager, AdminRoleName);
-        await SeedRoleAsync(roleManager, CustomerRoleName);
-        await SeedRoleAsync(roleManager, WorkerRoleName);
-        await SeedRoleAsync(roleManager, OwnerRoleName);
+        await Task.WhenAll(
+            SeedRoleAsync(roleManager, AdminRoleName),
+            SeedRoleAsync(roleManager, CustomerRoleName),
+            SeedRoleAsync(roleManager, WorkerRoleName),
+            SeedRoleAsync(roleManager, OwnerRoleName)
+        );
     }
 
     private static async Task SeedRoleAsync(RolesManager roleManager, string roleName)

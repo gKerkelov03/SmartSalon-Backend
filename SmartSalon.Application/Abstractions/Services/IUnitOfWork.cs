@@ -5,7 +5,7 @@ namespace SmartSalon.Application.Abstractions;
 
 public interface IUnitOfWork : IScopedLifetime
 {
-    Task<int> SaveAsync(CancellationToken cancellationToken);
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     void BeginTransaction();
     Task CommitTransactionAsync();
     void RollbackTransaction();

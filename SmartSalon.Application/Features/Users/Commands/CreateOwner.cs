@@ -40,7 +40,7 @@ internal class CreateOwnerCommandHandler(IEfRepository<User> _users, IUnitOfWork
         owner.UserName = command.Email;
 
         await _users.AddAsync(owner);
-        await _unitOfWork.SaveAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return new CreateOwnerCommandResponse { CreatedOwnerId = owner.Id };
     }

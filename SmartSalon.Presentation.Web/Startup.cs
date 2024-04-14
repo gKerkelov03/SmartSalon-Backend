@@ -22,32 +22,28 @@ builder
     .AddApplication(builder.Configuration)
     .AddIntegrations(builder.Configuration)
     .ConfigureAllOptionsClasses(builder.Configuration, applicationLayer)
+    .RegisterConventionalServices(presentationLayer, applicationLayer, dataLayer, integrationsLayer)
+    .RegisterUnconventionalServices()
+    .RegisterDbContext(builder.Configuration)
+    .RegisterIdentityServices()
+    .RegisterMapper(applicationLayer, dataLayer, presentationLayer)
 
     .AddVersioning()
     .AddSwaggerGen()
     .AddExceptionHandler<GlobalExceptionHandler>()
-    .AddCors()
+    .AddAuth(builder.Configuration)
     .AddHttpContextAccessor()
-
-    .RegisterDbContext(builder.Configuration)
-    .RegisterIdentityServices()
-    .RegisterConventionalServices(presentationLayer, applicationLayer, dataLayer, integrationsLayer)
-    .RegisterUnconventionalServices()
-    .RegisterMapper(applicationLayer, dataLayer, presentationLayer)
-
-    .AddAuthorization()
-    .AddAuthentication()
-    .AddJwtBearer();
-
+    .AddCors();
 
 var app = builder.Build();
 
 app
     .UseCors()
     .UseSwagger(app.Environment, app.Services)
+    .UseAuthentication()
+    .UseAuthorization()
     .UseSerilogRequestLogging()
     .UseHttpsRedirection()
-    .UseAuthorization()
     .UseExceptionHandling(app.Environment);
 
 app.MapControllers();

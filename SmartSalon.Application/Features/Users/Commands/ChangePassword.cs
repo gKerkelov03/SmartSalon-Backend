@@ -15,7 +15,7 @@ public class ChangePasswordCommand : ICommand
     public required string NewPassword { get; set; }
 }
 
-internal class ChangePasswordCommandHandler(UsersManager _usersManager, ICurrentUserAccessor _currentUser, IEmailsManager _emailsManager)
+internal class ChangePasswordCommandHandler(UsersManager _usersManager, IEmailsManager _emailsManager)
     : ICommandHandler<ChangePasswordCommand>
 {
     public async Task<Result> Handle(ChangePasswordCommand command, CancellationToken cancellationToken)

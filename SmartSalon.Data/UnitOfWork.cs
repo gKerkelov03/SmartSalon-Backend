@@ -11,9 +11,9 @@ public class UnitOfWork(SmartSalonDbContext _dbContext, ICurrentUserAccessor _cu
 {
     private IDbContextTransaction? _transaction;
 
-    public Task<int> SaveAsync(CancellationToken cancellationToken = default)
+    public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        ApplyAuditInfoRules(_dbContext.ChangeTracker, _currentUser.Id);
+        ApplySoftDelete(_dbContext.ChangeTracker, _currentUser.Id);
 
         return _dbContext.SaveChangesAsync(cancellationToken);
     }
@@ -44,7 +44,7 @@ public class UnitOfWork(SmartSalonDbContext _dbContext, ICurrentUserAccessor _cu
         _transaction.Rollback();
     }
 
-    public void ApplyAuditInfoRules(ChangeTracker changeTracker, Id currentUserId)
+    public void ApplySoftDelete(ChangeTracker changeTracker, Id currentUserId)
         => changeTracker
             .Entries()
             .ForEach(entry =>

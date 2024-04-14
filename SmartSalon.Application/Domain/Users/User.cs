@@ -12,7 +12,7 @@ public class User : IdentityUser<Id>, IDeletableEntity
     public bool IsDeleted { get; set; }
     public DateTimeOffset? DeletedOn { get; set; }
     public Id? DeletedBy { get; set; }
-    public new required string Email { get; set; }
-    public new required string PhoneNumber { get; set; }
-    public new required string UserName { get; set; }
+    public override required string Email { get; set; }
+    public override required string PhoneNumber { get; set; }
+    public override required string UserName { get; set; }
 }

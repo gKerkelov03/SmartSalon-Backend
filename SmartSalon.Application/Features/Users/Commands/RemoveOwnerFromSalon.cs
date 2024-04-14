@@ -36,7 +36,7 @@ internal class RemoveOwnerFromSalonCommandHandler(
         }
 
         salon.Owners!.Add(owner);
-        await _unitOfWork.SaveAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
     }

@@ -40,7 +40,7 @@ internal class UpdateWorkerCommandHandler(IEfRepository<Worker> _workers, IUnitO
         worker.MapAgainst(command);
         _workers.Update(worker);
 
-        await _unitOfWork.SaveAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
     }

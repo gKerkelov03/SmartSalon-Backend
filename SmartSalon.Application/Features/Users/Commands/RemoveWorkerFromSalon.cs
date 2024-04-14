@@ -39,7 +39,7 @@ internal class RemoveWorkerFromSalonCommandHandler(IEfRepository<Worker> _worker
         }
 
         salon.Workers!.Remove(worker);
-        await _unitOfWork.SaveAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
     }
