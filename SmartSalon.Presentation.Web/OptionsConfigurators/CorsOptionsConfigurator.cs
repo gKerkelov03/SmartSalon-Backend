@@ -4,7 +4,7 @@ using SmartSalon.Application.Abstractions.Lifetime;
 
 namespace SmartSalon.Presentation.Web.Options;
 
-public class CorsOptionsConfigurator : IConfigureOptions<CorsOptions>, ISingletonLifetime
+public class CorsOptionsConfigurator : IConfigureOptions<CorsOptions>, ITransientLifetime
 {
     public void Configure(CorsOptions options)
         => options.AddPolicy

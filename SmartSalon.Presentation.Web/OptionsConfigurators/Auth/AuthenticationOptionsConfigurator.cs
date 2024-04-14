@@ -5,7 +5,7 @@ using SmartSalon.Application.Abstractions.Lifetime;
 
 namespace SmartSalon.Presentation.Web.Options.Auth;
 
-public class AuthenticationOptionsConfigurator : IConfigureOptions<AuthenticationOptions>, ISingletonLifetime
+public class AuthenticationOptionsConfigurator : IConfigureOptions<AuthenticationOptions>, ITransientLifetime
 {
     public void Configure(AuthenticationOptions options)
     {

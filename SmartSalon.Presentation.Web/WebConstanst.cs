@@ -7,7 +7,7 @@ internal static class WebConstants
 
     internal static class PolicyNames
     {
-        public const string IsAdminPolicy = nameof(IsOwnerOrAdminPolicy);
+        public const string IsAdminPolicy = nameof(IsAdminPolicy);
         public const string IsOwnerOrAdminPolicy = nameof(IsOwnerOrAdminPolicy);
         public const string IsTheSameUserOrAdminPolicy = nameof(IsTheSameUserOrAdminPolicy);
         public const string IsOwnerOfTheSalonOfTheWorkerOrIsTheWorkerPolicy = nameof(IsOwnerOfTheSalonOfTheWorkerOrIsTheWorkerPolicy);

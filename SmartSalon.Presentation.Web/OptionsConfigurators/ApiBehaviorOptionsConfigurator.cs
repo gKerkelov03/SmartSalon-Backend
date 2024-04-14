@@ -8,7 +8,7 @@ using SmartSalon.Presentation.Web.Extensions;
 
 namespace SmartSalon.Presentation.Web.Options;
 
-public class ApiBehaviorOptionsConfigurator : IConfigureOptions<ApiBehaviorOptions>, ISingletonLifetime
+public class ApiBehaviorOptionsConfigurator : IConfigureOptions<ApiBehaviorOptions>, ITransientLifetime
 {
     public void Configure(ApiBehaviorOptions options) => options.InvalidModelStateResponseFactory = context =>
     {

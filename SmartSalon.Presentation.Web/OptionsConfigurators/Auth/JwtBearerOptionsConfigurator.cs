@@ -7,7 +7,7 @@ using SmartSalon.Application.Options;
 
 namespace SmartSalon.Presentation.Web.Options.Auth;
 
-public class JwtBearerOptionsConfigurator(IOptions<JwtOptions> _jwtOptions) : IConfigureOptions<JwtBearerOptions>, ISingletonLifetime
+public class JwtBearerOptionsConfigurator(IOptions<JwtOptions> _jwtOptions) : IConfigureOptions<JwtBearerOptions>, ITransientLifetime
 {
     public void Configure(JwtBearerOptions options)
     {

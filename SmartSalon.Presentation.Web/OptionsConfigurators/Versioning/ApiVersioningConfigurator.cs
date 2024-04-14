@@ -4,7 +4,7 @@ using SmartSalon.Application.Abstractions.Lifetime;
 
 namespace SmartSalon.Presentation.Web.Options.Versioning;
 
-public class ApiVersioningOptionsConfigurator : IConfigureOptions<ApiVersioningOptions>, ISingletonLifetime
+public class ApiVersioningOptionsConfigurator : IConfigureOptions<ApiVersioningOptions>, ITransientLifetime
 {
     public void Configure(ApiVersioningOptions options)
     {

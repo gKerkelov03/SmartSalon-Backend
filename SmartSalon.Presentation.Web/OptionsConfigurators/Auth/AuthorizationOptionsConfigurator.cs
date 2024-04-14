@@ -1,38 +1,23 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 using SmartSalon.Application.Abstractions.Lifetime;
-using SmartSalon.Presentation.Web.Policies;
+using SmartSalon.Application.Extensions;
+using SmartSalon.Presentation.Web.Controllers;
 
 namespace SmartSalon.Presentation.Web.Options.Auth;
 
-public class AuthorizationOptionsConfigurator : IConfigureOptions<AuthorizationOptions>, ISingletonLifetime
+public class AuthorizationOptionsConfigurator : IConfigureOptions<AuthorizationOptions>, ITransientLifetime
 {
     public void Configure(AuthorizationOptions options)
-    {
-        //TODO: make it register the policies with reflection
-        options.AddPolicy(
-            IsAdminPolicy,
-            policy => policy.AddRequirements(new IsAdminRequirement())
-        );
+        => typeof(ApiController)
+            .Assembly
+            .GetTypes()
+            .Where(type => typeof(IAuthorizationRequirement).IsAssignableFrom(type))
+            .ForEach(requirement =>
+            {
+                var policyName = requirement.Name.Replace("Requirement", "Policy");
+                var requirementInstance = Activator.CreateInstance(requirement)!.CastTo<IAuthorizationRequirement>();
 
-        options.AddPolicy(
-            IsOwnerOrAdminPolicy,
-            policy => policy.AddRequirements(new IsOwnerOrAdminRequirement())
-        );
-
-        options.AddPolicy(
-            IsTheSameUserOrAdminPolicy,
-            policy => policy.AddRequirements(new IsTheSameUserOrAdminRequirement())
-        );
-
-        options.AddPolicy(
-            IsOwnerOfTheSalonOfTheWorkerOrIsTheWorkerPolicy,
-            policy => policy.AddRequirements(new IsOwnerOfTheSalonOfTheWorkerOrIsTheWorkerRequirement())
-        );
-
-        options.AddPolicy(
-            IsOwnerOfTheSalonOrIsAdminPolicy,
-            policy => policy.AddRequirements(new IsOwnerOfTheSalonOrIsAdminRequirement())
-        );
-    }
+                options.AddPolicy(policyName, options => options.AddRequirements(requirementInstance));
+            });
 }

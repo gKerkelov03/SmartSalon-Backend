@@ -4,7 +4,7 @@ using SmartSalon.Application.Abstractions.Lifetime;
 
 namespace SmartSalon.Presentation.Web.Options.Auth;
 
-public class IdentityOptionsConfigurator : IConfigureOptions<IdentityOptions>, ISingletonLifetime
+public class IdentityOptionsConfigurator : IConfigureOptions<IdentityOptions>, ITransientLifetime
 {
     public void Configure(IdentityOptions options)
     {

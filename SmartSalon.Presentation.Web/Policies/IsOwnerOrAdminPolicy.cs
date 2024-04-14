@@ -7,7 +7,8 @@ namespace SmartSalon.Presentation.Web.Policies;
 
 internal class IsOwnerOrAdminRequirement : IAuthorizationRequirement { }
 
-internal class IsOwnerOrAdminHandler(IHttpContextAccessor _httpContextAccessor) : AuthorizationHandler<IsOwnerOrAdminRequirement>, ISingletonLifetime
+internal class IsOwnerOrAdminHandler(IHttpContextAccessor _httpContextAccessor)
+    : AuthorizationHandler<IsOwnerOrAdminRequirement>, ISingletonLifetime
 {
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IsOwnerOrAdminRequirement requirement)
     {

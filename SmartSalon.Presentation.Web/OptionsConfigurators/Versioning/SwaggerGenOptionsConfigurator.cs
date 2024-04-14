@@ -3,12 +3,11 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using SmartSalon.Application.Abstractions.Lifetime;
 using SmartSalon.Application.Extensions;
-using SmartSalon.Presentation.Web.SwaggerFilters;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace SmartSalon.Presentation.Web.Options.Versioning;
 
-public class SwaggerGenOptionsConfigurator : IConfigureOptions<SwaggerGenOptions>, ISingletonLifetime
+public class SwaggerGenOptionsConfigurator : IConfigureOptions<SwaggerGenOptions>, ITransientLifetime
 {
     private readonly IApiVersionDescriptionProvider _apiVersionsInfo;
 

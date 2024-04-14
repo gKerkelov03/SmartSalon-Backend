@@ -7,7 +7,8 @@ namespace SmartSalon.Presentation.Web.Policies;
 
 internal class IsOwnerOfTheSalonOfTheWorkerOrIsTheWorkerRequirement : IAuthorizationRequirement { }
 
-internal class IsOwnerOfTheSalonOfTheWorkerOrIsTheWorkerHandler(IHttpContextAccessor _httpContextAccessor) : AuthorizationHandler<IsOwnerOfTheSalonOfTheWorkerOrIsTheWorkerRequirement>, ISingletonLifetime
+internal class IsOwnerOfTheSalonOfTheWorkerOrIsTheWorkerHandler(IHttpContextAccessor _httpContextAccessor)
+    : AuthorizationHandler<IsOwnerOfTheSalonOfTheWorkerOrIsTheWorkerRequirement>, ISingletonLifetime
 {
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IsOwnerOfTheSalonOfTheWorkerOrIsTheWorkerRequirement requirement)
     {
