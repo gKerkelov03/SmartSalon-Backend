@@ -71,7 +71,7 @@ public class WorkersController(ISender _mediator, IMapper _mapper) : V1ApiContro
         return ProblemDetailsOr<OkResult>(result);
     }
 
-    [HttpPatch("RemoveFromSalon")]
+    [HttpPatch($"{IdRoute}/RemoveFromSalon")]
     [SuccessResponse(Status204NoContent)]
     [Authorize(Policy = IsOwnerOfTheSalonOfTheWorkerOrIsTheWorkerPolicy)]
     public async Task<IActionResult> RemoveWorkerFromSalon(Id workerId)
@@ -96,9 +96,9 @@ public class WorkersController(ISender _mediator, IMapper _mapper) : V1ApiContro
     [HttpPatch("AddToSalon")]
     [SuccessResponse(Status200OK)]
     [Authorize(Policy = IsOwnerOrAdminPolicy)]
-    public async Task<IActionResult> AddWorkerToSalon(AddWorkerToSalonRequest request)
+    public async Task<IActionResult> AddWorkerToSalon(string token)
     {
-        var command = _mapper.Map<AddWorkerToSalonCommand>(request);
+        var command = new AddWorkerToSalonCommand(token);
         var result = await _mediator.Send(command);
 
         return ProblemDetailsOr<OkResult>(result);

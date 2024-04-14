@@ -88,9 +88,9 @@ public class UsersController(ISender _mediator, IMapper _mapper) : V1ApiControll
     [SuccessResponse(Status200OK)]
     [FailureResponse(Status409Conflict)]
     [Authorize(Policy = IsTheSameUserOrAdminPolicy)]
-    public async Task<IActionResult> SendEmailConfirmationEmail(SendEmailConfirmationEmailRequest request)
+    public async Task<IActionResult> SendEmailConfirmationEmail(Id userId)
     {
-        var command = _mapper.Map<SendEmailConfirmationEmailCommand>(request);
+        var command = new SendEmailConfirmationEmailCommand(userId);
 
         var result = await _mediator.Send(command);
 

@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SmartSalon.Application.Options;
 using SmartSalon.Application.PipelineBehaviors;
 using SmartSalon.Application.ResultObject;
 
@@ -22,14 +23,11 @@ public static class ServiceCollectionExtensions
             .AddOpenBehavior(typeof(CachingPipelineBehaviour<,>))
         );
 
-    internal static IServiceCollection RegisterRedis(this IServiceCollection services, IConfiguration configuration)
+    internal static IServiceCollection RegisterRedis(this IServiceCollection services, IConfiguration config)
         => services.AddStackExchangeRedisCache(options =>
-            options.Configuration = configuration.GetConnectionString("Redis")
+            options.Configuration = config.GetConnectionString(nameof(ConnectionStringsOptions.Redis))
         );
 
     internal static IServiceCollection RegisterValidators(this IServiceCollection services)
-        => services.AddValidatorsFromAssembly(
-            typeof(IResult).Assembly,
-            includeInternalTypes: true
-        );
+        => services.AddValidatorsFromAssembly(typeof(IResult).Assembly, includeInternalTypes: true);
 }

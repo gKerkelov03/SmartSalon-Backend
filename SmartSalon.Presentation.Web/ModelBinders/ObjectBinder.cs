@@ -1,8 +1,8 @@
 using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using SmartSalon.Application.Extensions;
 using SmartSalon.Presentation.Web.Attributes;
 
@@ -11,11 +11,13 @@ public class ObjectBinder : IModelBinder, IModelBinderProvider
     public async Task BindModelAsync(ModelBindingContext bindingContext)
     {
         using StreamReader requestBodyReader = new(bindingContext.HttpContext.Request.Body, Encoding.UTF8);
-        var requestBodyMap = JsonConvert.DeserializeObject<Dictionary<string, string>>(await requestBodyReader.ReadToEndAsync())!;
+        var body = await requestBodyReader.ReadToEndAsync();
+
+        var requestBodyMap = JsonConvert.DeserializeObject<Dictionary<string, string>>(body)!;
+
         var IdRouteParameterName = IdRoute.Remove(['{', '}']);
         var routeValue = bindingContext.ActionContext.RouteData.Values[IdRouteParameterName]?.ToString();
         var requestModel = Activator.CreateInstance(bindingContext.ModelType)!;
-        requestBodyMap = requestBodyMap.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.WithFirstLetterToLower());
 
         foreach (var property in requestModel.GetType().GetProperties())
         {

@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Identity;
+﻿global using UsersManager = Microsoft.AspNetCore.Identity.UserManager<SmartSalon.Application.Domain.Users.User>;
+using Microsoft.Extensions.DependencyInjection;
 using SmartSalon.Application.Domain.Users;
 
 namespace SmartSalon.Data.Seeding;
@@ -8,12 +8,12 @@ internal class UsersSeeder : ISeeder
 {
     public async Task SeedAsync(SmartSalonDbContext dbContext, IServiceProvider serviceProvider)
     {
-        var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
-        var password = "password";
+        var userManager = serviceProvider.GetRequiredService<UsersManager>();
+        var password = "Password1";
 
         foreach (var admin in GetAdminsToSeed())
         {
-            await userManager.CreateAsync(admin, password);
+            var asdf = await userManager.CreateAsync(admin, password);
             await userManager.AddToRoleAsync(admin, AdminRoleName);
         };
 

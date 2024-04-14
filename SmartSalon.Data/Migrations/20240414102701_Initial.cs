@@ -17,8 +17,8 @@ namespace SmartSalon.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Code = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    Country = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Country = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -30,8 +30,8 @@ namespace SmartSalon.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    NormalizedName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    NormalizedName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -44,9 +44,9 @@ namespace SmartSalon.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    Location = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Location = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     ProfilePictureUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DefaultTimePenalty = table.Column<int>(type: "int", maxLength: 20, nullable: false),
                     DefaultBookingsInAdvance = table.Column<int>(type: "int", maxLength: 20, nullable: false),
@@ -152,25 +152,25 @@ namespace SmartSalon.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     ProfilePictureUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserType = table.Column<string>(type: "nvarchar(8)", maxLength: 8, nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     DeletedOn = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    SalonId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    JobTitle = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
-                    Nickname = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
-                    UserName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    SalonId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    JobTitle = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Nickname = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
                     TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
@@ -315,29 +315,6 @@ namespace SmartSalon.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Tokens",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Type = table.Column<int>(type: "int", nullable: false),
-                    Value = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DeletedOn = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tokens", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Tokens_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "UserRole",
                 columns: table => new
                 {
@@ -366,20 +343,21 @@ namespace SmartSalon.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Price = table.Column<double>(type: "float", nullable: false),
                     DurationInMinutes = table.Column<int>(type: "int", nullable: false),
                     SalonId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CategorieId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     SubscriptionId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Services", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Services_Categories_CategoryId",
-                        column: x => x.CategoryId,
+                        name: "FK_Services_Categories_CategorieId",
+                        column: x => x.CategorieId,
                         principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -543,9 +521,9 @@ namespace SmartSalon.Data.Migrations
                 column: "SalonId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Services_CategoryId",
+                name: "IX_Services_CategorieId",
                 table: "Services",
-                column: "CategoryId");
+                column: "CategorieId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Services_SalonId",
@@ -571,11 +549,6 @@ namespace SmartSalon.Data.Migrations
                 name: "IX_Subscriptions_SalonId",
                 table: "Subscriptions",
                 column: "SalonId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Tokens_UserId",
-                table: "Tokens",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserRole_RoleId",
@@ -628,9 +601,6 @@ namespace SmartSalon.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "SpecialSlots");
-
-            migrationBuilder.DropTable(
-                name: "Tokens");
 
             migrationBuilder.DropTable(
                 name: "UserRole");

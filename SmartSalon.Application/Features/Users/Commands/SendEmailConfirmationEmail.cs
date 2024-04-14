@@ -7,15 +7,12 @@ using SmartSalon.Application.Models.Emails;
 using SmartSalon.Application.ResultObject;
 namespace SmartSalon.Application.Features.Users.Commands;
 
-public class SendEmailConfirmationEmailCommand : ICommand
+public class SendEmailConfirmationEmailCommand(Id userId) : ICommand
 {
-    public required Id UserId { get; set; }
+    public Id UserId => userId;
 }
 
-public class SendEmailConfirmationEmailHandler(
-    IEmailsManager _emailsManager,
-    IEfRepository<User> _users
-) : ICommandHandler<SendEmailConfirmationEmailCommand>
+public class SendEmailConfirmationEmailHandler(IEfRepository<User> _users, IEmailsManager _emailsManager) : ICommandHandler<SendEmailConfirmationEmailCommand>
 {
     public async Task<Result> Handle(SendEmailConfirmationEmailCommand command, CancellationToken cancellationToken)
     {

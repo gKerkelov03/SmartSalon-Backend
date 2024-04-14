@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SmartSalon.Application.Domain;
+using SmartSalon.Application.Domain.Services;
 using static SmartSalon.Application.ApplicationConstants.Validation.Service;
 
 namespace SmartSalon.Data.Configurations;

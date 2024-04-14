@@ -8,24 +8,13 @@ using SmartSalon.Application.Extensions;
 using Microsoft.AspNetCore.Identity;
 using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Domain.Salons;
+using SmartSalon.Application.Domain.Services;
 
 namespace SmartSalon.Data;
 
 public class SmartSalonDbContext : IdentityDbContext<User, Role, Id>
 {
-    public SmartSalonDbContext() { }
-
     public SmartSalonDbContext(DbContextOptions<SmartSalonDbContext> options) : base(options) { }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder options)
-    {
-        if (options.IsConfigured)
-        {
-            return;
-        }
-
-        options.UseSqlServer("Server=.,1433;Database=WrongDatabaseName;TrustServerCertificate=True;User Id=sa;Password=P@ssw0rd123");
-    }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -49,9 +38,8 @@ public class SmartSalonDbContext : IdentityDbContext<User, Role, Id>
             )
             .ForEach(foreignKey => foreignKey.DeleteBehavior = DeleteBehavior.Restrict);
 
-    private static void DontShowIfDeleted<TEntity>(ModelBuilder builder)
-        where TEntity : class, IDeletableEntity
-            => builder.Entity<TEntity>().HasQueryFilter(entity => !entity.IsDeleted);
+    private static void DontShowIfDeleted<TEntity>(ModelBuilder builder) where TEntity : class, IDeletableEntity
+        => builder.Entity<TEntity>().HasQueryFilter(entity => !entity.IsDeleted);
 
     private static void SetupDeletedQueryFilter(ModelBuilder builder, IEnumerable<IMutableEntityType> entities)
     {
@@ -67,7 +55,7 @@ public class SmartSalonDbContext : IdentityDbContext<User, Role, Id>
                 entity.ClrType.BaseType != typeof(User)
             )
             .ForEach(deletableEntityType =>
-                //TODO: debug why SetIsDeletedQueryFilterMethodInfo is null sometimes
+                //TODO: debug why dontShowIfDeleted is null sometimes
                 dontShowIfDeleted?.MakeGenericMethod(deletableEntityType.ClrType).Invoke(null, [builder])
             );
     }
@@ -84,8 +72,8 @@ public class SmartSalonDbContext : IdentityDbContext<User, Role, Id>
     public DbSet<SpecialSlot> SpecialSlots { get; set; }
     public DbSet<Subscription> Subscriptions { get; set; }
     public DbSet<Booking> Bookings { get; set; }
-    public DbSet<Category> Categories { get; set; }
-    public DbSet<Section> Sections { get; set; }
+    public DbSet<ServiceCategory> Categories { get; set; }
+    public DbSet<ServiceSection> Sections { get; set; }
     public DbSet<SalonWorkingTime> WorkingTimes { get; set; }
-    public DbSet<Currency> Currencies { get; set; }
+    public DbSet<SalonCurrency> Currencies { get; set; }
 }

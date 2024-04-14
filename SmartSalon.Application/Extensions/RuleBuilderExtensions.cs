@@ -12,9 +12,8 @@ public static class RuleBuilderExtensions
 
         return ruleBuilder
             .Must((rootObject, propertyValue, context) =>
-            {
-                return Regex.IsMatch(propertyValue.ToString(), pattern) && propertyValue != default;
-            })
+                Regex.IsMatch(propertyValue.ToString(), pattern) && propertyValue != default
+            )
             .WithMessage("{PropertyPath}  must be a valid non empty GUID / UUID.");
     }
 
@@ -23,9 +22,9 @@ public static class RuleBuilderExtensions
         return ruleBuilder
             .Must((rootObject, propertyValue, context) =>
                 propertyValue.Length > MinPasswordLength &&
-                propertyValue.Any(char.IsDigit) &&
-                propertyValue.Any(char.IsSymbol)
+                propertyValue.Any(char.IsUpper) &&
+                propertyValue.Any(char.IsDigit)
             )
-            .WithMessage(string.Format("{PropertyPath}  must be at least {0} long, with digit and special symbol", MinPasswordLength));
+            .WithMessage("{PropertyPath}  must be at least 6 characters long, with uppercase and lowercase letters");
     }
 }

@@ -1,5 +1,4 @@
 using FluentValidation;
-using SmartSalon.Application.Extensions;
 using static SmartSalon.Application.ApplicationConstants.Validation.User;
 
 namespace SmartSalon.Application.Validators;
@@ -8,7 +7,8 @@ internal class RestorePasswordCommandValidator : AbstractValidator<RestorePasswo
 {
     public RestorePasswordCommandValidator()
     {
-        RuleFor(command => command.UserId).MustBeValidGuid();
+        RuleFor(command => command.Token).NotEmpty();
+
         RuleFor(command => command.NewPassword)
             .MinimumLength(MinPasswordLength)
             .Must(password => password.Any(char.IsUpper))

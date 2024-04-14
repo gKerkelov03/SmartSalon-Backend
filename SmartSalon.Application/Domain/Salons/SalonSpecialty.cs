@@ -17,10 +17,10 @@ public class SalonSpecialty : BaseEntity
 //free eyebrows fix
 //shoe polish
 //neck massage
-//nqkvo specialno maslo s koeto ti majat bradata primerno
+//special beard olio
 //music of choice
 //virtual reality headset entertainment during the service
-//Aromatherapy - da palqt sveshti deto mirishat hubavo i imat uj uspokoqvashti lechebni efekti
+//Aromatherapy 
 //hand massage
 //warm towel
 //Chance to win something

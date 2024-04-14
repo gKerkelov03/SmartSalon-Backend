@@ -4,7 +4,7 @@
         "Redis": "localhost:6379"
     },
     "Jwt": {
-        "EncryptionKey": "Some magic horses generated this string",
+        "EncryptionKey": "7AEFF259E4D24C8D1A3F91A7A50",
         "Issuer": "SmartSalon-Backend",
         "Audience": "SmartSalon-Frontend"
     },
@@ -13,7 +13,7 @@
         "Password": "dngd roit xigx pmmk",
         "Host": "smtp.gmail.com",
         "Port": "587",
-        "EncryptionKey": "Some magic horses generated this string"
+        "EncryptionKey": "9A4A6686572B9348E7AEFF259E4D24C8D1A3F91A7A5046616F559D0A90"
     },
     "Hosting": {
         "FrontendUrl": "http://localhost:4200",

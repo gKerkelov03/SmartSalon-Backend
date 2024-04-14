@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.MediatR;

@@ -4,7 +4,7 @@ using SmartSalon.Application.Models.Emails;
 
 namespace SmartSalon.Application.Abstractions.Services;
 
-public interface IEmailsManager : ISingletonLifetime
+public interface IEmailsManager : ITransientLifetime
 {
     Task SendEmailConfirmationEmailAsync(
         string recipientEmail,

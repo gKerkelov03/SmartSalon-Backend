@@ -12,6 +12,7 @@ public static class StringExtensions
 
         return lowercaseFirstLetter + otherPart;
     }
+
     public static string Remove(this string text, IEnumerable<char> charsToRemove)
     {
         charsToRemove.ForEach(@char => text = text.Replace(@char.ToString(), string.Empty));

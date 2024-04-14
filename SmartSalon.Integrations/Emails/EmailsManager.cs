@@ -70,7 +70,7 @@ public class EmailsManager(
         WorkerInvitationEmailViewModel viewModel
     )
     {
-        var templateName = "invite-owner.html";
+        var templateName = "invite-worker.html";
         var template = File.ReadAllText(Path.Combine(_templatesFolder, templateName));
         var subject = "Join a salon invitation";
         var backendEndpointUrl = $"{_hostingOptions.Value.BackendUrl}/Api/V1/Owners/AddToSalon";
@@ -95,9 +95,9 @@ public class EmailsManager(
         RestorePasswordEmailViewModel viewModel
     )
     {
-        var templateName = "invite-owner.html";
+        var templateName = "restore-password.html";
         var template = File.ReadAllText(Path.Combine(_templatesFolder, templateName));
-        var subject = "Join a salon invitation";
+        var subject = "Your password was changed";
         var frontendRedirectUrl = $"{_hostingOptions.Value.FrontendUrl}/public/reset-password";
 
         var token = _encryptionHelper.Encrypt(encryptionModel, _emailsOptions.Value.EncryptionKey);

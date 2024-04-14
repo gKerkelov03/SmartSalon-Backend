@@ -12,7 +12,7 @@ public class EncryptionHelper : IEncryptionHelper
         var textToEncrypt = JsonConvert.SerializeObject(model);
         using var Aes = System.Security.Cryptography.Aes.Create();
 
-        Aes.Key = Encoding.UTF8.GetBytes(encryptionKey);
+        Aes.Key = Sha256(encryptionKey);
         Aes.GenerateIV();
 
         var encryptor = Aes.CreateEncryptor(Aes.Key, Aes.IV);
@@ -38,7 +38,7 @@ public class EncryptionHelper : IEncryptionHelper
 
         using var Aes = System.Security.Cryptography.Aes.Create();
 
-        Aes.Key = Encoding.UTF8.GetBytes(encryptionKey);
+        Aes.Key = Sha256(encryptionKey);
         byte[] iv = new byte[Aes.IV.Length];
         Buffer.BlockCopy(encryptedBytes, 0, iv, 0, iv.Length);
         Aes.IV = iv;
@@ -52,5 +52,11 @@ public class EncryptionHelper : IEncryptionHelper
 
         var json = Encoding.UTF8.GetString(memoryStream.ToArray());
         return JsonConvert.DeserializeObject<TModel>(json);
+    }
+
+    private byte[] Sha256(string input)
+    {
+        using SHA256 hashAlgorithm = SHA256.Create();
+        return hashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(input));
     }
 }

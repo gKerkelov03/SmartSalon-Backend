@@ -1,6 +1,6 @@
 ﻿
 namespace SmartSalon.Application.Abstractions.Mapping;
 
-public interface IMapFrom<T>
+public interface IMapFrom<TType>
 {
 }

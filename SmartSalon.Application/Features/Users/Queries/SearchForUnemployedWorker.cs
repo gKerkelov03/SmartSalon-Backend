@@ -8,27 +8,28 @@ using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Users.Queries;
 
-public class SearchForUnemployedWorkerQuery(string searchTerm) : IQuery<IEnumerable<GetOwnerByIdQueryResponse>>
+public class SearchForUnemployedWorkerQuery(string searchTerm) : IQuery<IEnumerable<GetWorkerByIdQueryResponse>>
 {
     public string SearchTerm => searchTerm;
 }
 
-internal class SearchForUnemployedWorkerQueryHandler(IEfRepository<Owner> _workers, IMapper _mapper)
-    : IQueryHandler<SearchForUnemployedWorkerQuery, IEnumerable<GetOwnerByIdQueryResponse>>
+internal class SearchForUnemployedWorkerQueryHandler(IEfRepository<Worker> _workers, IMapper _mapper)
+    : IQueryHandler<SearchForUnemployedWorkerQuery, IEnumerable<GetWorkerByIdQueryResponse>>
 {
-    public async Task<Result<IEnumerable<GetOwnerByIdQueryResponse>>> Handle(SearchForUnemployedWorkerQuery query, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<GetWorkerByIdQueryResponse>>> Handle(SearchForUnemployedWorkerQuery query, CancellationToken cancellationToken)
     {
-        var workers = await _workers.FindAllAsync(worker =>
-            worker.Email!.Contains(query.SearchTerm) ||
-            worker.PhoneNumber!.Contains(query.SearchTerm) ||
-            (worker.FirstName + " " + worker.LastName).Contains(query.SearchTerm)
-        );
+        var matchingUnemployedWorkers = _workers.All
+            .Where(worker => worker.SalonId == null && (
+                worker.NormalizedEmail!.Contains(query.SearchTerm.ToUpper()) ||
+                worker.PhoneNumber!.Contains(query.SearchTerm) ||
+                (worker.FirstName.ToUpper() + " " + worker.LastName.ToUpper()).Contains(query.SearchTerm.ToUpper()))
+            );
 
-        if (workers.IsEmpty())
+        if (matchingUnemployedWorkers.IsEmpty())
         {
             return Error.NotFound;
         }
 
-        return workers.ToListOf<GetOwnerByIdQueryResponse>(_mapper);
+        return matchingUnemployedWorkers.ToListOf<GetWorkerByIdQueryResponse>(_mapper);
     }
 }

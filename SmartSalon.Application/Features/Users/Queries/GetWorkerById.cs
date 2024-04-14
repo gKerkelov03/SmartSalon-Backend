@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.Mapping;
 using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Errors;
-using SmartSalon.Application.Extensions;
 using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Users.Queries;

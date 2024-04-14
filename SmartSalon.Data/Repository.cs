@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using SmartSalon.Application.Domain.Base;
@@ -7,17 +6,10 @@ using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Data.Repositories;
 
-public class Repository<TEntity> : IEfRepository<TEntity>
+public class Repository<TEntity>(SmartSalonDbContext _dbContext) : IEfRepository<TEntity>
     where TEntity : class, IBaseEntity
 {
-    private readonly DbContext _dbContext;
-    private readonly DbSet<TEntity> _dbSet;
-
-    public Repository(SmartSalonDbContext dbContext)
-    {
-        _dbContext = dbContext;
-        _dbSet = dbContext.Set<TEntity>();
-    }
+    private readonly DbSet<TEntity> _dbSet = _dbContext.Set<TEntity>();
 
     public IQueryable<TEntity> All => _dbSet;
 

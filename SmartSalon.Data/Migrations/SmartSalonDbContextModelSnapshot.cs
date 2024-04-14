@@ -137,32 +137,7 @@ namespace SmartSalon.Data.Migrations
                     b.ToTable("Bookings");
                 });
 
-            modelBuilder.Entity("SmartSalon.Application.Domain.Category", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("SalonId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("SectionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SalonId");
-
-                    b.HasIndex("SectionId");
-
-                    b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("SmartSalon.Application.Domain.Currency", b =>
+            modelBuilder.Entity("SmartSalon.Application.Domain.SalonCurrency", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -175,13 +150,13 @@ namespace SmartSalon.Data.Migrations
 
                     b.Property<string>("Country")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -207,18 +182,18 @@ namespace SmartSalon.Data.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Location")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("ProfilePictureUrl")
                         .HasColumnType("nvarchar(max)");
@@ -352,7 +327,77 @@ namespace SmartSalon.Data.Migrations
                     b.ToTable("WorkingTimes");
                 });
 
-            modelBuilder.Entity("SmartSalon.Application.Domain.Section", b =>
+            modelBuilder.Entity("SmartSalon.Application.Domain.Services.Service", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CategorieId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("DurationInMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
+                    b.Property<Guid>("SalonId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("SubscriptionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategorieId");
+
+                    b.HasIndex("SalonId");
+
+                    b.HasIndex("SubscriptionId");
+
+                    b.ToTable("Services");
+                });
+
+            modelBuilder.Entity("SmartSalon.Application.Domain.Services.ServiceCategory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("SalonId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("SectionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SalonId");
+
+                    b.HasIndex("SectionId");
+
+                    b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("SmartSalon.Application.Domain.Services.ServiceSection", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -370,48 +415,6 @@ namespace SmartSalon.Data.Migrations
                     b.HasIndex("SalonId");
 
                     b.ToTable("Sections");
-                });
-
-            modelBuilder.Entity("SmartSalon.Application.Domain.Service", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<int>("DurationInMinutes")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
-
-                    b.Property<Guid>("SalonId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("SubscriptionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("SalonId");
-
-                    b.HasIndex("SubscriptionId");
-
-                    b.ToTable("Services");
                 });
 
             modelBuilder.Entity("SmartSalon.Application.Domain.SpecialSlot", b =>
@@ -475,38 +478,6 @@ namespace SmartSalon.Data.Migrations
                     b.ToTable("Subscriptions");
                 });
 
-            modelBuilder.Entity("SmartSalon.Application.Domain.Token", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTimeOffset?>("DeletedOn")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Tokens");
-                });
-
             modelBuilder.Entity("SmartSalon.Application.Domain.Users.Role", b =>
                 {
                     b.Property<Guid>("Id")
@@ -519,13 +490,13 @@ namespace SmartSalon.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("NormalizedName")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -566,16 +537,16 @@ namespace SmartSalon.Data.Migrations
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -598,8 +569,8 @@ namespace SmartSalon.Data.Migrations
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
@@ -660,13 +631,13 @@ namespace SmartSalon.Data.Migrations
 
                     b.Property<string>("JobTitle")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Nickname")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<Guid?>("SalonId")
                         .HasColumnType("uniqueidentifier");
@@ -744,7 +715,7 @@ namespace SmartSalon.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("SmartSalon.Application.Domain.Service", "Service")
+                    b.HasOne("SmartSalon.Application.Domain.Services.Service", "Service")
                         .WithMany()
                         .HasForeignKey("ServiceId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -765,27 +736,9 @@ namespace SmartSalon.Data.Migrations
                     b.Navigation("Worker");
                 });
 
-            modelBuilder.Entity("SmartSalon.Application.Domain.Category", b =>
-                {
-                    b.HasOne("SmartSalon.Application.Domain.Salons.Salon", "Salon")
-                        .WithMany("Categories")
-                        .HasForeignKey("SalonId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("SmartSalon.Application.Domain.Section", "Section")
-                        .WithMany("Categories")
-                        .HasForeignKey("SectionId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Salon");
-
-                    b.Navigation("Section");
-                });
-
             modelBuilder.Entity("SmartSalon.Application.Domain.Salons.Salon", b =>
                 {
-                    b.HasOne("SmartSalon.Application.Domain.Currency", "Currency")
+                    b.HasOne("SmartSalon.Application.Domain.SalonCurrency", "Currency")
                         .WithMany()
                         .HasForeignKey("CurrencyId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -826,24 +779,12 @@ namespace SmartSalon.Data.Migrations
                     b.Navigation("Salon");
                 });
 
-            modelBuilder.Entity("SmartSalon.Application.Domain.Section", b =>
+            modelBuilder.Entity("SmartSalon.Application.Domain.Services.Service", b =>
                 {
-                    b.HasOne("SmartSalon.Application.Domain.Salons.Salon", "Salon")
-                        .WithMany("Sections")
-                        .HasForeignKey("SalonId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Salon");
-                });
-
-            modelBuilder.Entity("SmartSalon.Application.Domain.Service", b =>
-                {
-                    b.HasOne("SmartSalon.Application.Domain.Category", "Categorie")
+                    b.HasOne("SmartSalon.Application.Domain.Services.ServiceCategory", "Categorie")
                         .WithMany("Services")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("CategorieId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("SmartSalon.Application.Domain.Salons.Salon", "Salon")
                         .WithMany("Services")
@@ -861,9 +802,38 @@ namespace SmartSalon.Data.Migrations
                     b.Navigation("Salon");
                 });
 
+            modelBuilder.Entity("SmartSalon.Application.Domain.Services.ServiceCategory", b =>
+                {
+                    b.HasOne("SmartSalon.Application.Domain.Salons.Salon", "Salon")
+                        .WithMany("Categories")
+                        .HasForeignKey("SalonId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SmartSalon.Application.Domain.Services.ServiceSection", "Section")
+                        .WithMany("Categories")
+                        .HasForeignKey("SectionId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Salon");
+
+                    b.Navigation("Section");
+                });
+
+            modelBuilder.Entity("SmartSalon.Application.Domain.Services.ServiceSection", b =>
+                {
+                    b.HasOne("SmartSalon.Application.Domain.Salons.Salon", "Salon")
+                        .WithMany("Sections")
+                        .HasForeignKey("SalonId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Salon");
+                });
+
             modelBuilder.Entity("SmartSalon.Application.Domain.SpecialSlot", b =>
                 {
-                    b.HasOne("SmartSalon.Application.Domain.Service", "Service")
+                    b.HasOne("SmartSalon.Application.Domain.Services.Service", "Service")
                         .WithMany()
                         .HasForeignKey("ServiceId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -888,17 +858,6 @@ namespace SmartSalon.Data.Migrations
                     b.Navigation("Salon");
                 });
 
-            modelBuilder.Entity("SmartSalon.Application.Domain.Token", b =>
-                {
-                    b.HasOne("SmartSalon.Application.Domain.Users.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("SmartSalon.Application.Domain.Users.Worker", b =>
                 {
                     b.HasOne("SmartSalon.Application.Domain.Salons.Salon", "Salon")
@@ -907,11 +866,6 @@ namespace SmartSalon.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Salon");
-                });
-
-            modelBuilder.Entity("SmartSalon.Application.Domain.Category", b =>
-                {
-                    b.Navigation("Services");
                 });
 
             modelBuilder.Entity("SmartSalon.Application.Domain.Salons.Salon", b =>
@@ -931,7 +885,12 @@ namespace SmartSalon.Data.Migrations
                     b.Navigation("WorkingTime");
                 });
 
-            modelBuilder.Entity("SmartSalon.Application.Domain.Section", b =>
+            modelBuilder.Entity("SmartSalon.Application.Domain.Services.ServiceCategory", b =>
+                {
+                    b.Navigation("Services");
+                });
+
+            modelBuilder.Entity("SmartSalon.Application.Domain.Services.ServiceSection", b =>
                 {
                     b.Navigation("Categories");
                 });

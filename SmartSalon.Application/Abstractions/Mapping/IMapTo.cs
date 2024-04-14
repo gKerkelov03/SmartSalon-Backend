@@ -1,5 +1,5 @@
 ﻿namespace SmartSalon.Application.Abstractions.Mapping;
 
-public interface IMapTo<T>
+public interface IMapTo<TType>
 {
 }

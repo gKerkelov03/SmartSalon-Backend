@@ -1,4 +1,5 @@
 ﻿using SmartSalon.Application.Domain.Base;
+using SmartSalon.Application.Domain.Services;
 using SmartSalon.Application.Domain.Users;
 
 namespace SmartSalon.Application.Domain.Salons;
@@ -18,12 +19,12 @@ public class Salon : BaseEntity
     public Id? WorkingTimeId { get; set; }
     public SalonWorkingTime? WorkingTime { get; set; }
     public Id? CurrencyId { get; set; }
-    public Currency? Currency { get; set; }
+    public SalonCurrency? Currency { get; set; }
     public virtual ICollection<Owner>? Owners { get; set; }
     public virtual ICollection<Worker>? Workers { get; set; }
     public virtual ICollection<SalonSpecialty>? Specialties { get; set; }
-    public virtual ICollection<Section>? Sections { get; set; }
-    public virtual ICollection<Category>? Categories { get; set; }
+    public virtual ICollection<ServiceSection>? Sections { get; set; }
+    public virtual ICollection<ServiceCategory>? Categories { get; set; }
     public virtual ICollection<Service>? Services { get; set; }
     public virtual ICollection<SalonImage>? Images { get; set; }
 }
