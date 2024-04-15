@@ -34,12 +34,12 @@ internal class ChangePasswordCommandHandler(UsersManager _usersManager, IEmailsM
             return new Error(identityResult.ErrorDescription());
         }
 
-        var encryptionModel = new RestorePasswordEmailEncryptionModel
+        var encryptionModel = new RestorePasswordEncryptionModel
         {
             UserId = user.Id
         };
 
-        var viewModel = new RestorePasswordEmailViewModel
+        var viewModel = new RestorePasswordViewModel
         {
             UserFirstName = user.FirstName
         };

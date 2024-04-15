@@ -5,7 +5,5 @@ namespace SmartSalon.Presentation.Web.Features.Users.Controllers;
 
 public class AddOwnerToSalonRequest : IMapTo<AddOwnerToSalonCommand>
 {
-    public Id OwnerId { get; set; }
-    public Id SalonId { get; set; }
     public required string Token { get; set; }
 }

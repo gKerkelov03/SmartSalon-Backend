@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.MediatR;
-using SmartSalon.Application.Domain;
 using SmartSalon.Application.Domain.Salons;
 using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Errors;
@@ -9,11 +8,9 @@ using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Users.Commands;
 
-public class RemoveWorkerFromSalonCommand : ICommand
+public class RemoveWorkerFromSalonCommand(Id workerId) : ICommand
 {
-    public Id WorkerId { get; set; }
-
-    public RemoveWorkerFromSalonCommand(Id workerId) => WorkerId = workerId;
+    public Id WorkerId => workerId;
 }
 
 internal class RemoveWorkerFromSalonCommandHandler(IEfRepository<Worker> _workers, IEfRepository<Salon> _salons, IUnitOfWork _unitOfWork)

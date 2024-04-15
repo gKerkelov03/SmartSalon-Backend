@@ -9,7 +9,7 @@ internal class SalonsSeeder : ISeeder
     public async Task SeedAsync(SmartSalonDbContext dbContext, IServiceProvider serviceProvider)
     {
         var owners = serviceProvider.GetRequiredService<IEfRepository<Owner>>();
-        var owner = await owners.FirstAsync(owner => true);
+        var owner = await owners.FirstOrDefaultAsync(owner => true);
 
         if (owner is null)
         {

@@ -16,19 +16,19 @@ public class RestorePasswordCommand : ICommand
 internal class RestorePasswordCommandHandler(
     UsersManager _usersManager,
     IEncryptionHelper _encryptionHelper,
-    IOptions<EmailsOptions> _options
+    IOptions<EmailOptions> _options
 ) : ICommandHandler<RestorePasswordCommand>
 {
     public async Task<Result> Handle(RestorePasswordCommand command, CancellationToken cancellationToken)
     {
-        var encryptionModel = _encryptionHelper.DecryptTo<RestorePasswordEmailEncryptionModel>(command.Token, _options.Value.EncryptionKey);
+        var decryptedToken = _encryptionHelper.DecryptTo<RestorePasswordEncryptionModel>(command.Token, _options.Value.EncryptionKey);
 
-        if (encryptionModel is null)
+        if (decryptedToken is null)
         {
             return new Error("Invalid token");
         }
 
-        var user = await _usersManager.FindByIdAsync(encryptionModel.UserId.ToString());
+        var user = await _usersManager.FindByIdAsync(decryptedToken.UserId.ToString());
 
         if (user is null)
         {

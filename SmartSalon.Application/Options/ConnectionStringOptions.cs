@@ -1,7 +1,7 @@
 
 namespace SmartSalon.Application.Options;
 
-public class ConnectionStringsOptions
+public class ConnectionStringOptions
 {
     public static string SectionName = "ConnectionStrings";
     public required string Sql { get; set; }

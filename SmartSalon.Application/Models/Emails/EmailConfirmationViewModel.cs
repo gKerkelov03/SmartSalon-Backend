@@ -1,6 +1,6 @@
 namespace SmartSalon.Application.Models.Emails;
 
-public class RestorePasswordEmailViewModel
+public class EmailConfirmationViewModel
 {
     public required string UserFirstName { get; set; }
 }

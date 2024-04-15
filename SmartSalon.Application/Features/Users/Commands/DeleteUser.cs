@@ -6,11 +6,9 @@ using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Users.Commands;
 
-public class DeleteUserCommand : ICommand
+public class DeleteUserCommand(Id userId) : ICommand
 {
-    public Id UserId { get; set; }
-
-    public DeleteUserCommand(Id userId) => UserId = userId;
+    public Id UserId => userId;
 }
 
 internal class DeleteUserCommandHandler(IEfRepository<User> _users, IUnitOfWork _unitOfWork)

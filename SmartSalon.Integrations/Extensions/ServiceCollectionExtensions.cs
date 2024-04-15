@@ -13,11 +13,11 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddEmailSending(this IServiceCollection services, IConfiguration config)
     {
-        var emailsOptions = config.GetSection(EmailsOptions.SectionName).Get<EmailsOptions>();
+        var emailsOptions = config.GetSection(EmailOptions.SectionName).Get<EmailOptions>();
 
         if (emailsOptions is null)
         {
-            throw new InvalidOperationException($"The section {EmailsOptions.SectionName} is missing from the settings files");
+            throw new InvalidOperationException($"The section {EmailOptions.SectionName} is missing from the settings files");
         }
 
         services

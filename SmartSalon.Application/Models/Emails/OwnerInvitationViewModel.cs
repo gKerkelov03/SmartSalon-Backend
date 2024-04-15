@@ -1,7 +1,7 @@
 namespace SmartSalon.Application.Models.Emails;
 
-public class WorkerInvitationEmailViewModel
+public class OwnerInvitationViewModel
 {
-    public required string WorkerFirstName { get; set; }
+    public required string OwnerFirstName { get; set; }
     public required string SalonName { get; set; }
 }

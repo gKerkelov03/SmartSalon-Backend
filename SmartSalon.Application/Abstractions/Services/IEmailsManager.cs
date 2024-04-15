@@ -8,25 +8,25 @@ public interface IEmailsManager : ITransientLifetime
 {
     Task SendEmailConfirmationEmailAsync(
         string recipientEmail,
-        EmailConfirmationEmailEncryptionModel encryptionModel,
-        EmailConfirmationEmailViewModel viewModel
+        EmailConfirmationEncryptionModel encryptionModel,
+        EmailConfirmationViewModel viewModel
     );
 
     Task SendWorkerInvitationEmailAsync(
         string recipientEmail,
-        WorkerInvitationEmailEncryptionModel encryptionModel,
-        WorkerInvitationEmailViewModel viewModel
+        WorkerInvitationEncryptionModel encryptionModel,
+        WorkerInvitationViewModel viewModel
     );
 
     Task SendOwnerInvitationEmailAsync(
         string recipientEmail,
-        OwnerInvitationEmailEncryptionModel encryptionModel,
-        OwnerInvitationEmailViewModel viewModel
+        OwnerInvitationEncryptionModel encryptionModel,
+        OwnerInvitationViewModel viewModel
     );
 
     Task SendRestorePasswordEmailAsync(
         string recipientEmail,
-        RestorePasswordEmailEncryptionModel encryptionModel,
-        RestorePasswordEmailViewModel viewModel
+        RestorePasswordEncryptionModel encryptionModel,
+        RestorePasswordViewModel viewModel
     );
 }

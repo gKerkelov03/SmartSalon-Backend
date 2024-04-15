@@ -12,7 +12,7 @@ using SmartSalon.Data;
 namespace SmartSalon.Data.Migrations
 {
     [DbContext(typeof(SmartSalonDbContext))]
-    [Migration("20240414102701_Initial")]
+    [Migration("20240414184231_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -567,7 +567,6 @@ namespace SmartSalon.Data.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("PasswordHash")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")

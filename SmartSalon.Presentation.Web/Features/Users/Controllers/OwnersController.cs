@@ -18,7 +18,6 @@ public class OwnersController(ISender _mediator, IMapper _mapper) : V1ApiControl
     [SuccessResponse(Status201Created)]
     [FailureResponse(Status409Conflict)]
     [Authorize(Policy = IsAdminPolicy)]
-
     public async Task<IActionResult> CreateOwner(CreateOwnerRequest request)
     {
         var command = _mapper.Map<CreateOwnerCommand>(request);
@@ -59,7 +58,7 @@ public class OwnersController(ISender _mediator, IMapper _mapper) : V1ApiControl
         );
     }
 
-    [HttpPatch("RemoveFromSalon")]
+    [HttpPatch($"{IdRoute}/RemoveFromSalon")]
     [SuccessResponse(Status204NoContent)]
     [Authorize(Policy = IsTheSameUserOrAdminPolicy)]
     public async Task<IActionResult> RemoveOwnerFromSalon(RemoveOwnerFromSalonRequest request)
@@ -70,10 +69,10 @@ public class OwnersController(ISender _mediator, IMapper _mapper) : V1ApiControl
         return ProblemDetailsOr<NoContentResult>(result);
     }
 
-    [HttpPost($"{IdRoute}/SendWorkerInvitationEmail")]
+    [HttpPost($"SendWorkerInvitationEmail")]
     [SuccessResponse(Status200OK)]
     [Authorize(Policy = IsOwnerOrAdminPolicy)]
-    public async Task<IActionResult> SendWorkerInvitationEmail(SendWorkerInvitationEmailRequest request)
+    public async Task<IActionResult> SendOwnerInvitationEmail(SendOwnerInvitationEmailRequest request)
     {
         var command = _mapper.Map<SendWorkerInvitationEmailCommand>(request);
         var result = await _mediator.Send(command);

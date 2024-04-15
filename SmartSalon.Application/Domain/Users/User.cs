@@ -5,6 +5,8 @@ namespace SmartSalon.Application.Domain.Users;
 
 public class User : IdentityUser<Id>, IDeletableEntity
 {
+    public User() => Id = Id.NewGuid();
+
     public required string FirstName { get; set; }
     public required string LastName { get; set; }
     public string? ProfilePictureUrl { get; set; }

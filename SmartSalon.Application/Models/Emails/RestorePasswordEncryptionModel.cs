@@ -1,6 +1,6 @@
 namespace SmartSalon.Application.Models.Emails;
 
-public class RestorePasswordEmailEncryptionModel
+public class RestorePasswordEncryptionModel
 {
     public Id UserId { get; set; }
     public DateOnly ExpirationDate { get; set; }

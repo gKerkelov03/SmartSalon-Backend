@@ -51,9 +51,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasMaxLength(MaxPhoneNumberLength)
             .IsRequired();
 
-        builder
-            .Property(user => user.PasswordHash)
-            .IsRequired();
+        // builder
+        //     .Property(user => user.PasswordHash)
+        //     .IsRequired();
 
         builder
             .Property(user => user.SecurityStamp)

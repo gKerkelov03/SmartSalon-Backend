@@ -5,20 +5,21 @@ using SmartSalon.Application.Abstractions.Mapping;
 using SmartSalon.Application.Abstractions.MediatR;
 using SmartSalon.Application.Abstractions.Services;
 using SmartSalon.Application.Domain.Salons;
+using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Errors;
 using SmartSalon.Application.Models.Emails;
 using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Users.Commands;
 
-public class SendWorkerInvitationEmailCommand : ICommand, IMapTo<WorkerInvitationEmailEncryptionModel>
+public class SendWorkerInvitationEmailCommand : ICommand, IMapTo<WorkerInvitationEncryptionModel>
 {
     public Id WorkerId { get; set; }
     public Id SalonId { get; set; }
 }
 
 public class SendWorkerInvitationEmailHandler(
-    UsersManager _usersManager,
+    IEfRepository<Worker> _workers,
     IEfRepository<Salon> _salons,
     IEmailsManager _emailsManager,
     IMapper _mapper
@@ -26,7 +27,7 @@ public class SendWorkerInvitationEmailHandler(
 {
     public async Task<Result> Handle(SendWorkerInvitationEmailCommand command, CancellationToken cancellationToken)
     {
-        var invitedWorker = await _usersManager.FindByIdAsync(command.WorkerId.ToString());
+        var invitedWorker = await _workers.GetByIdAsync(command.WorkerId);
 
         if (invitedWorker is null)
         {
@@ -49,12 +50,12 @@ public class SendWorkerInvitationEmailHandler(
 
         if (invitedWorkerIsAlreadyInTheSalon)
         {
-            return new Error("Worker already included in the workers of the salon");
+            return new Error("Worker already works in this salon");
         }
 
-        var encryptionModel = _mapper.Map<WorkerInvitationEmailEncryptionModel>(command);
+        var encryptionModel = _mapper.Map<WorkerInvitationEncryptionModel>(command);
 
-        var viewModel = new WorkerInvitationEmailViewModel
+        var viewModel = new WorkerInvitationViewModel
         {
             SalonName = salon.Name,
             WorkerFirstName = invitedWorker.FirstName

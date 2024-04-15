@@ -4,7 +4,7 @@ using SmartSalon.Presentation.Web.Attributes;
 
 namespace SmartSalon.Presentation.Web.Features.Users.Requests;
 
-public class ChangeEmailRequest : IMapTo<ChangeEmailCommand>
+public class SendEmailConfirmationEmailRequest : IMapTo<SendEmailConfirmationEmailCommand>
 {
     [IdRouteParameter]
     public Id UserId { get; set; }

@@ -11,7 +11,7 @@ using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Users.Commands;
 
-public class SendOwnerInvitationEmailCommand : ICommand, IMapTo<OwnerInvitationEmailEncryptionModel>
+public class SendOwnerInvitationEmailCommand : ICommand, IMapTo<OwnerInvitationEncryptionModel>
 {
     public Id OwnerId { get; set; }
     public Id SalonId { get; set; }
@@ -49,12 +49,12 @@ public class SendOwnerInvitationEmailHandler(
 
         if (invitedOwnerIsAlreadyInTheSalon)
         {
-            return new Error("Owner already included in the owners of the salon");
+            return new Error("Owner already owns the salon");
         }
 
-        var encryptionModel = _mapper.Map<OwnerInvitationEmailEncryptionModel>(command);
+        var encryptionModel = _mapper.Map<OwnerInvitationEncryptionModel>(command);
 
-        var viewModel = new OwnerInvitationEmailViewModel
+        var viewModel = new OwnerInvitationViewModel
         {
             OwnerFirstName = invitedOwner.FirstName,
             SalonName = salon.Name

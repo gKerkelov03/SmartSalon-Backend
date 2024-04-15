@@ -22,6 +22,8 @@ builder
     .AddApplication(builder.Configuration)
     .AddIntegrations(builder.Configuration)
     .ConfigureAllOptionsClasses(builder.Configuration, applicationLayer)
+    .CallAddControllers()
+
     .RegisterConventionalServices(presentationLayer, applicationLayer, dataLayer, integrationsLayer)
     .RegisterUnconventionalServices()
     .RegisterDbContext(builder.Configuration)

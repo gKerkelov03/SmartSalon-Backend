@@ -1,4 +1,5 @@
-﻿using SmartSalon.Application.Abstractions;
+﻿using Microsoft.EntityFrameworkCore;
+using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.Mapping;
 using SmartSalon.Application.Abstractions.MediatR;
 using SmartSalon.Application.Domain.Users;
@@ -20,21 +21,23 @@ internal class UpdateWorkerCommandHandler(IEfRepository<Worker> _workers, IUnitO
 {
     public async Task<Result> Handle(UpdateWorkerCommand command, CancellationToken cancellationToken)
     {
-        var workerWithTheSameNickname = await _workers.FirstAsync(worker =>
+        var worker = await _workers.GetByIdAsync(command.WorkerId);
+        var salonId = worker!.SalonId;
+
+        if (worker is null)
+        {
+            return Error.NotFound;
+        }
+
+        var workerWithTheSameNickname = await _workers.FirstOrDefaultAsync(worker =>
             worker.Nickname == command.Nickname &&
-            worker.Id != command.WorkerId
+            worker.Id != command.WorkerId &&
+            worker.SalonId == salonId
         );
 
         if (workerWithTheSameNickname is not null)
         {
             return Error.Conflict;
-        }
-
-        var worker = await _workers.GetByIdAsync(command.WorkerId);
-
-        if (worker is null)
-        {
-            return Error.NotFound;
         }
 
         worker.MapAgainst(command);

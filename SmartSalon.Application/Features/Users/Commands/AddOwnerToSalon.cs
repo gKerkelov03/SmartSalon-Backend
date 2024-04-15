@@ -22,22 +22,22 @@ internal class AddOwnerToSalonCommandHandler(
     IEfRepository<Owner> _owners,
     IEfRepository<Salon> _salons,
     IUnitOfWork _unitOfWork,
-    IOptions<EmailsOptions> _emailOptions,
+    IOptions<EmailOptions> _emailOptions,
     IEncryptionHelper _encryptionHelper
 ) : ICommandHandler<AddOwnerToSalonCommand>
 {
     public async Task<Result> Handle(AddOwnerToSalonCommand command, CancellationToken cancellationToken)
     {
-        var encryptionModel = _encryptionHelper.DecryptTo<OwnerInvitationEmailEncryptionModel>(command.Token, _emailOptions.Value.EncryptionKey);
+        var decryptedToken = _encryptionHelper.DecryptTo<OwnerInvitationEncryptionModel>(command.Token, _emailOptions.Value.EncryptionKey);
 
-        if (encryptionModel is null)
+        if (decryptedToken is null)
         {
             return new Error("Invalid token");
         }
 
-        var owner = await _owners.GetByIdAsync(encryptionModel.OwnerId);
+        var owner = await _owners.GetByIdAsync(decryptedToken.OwnerId);
         var salon = await _salons.All
-            .Where(salon => salon.Id == encryptionModel.SalonId)
+            .Where(salon => salon.Id == decryptedToken.SalonId)
             .Include(salon => salon.Owners)
             .FirstOrDefaultAsync();
 

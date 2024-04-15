@@ -50,13 +50,11 @@ public class UsersController(ISender _mediator, IMapper _mapper) : V1ApiControll
         return ProblemDetailsOr<OkResult>(result);
     }
 
-    [HttpPatch($"{IdRoute}/ChangeEmail")]
+    [HttpPatch($"ChangeEmail")]
     [SuccessResponse(Status200OK)]
-    [FailureResponse(Status409Conflict)]
-    [Authorize(Policy = IsTheSameUserOrAdminPolicy)]
-    public async Task<IActionResult> ChangeEmail(ChangeEmailRequest request)
+    public async Task<IActionResult> ChangeEmail(string token)
     {
-        var command = _mapper.Map<ChangeEmailCommand>(request);
+        var command = new ChangeEmailCommand(token);
         var result = await _mediator.Send(command);
 
         return ProblemDetailsOr<OkResult>(result);
@@ -88,22 +86,9 @@ public class UsersController(ISender _mediator, IMapper _mapper) : V1ApiControll
     [SuccessResponse(Status200OK)]
     [FailureResponse(Status409Conflict)]
     [Authorize(Policy = IsTheSameUserOrAdminPolicy)]
-    public async Task<IActionResult> SendEmailConfirmationEmail(Id userId)
+    public async Task<IActionResult> SendEmailConfirmationEmail(SendEmailConfirmationEmailRequest request)
     {
-        var command = new SendEmailConfirmationEmailCommand(userId);
-
-        var result = await _mediator.Send(command);
-
-        return ProblemDetailsOr<OkResult>(result);
-    }
-
-    [HttpPost("ConfirmEmail")]
-    [SuccessResponse(Status200OK)]
-    [FailureResponse(Status409Conflict)]
-    [Authorize(Policy = IsTheSameUserOrAdminPolicy)]
-    public async Task<IActionResult> ConfirmEmail(string token)
-    {
-        var command = new ConfirmEmailCommand(token);
+        var command = _mapper.Map<SendEmailConfirmationEmailCommand>(request);
         var result = await _mediator.Send(command);
 
         return ProblemDetailsOr<OkResult>(result);

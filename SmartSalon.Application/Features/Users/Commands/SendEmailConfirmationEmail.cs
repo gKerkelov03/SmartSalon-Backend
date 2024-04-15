@@ -1,4 +1,6 @@
 
+using AutoMapper;
+using SmartSalon.Application.Abstractions.Mapping;
 using SmartSalon.Application.Abstractions.MediatR;
 using SmartSalon.Application.Abstractions.Services;
 using SmartSalon.Application.Domain.Users;
@@ -7,16 +9,22 @@ using SmartSalon.Application.Models.Emails;
 using SmartSalon.Application.ResultObject;
 namespace SmartSalon.Application.Features.Users.Commands;
 
-public class SendEmailConfirmationEmailCommand(Id userId) : ICommand
+public class SendEmailConfirmationEmailCommand : ICommand, IMapTo<EmailConfirmationEncryptionModel>
 {
-    public Id UserId => userId;
+    public Id UserId { get; set; }
+    public required string NewEmail { get; set; }
+    public required string Password { get; set; }
 }
 
-public class SendEmailConfirmationEmailHandler(IEfRepository<User> _users, IEmailsManager _emailsManager) : ICommandHandler<SendEmailConfirmationEmailCommand>
+public class SendEmailConfirmationEmailHandler(
+    IEfRepository<User> _users,
+    IEmailsManager _emailsManager,
+    IMapper _mapper
+) : ICommandHandler<SendEmailConfirmationEmailCommand>
 {
     public async Task<Result> Handle(SendEmailConfirmationEmailCommand command, CancellationToken cancellationToken)
     {
-        var user = await _users.FirstAsync(user => user.Id == command.UserId);
+        var user = await _users.FirstOrDefaultAsync(user => user.Id == command.UserId);
 
         if (user is null)
         {
@@ -28,12 +36,8 @@ public class SendEmailConfirmationEmailHandler(IEfRepository<User> _users, IEmai
             return new Error("Email is already confirmed");
         }
 
-        var encryptionModel = new EmailConfirmationEmailEncryptionModel
-        {
-            UserId = user.Id
-        };
-
-        var viewModel = new EmailConfirmationEmailViewModel
+        var encryptionModel = _mapper.Map<EmailConfirmationEncryptionModel>(command);
+        var viewModel = new EmailConfirmationViewModel
         {
             UserFirstName = user.FirstName
         };

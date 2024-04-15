@@ -25,12 +25,15 @@ public class ApiBehaviorOptionsConfigurator : IConfigureOptions<ApiBehaviorOptio
                 validationViolations.Errors.Select(error =>
                     Error.Validation(validationViolations.PropertyName, error)
                 )
-            );
+            )
+            .Where(validationError => validationError.PropertyName != "request");
 
         var result = Result.Failure(validationErrors);
         var requestId = context.HttpContext.TraceIdentifier;
 
-        if (result.Errors!.Any(error => error.CastTo<ValidationError>().PropertyName == identifierForTheJsonObjectAsAWhole))
+        var isInvalidJson = result.Errors!.Any(error => error.CastTo<ValidationError>().PropertyName == identifierForTheJsonObjectAsAWhole);
+
+        if (isInvalidJson)
         {
             result = Result.Failure(new Error("Invalid JSON"));
         }

@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using SmartSalon.Application.Abstractions.Mapping;
 using SmartSalon.Application.Abstractions.MediatR;
+using SmartSalon.Application.Abstractions.Services;
 using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Errors;
 using SmartSalon.Application.Extensions;
+using SmartSalon.Application.Models.Emails;
 using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Users.Commands;
@@ -18,14 +20,12 @@ public class RegisterCommand : ICommand<RegisterCommandResponse>, IMapTo<Custome
     public required string ProfilePictureUrl { get; set; }
 }
 
-public class RegisterCommandResponse
+public class RegisterCommandResponse(Id id)
 {
-    public Id RegisteredUserId { get; set; }
-
-    public RegisterCommandResponse(Id id) => RegisteredUserId = id;
+    public Id RegisteredUserId => id;
 }
 
-internal class RegisterCommandHandler(UsersManager _users, IMapper _mapper)
+internal class RegisterCommandHandler(UsersManager _users, IMapper _mapper, IEmailsManager _emailsManager)
     : ICommandHandler<RegisterCommand, RegisterCommandResponse>
 {
     public async Task<Result<RegisterCommandResponse>> Handle(RegisterCommand command, CancellationToken cancellationToken)
@@ -40,12 +40,32 @@ internal class RegisterCommandHandler(UsersManager _users, IMapper _mapper)
         var customer = _mapper.Map<Customer>(command);
         customer.UserName = command.Email;
 
-        var identityResult = await _users.CreateAsync(customer, command.Password);
+        var identityResultForCreation = await _users.CreateAsync(customer);
+        var identityResultForAddingToRole = await _users.AddToRoleAsync(customer, CustomerRoleName);
 
-        if (identityResult.Failure())
+        if (identityResultForCreation.Failure())
         {
-            return new Error(identityResult.ErrorDescription());
+            return new Error(identityResultForCreation.ErrorDescription());
         }
+
+        if (identityResultForAddingToRole.Failure())
+        {
+            return new Error(identityResultForAddingToRole.ErrorDescription());
+        }
+
+        var encryptionModel = new EmailConfirmationEncryptionModel
+        {
+            UserId = customer.Id,
+            NewEmail = command.Email,
+            Password = command.Password
+        };
+
+        var viewModel = new EmailConfirmationViewModel
+        {
+            UserFirstName = customer.FirstName
+        };
+
+        await _emailsManager.SendEmailConfirmationEmailAsync(customer.Email, encryptionModel, viewModel);
 
         return new RegisterCommandResponse(customer.Id);
     }

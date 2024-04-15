@@ -1,10 +1,10 @@
-using SmartSalon.Presentation.Web.Attributes;
+using SmartSalon.Application.Abstractions.Mapping;
+using SmartSalon.Application.Features.Users.Commands;
 
 namespace SmartSalon.Presentation.Web.Features.Users.Requests;
 
-public class SendWorkerInvitationEmailRequest
+public class SendWorkerInvitationEmailRequest : IMapTo<SendWorkerInvitationEmailCommand>
 {
-    [IdRouteParameter]
     public Id WorkerId { get; set; }
     public Id SalonId { get; set; }
 }

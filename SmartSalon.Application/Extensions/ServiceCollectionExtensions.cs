@@ -25,7 +25,7 @@ public static class ServiceCollectionExtensions
 
     internal static IServiceCollection RegisterRedis(this IServiceCollection services, IConfiguration config)
         => services.AddStackExchangeRedisCache(options =>
-            options.Configuration = config.GetConnectionString(nameof(ConnectionStringsOptions.Redis))
+            options.Configuration = config.GetConnectionString(nameof(ConnectionStringOptions.Redis))
         );
 
     internal static IServiceCollection RegisterValidators(this IServiceCollection services)

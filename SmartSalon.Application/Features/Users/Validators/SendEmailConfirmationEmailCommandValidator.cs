@@ -8,6 +8,8 @@ internal class SendEmailConfirmationEmailCommandValidator : AbstractValidator<Se
 {
     public SendEmailConfirmationEmailCommandValidator()
     {
+        RuleFor(command => command.NewEmail).EmailAddress();
         RuleFor(command => command.UserId).MustBeValidGuid();
+        RuleFor(command => command.Password).MustBeValidPassword();
     }
 }

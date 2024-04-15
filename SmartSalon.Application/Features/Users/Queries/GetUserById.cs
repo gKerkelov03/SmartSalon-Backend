@@ -7,11 +7,9 @@ using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Users.Queries;
 
-public class GetUserByIdQuery : IQuery<GetUserByIdQueryResponse>
+public class GetUserByIdQuery(Id userId) : IQuery<GetUserByIdQueryResponse>
 {
-    public Id UserId { get; set; }
-
-    public GetUserByIdQuery(Id userId) => UserId = userId;
+    public Id UserId => userId;
 }
 
 public class GetUserByIdQueryResponse : IMapFrom<User>
@@ -20,6 +18,7 @@ public class GetUserByIdQueryResponse : IMapFrom<User>
     public required string LastName { get; set; }
     public required string PhoneNumber { get; set; }
     public required string Email { get; set; }
+    public bool EmailConfirmed { get; set; }
     public required string ProfilePictureUrl { get; set; }
 }
 

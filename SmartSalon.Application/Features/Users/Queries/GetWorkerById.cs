@@ -7,11 +7,9 @@ using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Users.Queries;
 
-public class GetWorkerByIdQuery : IQuery<GetWorkerByIdQueryResponse>
+public class GetWorkerByIdQuery(Id workerId) : IQuery<GetWorkerByIdQueryResponse>
 {
-    public Id WorkerId { get; set; }
-
-    public GetWorkerByIdQuery(Id workerId) => WorkerId = workerId;
+    public Id WorkerId => workerId;
 }
 
 public class GetWorkerByIdQueryResponse : IMapFrom<Worker>
@@ -21,8 +19,10 @@ public class GetWorkerByIdQueryResponse : IMapFrom<Worker>
     public required string ProfilePictureUrl { get; set; }
     public required string LastName { get; set; }
     public required string Email { get; set; }
+    public bool IsEmailConfirmed { get; set; }
     public required string Nickname { get; set; }
     public required string FirstName { get; set; }
+    public Id? SalonId { get; set; }
 }
 
 internal class GetWorkerByIdQueryHandler(IEfRepository<Worker> _workers, IMapper _mapper)

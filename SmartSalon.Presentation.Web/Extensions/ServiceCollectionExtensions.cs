@@ -14,6 +14,9 @@ using SmartSalon.Application.Options;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using SmartSalon.Application.Errors;
+using SmartSalon.Application.ResultObject;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SmartSalon.Presentation.Web.Extensions;
 
@@ -131,7 +134,6 @@ public static partial class ServiceCollectionExtensions
         var signingKey = Encoding.ASCII.GetBytes(jwtOptions.EncryptionKey);
 
         services
-            .AddAuthorization()
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
                 options.TokenValidationParameters = new()
@@ -143,6 +145,14 @@ public static partial class ServiceCollectionExtensions
                 }
             );
 
+        services.AddAuthorization();
+        return services;
+    }
+
+
+    public static IServiceCollection CallAddControllers(this IServiceCollection services)
+    {
+        services.AddControllers();
         return services;
     }
 

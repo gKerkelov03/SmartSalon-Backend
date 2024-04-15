@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.Mapping;
 using SmartSalon.Application.Domain.Users;
@@ -18,6 +17,7 @@ public class GetOwnerByIdQueryResponse : IMapFrom<Owner>
     public required string FirstName { get; set; }
     public required string LastName { get; set; }
     public required string Email { get; set; }
+    public bool IsEmailConfirmed { get; set; }
     public required string PhoneNumber { get; set; }
     public string? ProfilePictureUrl { get; set; }
     public required IEnumerable<Id> SalonsOwned { get; set; }

@@ -10,7 +10,7 @@ public interface IEfRepository<TEntity> : IScopedLifetime where TEntity : IBaseE
 
     IQueryable<TEntity> All { get; }
     Task<TEntity?> GetByIdAsync(Id id);
-    Task<TEntity?> FirstAsync(Expression<Func<TEntity, bool>> predicate);
+    Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
     Task<IEnumerable<TEntity>> FindAllAsync(Expression<Func<TEntity, bool>> predicate);
 
     void Update(TEntity newEntity);

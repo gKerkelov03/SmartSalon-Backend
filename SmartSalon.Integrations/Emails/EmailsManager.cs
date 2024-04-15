@@ -9,7 +9,7 @@ namespace SmartSalon.Integrations.Emails;
 public class EmailsManager(
     IFluentEmail _emailSender,
     IEncryptionHelper _encryptionHelper,
-    IOptions<EmailsOptions> _emailsOptions,
+    IOptions<EmailOptions> _emailOptions,
     IOptions<HostingOptions> _hostingOptions
 ) : IEmailsManager
 {
@@ -17,8 +17,8 @@ public class EmailsManager(
 
     public async Task SendEmailConfirmationEmailAsync(
         string recipientEmail,
-        EmailConfirmationEmailEncryptionModel encryptionModel,
-        EmailConfirmationEmailViewModel viewModel
+        EmailConfirmationEncryptionModel encryptionModel,
+        EmailConfirmationViewModel viewModel
     )
     {
         var templateName = "confirm-your-email.html";
@@ -27,7 +27,7 @@ public class EmailsManager(
         var backendEndpointUrl = $"{_hostingOptions.Value.BackendUrl}/Api/V1/Users/ConfirmEmail";
         var frontendRedirectUrl = $"{_hostingOptions.Value.FrontendUrl}/main/profile";
 
-        var token = _encryptionHelper.Encrypt(encryptionModel, _emailsOptions.Value.EncryptionKey);
+        var token = _encryptionHelper.Encrypt(encryptionModel, _emailOptions.Value.EncryptionKey);
         var extendedViewModel = new
         {
             viewModel.UserFirstName,
@@ -41,8 +41,8 @@ public class EmailsManager(
 
     public async Task SendOwnerInvitationEmailAsync(
         string recipientEmail,
-        OwnerInvitationEmailEncryptionModel encryptionModel,
-        OwnerInvitationEmailViewModel viewModel
+        OwnerInvitationEncryptionModel encryptionModel,
+        OwnerInvitationViewModel viewModel
     )
     {
         var templateName = "invite-owner.html";
@@ -51,7 +51,7 @@ public class EmailsManager(
         var backendEndpointUrl = $"{_hostingOptions.Value.BackendUrl}/Api/V1/Owners/AddToSalon";
         var frontendRedirectUrl = $"{_hostingOptions.Value.FrontendUrl}/main/my-salons";
 
-        var token = _encryptionHelper.Encrypt(encryptionModel, _emailsOptions.Value.EncryptionKey);
+        var token = _encryptionHelper.Encrypt(encryptionModel, _emailOptions.Value.EncryptionKey);
         var extendedViewModel = new
         {
             viewModel.OwnerFirstName,
@@ -66,8 +66,8 @@ public class EmailsManager(
 
     public async Task SendWorkerInvitationEmailAsync(
         string recipientEmail,
-        WorkerInvitationEmailEncryptionModel encryptionModel,
-        WorkerInvitationEmailViewModel viewModel
+        WorkerInvitationEncryptionModel encryptionModel,
+        WorkerInvitationViewModel viewModel
     )
     {
         var templateName = "invite-worker.html";
@@ -76,7 +76,7 @@ public class EmailsManager(
         var backendEndpointUrl = $"{_hostingOptions.Value.BackendUrl}/Api/V1/Owners/AddToSalon";
         var frontendRedirectUrl = $"{_hostingOptions.Value.FrontendUrl}/main/my-salons";
 
-        var token = _encryptionHelper.Encrypt(encryptionModel, _emailsOptions.Value.EncryptionKey);
+        var token = _encryptionHelper.Encrypt(encryptionModel, _emailOptions.Value.EncryptionKey);
         var extendedViewModel = new
         {
             viewModel.WorkerFirstName,
@@ -91,8 +91,8 @@ public class EmailsManager(
 
     public async Task SendRestorePasswordEmailAsync(
         string recipientEmail,
-        RestorePasswordEmailEncryptionModel encryptionModel,
-        RestorePasswordEmailViewModel viewModel
+        RestorePasswordEncryptionModel encryptionModel,
+        RestorePasswordViewModel viewModel
     )
     {
         var templateName = "restore-password.html";
@@ -100,7 +100,7 @@ public class EmailsManager(
         var subject = "Your password was changed";
         var frontendRedirectUrl = $"{_hostingOptions.Value.FrontendUrl}/public/reset-password";
 
-        var token = _encryptionHelper.Encrypt(encryptionModel, _emailsOptions.Value.EncryptionKey);
+        var token = _encryptionHelper.Encrypt(encryptionModel, _emailOptions.Value.EncryptionKey);
         var extendedViewModel = new
         {
             viewModel.UserFirstName,
