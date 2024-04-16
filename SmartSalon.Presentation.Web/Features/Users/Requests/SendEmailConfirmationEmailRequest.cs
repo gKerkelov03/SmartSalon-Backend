@@ -8,6 +8,6 @@ public class SendEmailConfirmationEmailRequest : IMapTo<SendEmailConfirmationEma
 {
     [IdRouteParameter]
     public Id UserId { get; set; }
-    public required string NewEmail { get; set; }
+    public required string EmailToBeConfirmed { get; set; }
     public required string Password { get; set; }
 }

@@ -14,15 +14,16 @@ using SmartSalon.Application.Options;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using SmartSalon.Application.Errors;
-using SmartSalon.Application.ResultObject;
-using Microsoft.AspNetCore.Mvc;
 
 namespace SmartSalon.Presentation.Web.Extensions;
 
 public static partial class ServiceCollectionExtensions
 {
-    public static IServiceCollection ConfigureAllOptionsClasses(this IServiceCollection services, IConfiguration config, params Assembly[] assemblies)
+    public static IServiceCollection ConfigureAllOptionsClasses(
+        this IServiceCollection services,
+        IConfiguration config,
+        params Assembly[] assemblies
+    )
     {
         var optionsTypes = assemblies
             .SelectMany(assembly => assembly.GetExportedTypes())

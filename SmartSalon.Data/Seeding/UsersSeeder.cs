@@ -8,32 +8,38 @@ internal class UsersSeeder : ISeeder
 {
     public async Task SeedAsync(SmartSalonDbContext dbContext, IServiceProvider serviceProvider)
     {
-        var userManager = serviceProvider.GetRequiredService<UsersManager>();
-        var password = "Password1";
+        var usersManager = serviceProvider.GetRequiredService<UsersManager>();
 
         foreach (var admin in GetAdminsToSeed())
         {
-            var asdf = await userManager.CreateAsync(admin, password);
-            await userManager.AddToRoleAsync(admin, AdminRoleName);
+            await CreateUserAsync(usersManager, admin, AdminRoleName);
         };
 
         foreach (var customer in GetCustomersToSeed())
         {
-            await userManager.CreateAsync(customer, password);
-            await userManager.AddToRoleAsync(customer, CustomerRoleName);
+            await CreateUserAsync(usersManager, customer, CustomerRoleName);
         };
 
         foreach (var worker in GetWorkersToSeed())
         {
-            await userManager.CreateAsync(worker, password);
-            await userManager.AddToRoleAsync(worker, OwnerRoleName);
+            await CreateUserAsync(usersManager, worker, WorkerRoleName);
         };
 
         foreach (var owner in GetOwnersToSeed())
         {
-            await userManager.CreateAsync(owner, password);
-            await userManager.AddToRoleAsync(owner, OwnerRoleName);
+            await CreateUserAsync(usersManager, owner, OwnerRoleName);
         };
+    }
+
+    private async Task CreateUserAsync(UsersManager usersManager, User user, string role)
+    {
+        var password = "Password1";
+
+        await usersManager.CreateAsync(user, password);
+        await usersManager.AddToRoleAsync(user, role);
+
+        var _ = await usersManager.GenerateEmailConfirmationTokenAsync(user);
+        await usersManager.ConfirmEmailAsync(user, _);
     }
 
     private IEnumerable<Customer> GetCustomersToSeed() => [
@@ -43,6 +49,7 @@ internal class UsersSeeder : ISeeder
             PhoneNumber = "1234567890",
             UserName= "ivan@abv.bg",
             Email = "ivan@abv.bg",
+            EmailConfirmed = true,
         }
     ];
 

@@ -19,9 +19,9 @@ public class EncryptionHelper : IEncryptionHelper
 
         using var memoryStream = new MemoryStream();
         using var cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write);
-        using var streamWrite = new StreamWriter(cryptoStream);
+        using var streamWriter = new StreamWriter(cryptoStream);
 
-        streamWrite.Write(textToEncrypt);
+        streamWriter.Write(textToEncrypt);
 
         var encryptedBytes = memoryStream.ToArray();
         var result = new byte[Aes.IV.Length + encryptedBytes.Length];
@@ -56,7 +56,7 @@ public class EncryptionHelper : IEncryptionHelper
 
     private byte[] Sha256(string input)
     {
-        using SHA256 hashAlgorithm = SHA256.Create();
+        using HashAlgorithm hashAlgorithm = SHA256.Create();
         return hashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(input));
     }
 }

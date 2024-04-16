@@ -12,7 +12,7 @@ namespace SmartSalon.Application.Features.Users.Commands;
 public class SendEmailConfirmationEmailCommand : ICommand, IMapTo<EmailConfirmationEncryptionModel>
 {
     public Id UserId { get; set; }
-    public required string NewEmail { get; set; }
+    public required string EmailToBeConfirmed { get; set; }
     public required string Password { get; set; }
 }
 
@@ -31,7 +31,7 @@ public class SendEmailConfirmationEmailHandler(
             return Error.NotFound;
         }
 
-        if (user.EmailConfirmed)
+        if (user.Email == command.EmailToBeConfirmed && user.EmailConfirmed)
         {
             return new Error("Email is already confirmed");
         }
@@ -42,7 +42,7 @@ public class SendEmailConfirmationEmailHandler(
             UserFirstName = user.FirstName
         };
 
-        await _emailsManager.SendEmailConfirmationEmailAsync(user.Email!, encryptionModel, viewModel);
+        await _emailsManager.SendEmailConfirmationEmailAsync(command.EmailToBeConfirmed, encryptionModel, viewModel);
 
         return Result.Success();
     }

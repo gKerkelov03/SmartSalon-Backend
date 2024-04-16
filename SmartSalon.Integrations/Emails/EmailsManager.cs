@@ -1,6 +1,7 @@
 using FluentEmail.Core;
 using Microsoft.Extensions.Options;
 using SmartSalon.Application.Abstractions.Services;
+using SmartSalon.Application.Extensions;
 using SmartSalon.Application.Models.Emails;
 using SmartSalon.Application.Options;
 
@@ -21,22 +22,19 @@ public class EmailsManager(
         EmailConfirmationViewModel viewModel
     )
     {
-        var templateName = "confirm-your-email.html";
+        var templateName = "confirm-email.html";
         var template = File.ReadAllText(Path.Combine(_templatesFolder, templateName));
         var subject = "Confirm your email";
-        var backendEndpointUrl = $"{_hostingOptions.Value.BackendUrl}/Api/V1/Users/ConfirmEmail";
-        var frontendRedirectUrl = $"{_hostingOptions.Value.FrontendUrl}/main/profile";
 
         var token = _encryptionHelper.Encrypt(encryptionModel, _emailOptions.Value.EncryptionKey);
-        var extendedViewModel = new
+
+        var viewModelWithFrontendUrl = new
         {
             viewModel.UserFirstName,
-            Token = token,
-            BackendEndpointUrl = backendEndpointUrl,
-            FrontendRedirectUrl = frontendRedirectUrl,
+            FrontendUrl = GetFrontendUrl(token, EmailType.EmailConfirmation)
         };
 
-        await SendEmailAsync(recipientEmail, subject, template, extendedViewModel);
+        await SendEmailAsync(recipientEmail, subject, template, viewModelWithFrontendUrl);
     }
 
     public async Task SendOwnerInvitationEmailAsync(
@@ -48,20 +46,16 @@ public class EmailsManager(
         var templateName = "invite-owner.html";
         var template = File.ReadAllText(Path.Combine(_templatesFolder, templateName));
         var subject = "Join a salon invitation";
-        var backendEndpointUrl = $"{_hostingOptions.Value.BackendUrl}/Api/V1/Owners/AddToSalon";
-        var frontendRedirectUrl = $"{_hostingOptions.Value.FrontendUrl}/main/my-salons";
-
         var token = _encryptionHelper.Encrypt(encryptionModel, _emailOptions.Value.EncryptionKey);
-        var extendedViewModel = new
+
+        var viewModelWithFrontendUrl = new
         {
             viewModel.OwnerFirstName,
             viewModel.SalonName,
-            Token = token,
-            BackendEndpointUrl = backendEndpointUrl,
-            FrontendRedirectUrl = frontendRedirectUrl,
+            FrontendUrl = GetFrontendUrl(token, EmailType.OwnerInvitation),
         };
 
-        await SendEmailAsync(recipientEmail, subject, template, extendedViewModel);
+        await SendEmailAsync(recipientEmail, subject, template, viewModelWithFrontendUrl);
     }
 
     public async Task SendWorkerInvitationEmailAsync(
@@ -73,20 +67,16 @@ public class EmailsManager(
         var templateName = "invite-worker.html";
         var template = File.ReadAllText(Path.Combine(_templatesFolder, templateName));
         var subject = "Join a salon invitation";
-        var backendEndpointUrl = $"{_hostingOptions.Value.BackendUrl}/Api/V1/Owners/AddToSalon";
-        var frontendRedirectUrl = $"{_hostingOptions.Value.FrontendUrl}/main/my-salons";
-
         var token = _encryptionHelper.Encrypt(encryptionModel, _emailOptions.Value.EncryptionKey);
-        var extendedViewModel = new
+
+        var viewModelWithFrontendUrl = new
         {
             viewModel.WorkerFirstName,
             viewModel.SalonName,
-            Token = token,
-            BackendEndpointUrl = backendEndpointUrl,
-            FrontendRedirectUrl = frontendRedirectUrl,
+            FrontendUrl = GetFrontendUrl(token, EmailType.WorkerInvitation),
         };
 
-        await SendEmailAsync(recipientEmail, subject, template, extendedViewModel);
+        await SendEmailAsync(recipientEmail, subject, template, viewModelWithFrontendUrl);
     }
 
     public async Task SendRestorePasswordEmailAsync(
@@ -98,18 +88,20 @@ public class EmailsManager(
         var templateName = "restore-password.html";
         var template = File.ReadAllText(Path.Combine(_templatesFolder, templateName));
         var subject = "Your password was changed";
-        var frontendRedirectUrl = $"{_hostingOptions.Value.FrontendUrl}/public/reset-password";
-
         var token = _encryptionHelper.Encrypt(encryptionModel, _emailOptions.Value.EncryptionKey);
-        var extendedViewModel = new
+
+        var viewModelWithFrontendUrl = new
         {
             viewModel.UserFirstName,
             Token = token,
-            FrontendRedirectUrl = frontendRedirectUrl,
+            FrontendUrl = GetFrontendUrl(token, EmailType.RestorePassword),
         };
 
-        await SendEmailAsync(recipientEmail, subject, template, extendedViewModel);
+        await SendEmailAsync(recipientEmail, subject, template, viewModelWithFrontendUrl);
     }
+
+    private string GetFrontendUrl(string token, EmailType emailType)
+        => $"{_hostingOptions.Value.FrontendUrl}/public/emails-handler?token={token}&email-type={emailType.CastTo<int>()}";
 
     private async Task SendEmailAsync(string recipientEmail, string subject, string template, object viewModel)
         => await _emailSender

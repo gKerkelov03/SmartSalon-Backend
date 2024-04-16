@@ -44,6 +44,8 @@ internal class ChangeEmailCommandHandler(
             return new Error(identityResult.ErrorDescription());
         }
 
+        await _usersManager.ConfirmEmailAsync(user, _);
+
         return Result.Success();
     }
 }
