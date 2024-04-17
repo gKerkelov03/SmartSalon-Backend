@@ -24,6 +24,13 @@ public class SendEmailConfirmationEmailHandler(
 {
     public async Task<Result> Handle(SendEmailConfirmationEmailCommand command, CancellationToken cancellationToken)
     {
+        var userWithTheSameEmail = await _users.FirstOrDefaultAsync(user => user.Email == command.EmailToBeConfirmed);
+
+        if (userWithTheSameEmail is not null)
+        {
+            return Error.Conflict;
+        }
+
         var user = await _users.FirstOrDefaultAsync(user => user.Id == command.UserId);
 
         if (user is null)

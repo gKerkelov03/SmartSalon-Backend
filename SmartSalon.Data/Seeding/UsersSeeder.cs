@@ -61,8 +61,8 @@ internal class UsersSeeder : ISeeder
             JobTitle = "Barber",
             PhoneNumber = "1234567890",
             Nickname = "Ganio",
-            UserName = "gancho@abv.bg",
-            Email = "gancho@abv.bg",
+            UserName = "gkerkelov031@gmail.com",
+            Email = "gkerkelov031@gmail.com",
             ProfilePictureUrl = "https://res.cloudinary.com/donhvedgr/image/upload/v1663928763/mlnxqpbwatsjlobnqbwl.jpg"
         },
         new()
@@ -81,13 +81,22 @@ internal class UsersSeeder : ISeeder
     private IEnumerable<Owner> GetOwnersToSeed() => [
         new()
         {
+            FirstName = "Stanislav",
+            LastName = "Mitkov",
+            PhoneNumber = "1234567890",
+            UserName= "gkerkelov032@abv.bg",
+            Email = "gkerkelov032@abv.bg",
+            ProfilePictureUrl = "https://res.cloudinary.com/donhvedgr/image/upload/v1663915155/gaxbdvdgfxqklct4ezpm.jpg"
+        },
+        new()
+        {
             FirstName = "Mladen",
             LastName = "Petrov",
             PhoneNumber = "1234567890",
             UserName= "mladen@abv.bg",
             Email = "mladen@abv.bg",
             ProfilePictureUrl = "https://res.cloudinary.com/donhvedgr/image/upload/v1663915155/gaxbdvdgfxqklct4ezpm.jpg"
-        }
+        },
     ];
 
     private IEnumerable<User> GetAdminsToSeed() => [

@@ -82,7 +82,7 @@ public class WorkersController(ISender _mediator, IMapper _mapper) : V1ApiContro
         return ProblemDetailsOr<NoContentResult>(result);
     }
 
-    [HttpPost($"{IdRoute}/SendWorkerInvitationEmail")]
+    [HttpPost($"SendWorkerInvitationEmail")]
     [SuccessResponse(Status200OK)]
     [Authorize(Policy = IsOwnerOrAdminPolicy)]
     public async Task<IActionResult> SendWorkerInvitationEmail(SendWorkerInvitationEmailRequest request)

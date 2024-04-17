@@ -44,6 +44,7 @@ internal class ChangeEmailCommandHandler(
             return new Error(identityResult.ErrorDescription());
         }
 
+        await _usersManager.SetUserNameAsync(user, decryptedToken.EmailToBeConfirmed);
         await _usersManager.ConfirmEmailAsync(user, _);
 
         return Result.Success();
