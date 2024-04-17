@@ -56,7 +56,7 @@ internal class RegisterCommandHandler(UsersManager _users, IMapper _mapper, IEma
         var encryptionModel = new EmailConfirmationEncryptionModel
         {
             UserId = customer.Id,
-            NewEmail = command.Email,
+            EmailToBeConfirmed = command.Email,
             Password = command.Password
         };
 

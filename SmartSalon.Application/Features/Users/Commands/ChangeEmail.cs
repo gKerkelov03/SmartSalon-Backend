@@ -36,8 +36,8 @@ internal class ChangeEmailCommandHandler(
             return Error.NotFound;
         }
 
-        var _ = await _usersManager.GenerateChangeEmailTokenAsync(user, decryptedToken.NewEmail);
-        var identityResult = await _usersManager.ChangeEmailAsync(user, decryptedToken.NewEmail, _);
+        var _ = await _usersManager.GenerateChangeEmailTokenAsync(user, decryptedToken.EmailToBeConfirmed);
+        var identityResult = await _usersManager.ChangeEmailAsync(user, decryptedToken.EmailToBeConfirmed, _);
 
         if (identityResult.Failure())
         {

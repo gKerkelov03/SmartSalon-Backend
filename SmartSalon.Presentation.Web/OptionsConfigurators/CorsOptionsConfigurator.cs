@@ -9,7 +9,7 @@ public class CorsOptionsConfigurator : IConfigureOptions<CorsOptions>, ITransien
     public void Configure(CorsOptions options)
         => options.AddPolicy
         (
-            "Angular-Localhost-Cors-Policy",
+            AngularLocalhostCorsPolicy,
             policy => policy
                 .WithOrigins("http://localhost:4200")
                 .AllowAnyHeader()

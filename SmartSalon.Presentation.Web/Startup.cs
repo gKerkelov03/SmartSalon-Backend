@@ -40,7 +40,7 @@ builder
 var app = builder.Build();
 
 app
-    .UseCors()
+    .UseCors(AngularLocalhostCorsPolicy)
     .UseSwagger(app.Environment, app.Services)
     .UseAuthentication()
     .UseAuthorization()
@@ -54,6 +54,5 @@ app
     .SeedTheDatabase(app.Services)
     .OpenSwaggerOnStartup();
 
-//Only for improved dev experience and will be removed eventually
 Console.WriteLine($"Running on: http://localhost:5054");
 app.Run();

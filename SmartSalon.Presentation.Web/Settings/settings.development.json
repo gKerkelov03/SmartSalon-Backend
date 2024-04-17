@@ -13,7 +13,7 @@
         "Password": "dngd roit xigx pmmk",
         "Host": "smtp.gmail.com",
         "Port": "587",
-        "EncryptionKey": "9A4A6686572B9348E7AEFF259E4D24C8D1A3F91A7A5046616F559D0A90"
+        "EncryptionKey": "b14ca5898a4e4133bbce2ea2315a1916"
     },
     "Hosting": {
         "FrontendUrl": "http://localhost:4200",
