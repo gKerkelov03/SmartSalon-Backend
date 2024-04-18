@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Text;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
 using SmartSalon.Application.Extensions;
@@ -7,17 +8,17 @@ using SmartSalon.Presentation.Web.Attributes;
 
 public class ObjectBinder : BaseBinder, IModelBinder, IModelBinderProvider
 {
-    public async Task BindModelAsync(ModelBindingContext bindingContext)
+    public async Task BindModelAsync(ModelBindingContext context)
     {
-        var requestBodyMap = await ConvertTheRequestBodyToDictionaryAsync(bindingContext);
+        var requestBodyMap = await GetRequestBodyMapAsync(context);
 
         if (requestBodyMap is null)
         {
             return;
         }
 
-        var IdRouteParameterPassed = GetTheIdRouteParameter(bindingContext);
-        var requestModel = Activator.CreateInstance(bindingContext.ModelType)!;
+        var IdRouteParameterPassed = GetTheIdRouteParameter(context);
+        var requestModel = Activator.CreateInstance(context.ModelType)!;
 
         foreach (var property in requestModel.GetType().GetProperties())
         {
@@ -28,23 +29,23 @@ public class ObjectBinder : BaseBinder, IModelBinder, IModelBinderProvider
             {
                 if (IdRouteParameterPassed is null)
                 {
-                    bindingContext.ModelState.AddModelError(jsonPropertyName, $"No route value passed for parameter {jsonPropertyName}");
+                    context.ModelState.AddModelError(jsonPropertyName, $"No route value passed for parameter {jsonPropertyName}");
                     return;
                 }
 
-                var id = ConvertToId(bindingContext, jsonPropertyName, IdRouteParameterPassed);
+                var id = ConvertToId(context, jsonPropertyName, IdRouteParameterPassed);
                 requestModel!.GetType().GetProperty(property.Name)!.SetValue(requestModel, id);
             }
             else if (!requestBodyMap.ContainsKey(jsonPropertyName))
             {
-                bindingContext.ModelState.AddModelError(jsonPropertyName, $"Property {jsonPropertyName} is required");
+                context.ModelState.AddModelError(jsonPropertyName, $"Property {jsonPropertyName} is required");
                 return;
             }
             else
             {
-                object convertedValue = ConvertToType(property.PropertyType, bindingContext, jsonPropertyName, requestBodyMap[jsonPropertyName]);
+                object convertedValue = ConvertToType(property.PropertyType, context, jsonPropertyName, requestBodyMap[jsonPropertyName]);
 
-                if (!bindingContext.ModelState.IsValid)
+                if (!context.ModelState.IsValid)
                 {
                     return;
                 }
@@ -53,17 +54,21 @@ public class ObjectBinder : BaseBinder, IModelBinder, IModelBinderProvider
             }
         }
 
-        bindingContext.Result = ModelBindingResult.Success(requestModel);
+        context.Result = ModelBindingResult.Success(requestModel);
     }
 
-    private static async Task<IDictionary<string, string>?> ConvertTheRequestBodyToDictionaryAsync(ModelBindingContext bindingContext)
+    private static async Task<IDictionary<string, string>?> GetRequestBodyMapAsync(ModelBindingContext bindingContext)
     {
         try
         {
-            using var requestBodyReader = new StreamReader(bindingContext.HttpContext.Request.Body, Encoding.UTF8);
-            var body = await requestBodyReader.ReadToEndAsync();
+            var request = bindingContext.HttpContext.Request;
+            request.EnableBuffering();
 
-            return JsonConvert.DeserializeObject<Dictionary<string, string>>(body)!;
+            using var requestBodyReader = new StreamReader(request.Body, Encoding.UTF8, leaveOpen: true);
+            var bodyAsText = await requestBodyReader.ReadToEndAsync();
+            request.Body.Position = 0;
+
+            return JsonConvert.DeserializeObject<Dictionary<string, string>>(bodyAsText)!;
         }
         catch (Exception ex)
         {

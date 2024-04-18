@@ -2,7 +2,6 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SmartSalon.Application.Abstractions.Services;
 using SmartSalon.Application.Features.Users.Commands;
 using SmartSalon.Presentation.Web.Controllers;
 using SmartSalon.Presentation.Web.Features.Users.Requests;

@@ -10,13 +10,11 @@ namespace SmartSalon.Application.Services;
 public class JwtTokensGenerator(JwtSecurityTokenHandler _jwtHelper, IOptions<JwtOptions> _jwtOptions, TimeProvider _timeProvider)
     : IJwtTokensGenerator
 {
-    public string GenerateJwt(Id userId, IEnumerable<string> role)
+    public string GenerateJwt(Id userId, IEnumerable<string> roles)
     {
         var jwtOptions = _jwtOptions.Value;
         var signingKeyBytes = Encoding.UTF8.GetBytes(jwtOptions.EncryptionKey);
         var expirationTime = _timeProvider.GetUtcNow().AddDays(jwtOptions.TokenExpirationInDays);
-
-        var roles = role.Append("Something");
 
         var token = new JwtSecurityToken(
             jwtOptions.Issuer,

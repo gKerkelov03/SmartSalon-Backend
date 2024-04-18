@@ -3,17 +3,17 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 public class IdBinder : BaseBinder, IModelBinder, IModelBinderProvider
 {
-    public Task BindModelAsync(ModelBindingContext bindingContext)
+    public Task BindModelAsync(ModelBindingContext context)
     {
-        var passedValueForId = GetTheIdRouteParameter(bindingContext);
-        var id = ConvertToId(bindingContext, IdRouteParameterName, passedValueForId);
+        var passedValueForId = GetTheIdRouteParameter(context);
+        var id = ConvertToId(context, IdRouteParameterName, passedValueForId);
 
-        if (!bindingContext.ModelState.IsValid)
+        if (!context.ModelState.IsValid)
         {
             return Task.CompletedTask;
         }
 
-        bindingContext.Result = ModelBindingResult.Success(id);
+        context.Result = ModelBindingResult.Success(id);
         return Task.CompletedTask;
     }
 

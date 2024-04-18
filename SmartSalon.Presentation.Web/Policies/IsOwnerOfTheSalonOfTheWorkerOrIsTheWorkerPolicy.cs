@@ -19,10 +19,16 @@ internal class IsOwnerOfTheSalonOfTheWorkerOrIsAdminHandler(
 {
     public async Task HandleAsync(AuthorizationHandlerContext context)
     {
-        var requestBodyMap = await GetRequestBodyMapAsync(_httpContextAccessor);
         var requirement = GetRequirement<IsOwnerOfTheSalonOfTheWorkerOrIsAdminRequirement>(context);
 
-        if (requirement is null || requestBodyMap is null)
+        if (requirement is null)
+        {
+            return;
+        }
+
+        var requestBodyMap = await GetRequestBodyMapAsync(_httpContextAccessor);
+
+        if (requestBodyMap is null)
         {
             return;
         }

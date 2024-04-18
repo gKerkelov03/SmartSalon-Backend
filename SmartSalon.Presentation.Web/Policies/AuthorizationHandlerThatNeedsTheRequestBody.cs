@@ -10,8 +10,12 @@ public abstract class AuthorizationHandlerThatNeedsTheRequestBody
 
     protected async Task<IDictionary<string, string>?> GetRequestBodyMapAsync(IHttpContextAccessor httpContextAccessor)
     {
-        using var requestBodyReader = new StreamReader(httpContextAccessor.HttpContext!.Request.Body, Encoding.UTF8);
+        var request = httpContextAccessor.HttpContext!.Request;
+        request.EnableBuffering();
+
+        using var requestBodyReader = new StreamReader(request.Body, Encoding.UTF8, leaveOpen: true);
         var body = await requestBodyReader.ReadToEndAsync();
+        request.Body.Position = 0;
 
         return JsonConvert.DeserializeObject<Dictionary<string, string>>(body);
     }
