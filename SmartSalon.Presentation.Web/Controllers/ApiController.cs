@@ -11,7 +11,7 @@ namespace SmartSalon.Presentation.Web.Controllers;
 [Route("Api/V{apiVersion:apiVersion}/[controller]")]
 [FailureResponse(Status401Unauthorized)]
 [FailureResponse(Status400BadRequest)]
-// [Authorize]
+[Authorize]
 public abstract class ApiController : ControllerBase
 {
     protected IActionResult CreatedAndLocatedAt(string controllerName, string actionName, Id createdResourceId, object? response = null)
@@ -49,10 +49,7 @@ public abstract class ApiController : ControllerBase
         return successResponseFactory(result);
     }
 
-    protected IActionResult ProblemDetailsOr<TValue>(
-        Func<Result<TValue>, IActionResult> successResponseFactory,
-        Result<TValue> result
-    )
+    protected IActionResult ProblemDetailsOr<TValue>(Func<Result<TValue>, IActionResult> successResponseFactory, Result<TValue> result)
     {
         if (result.IsFailure)
         {

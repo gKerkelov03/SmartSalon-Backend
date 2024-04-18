@@ -40,13 +40,13 @@ builder
 var app = builder.Build();
 
 app
+    .UseExceptionHandling(app.Environment)
     .UseCors(AngularLocalhostCorsPolicy)
     .UseSwagger(app.Environment, app.Services)
     .UseAuthentication()
     .UseAuthorization()
     .UseSerilogRequestLogging()
-    .UseHttpsRedirection()
-    .UseExceptionHandling(app.Environment);
+    .UseHttpsRedirection();
 
 app.MapControllers();
 

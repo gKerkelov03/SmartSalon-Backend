@@ -18,7 +18,7 @@ public class WorkersController(ISender _mediator, IMapper _mapper) : V1ApiContro
     [HttpPost]
     [SuccessResponse(Status201Created)]
     [FailureResponse(Status409Conflict)]
-    [Authorize(Policy = IsOwnerOrAdminPolicy)]
+    [Authorize(Policy = IsOwnerOrIsAdminPolicy)]
     public async Task<IActionResult> CreateWorker(CreateWorkerRequest request)
     {
         var command = _mapper.Map<CreateWorkerCommand>(request);
@@ -33,7 +33,7 @@ public class WorkersController(ISender _mediator, IMapper _mapper) : V1ApiContro
     [HttpGet("Search")]
     [SuccessResponse(Status200OK)]
     [FailureResponse(Status404NotFound)]
-    [Authorize(Policy = IsOwnerOrAdminPolicy)]
+    [Authorize(Policy = IsOwnerOrIsAdminPolicy)]
     public async Task<IActionResult> SearchForUnemployedWorker(string searchTerm)
     {
         var query = new SearchForUnemployedWorkerQuery(searchTerm);
@@ -62,7 +62,7 @@ public class WorkersController(ISender _mediator, IMapper _mapper) : V1ApiContro
     [HttpPatch(IdRoute)]
     [SuccessResponse(Status200OK)]
     [FailureResponse(Status409Conflict)]
-    [Authorize(Policy = IsOwnerOfTheSalonOfTheWorkerOrIsTheWorkerPolicy)]
+    [Authorize(Policy = IsOwnerOfTheSalonOfTheWorkerOrIsAdminPolicy)]
     public async Task<IActionResult> UpdateWorker(UpdateWorkerRequest request)
     {
         var command = _mapper.Map<UpdateWorkerCommand>(request);
@@ -73,7 +73,7 @@ public class WorkersController(ISender _mediator, IMapper _mapper) : V1ApiContro
 
     [HttpPatch($"{IdRoute}/RemoveFromSalon")]
     [SuccessResponse(Status204NoContent)]
-    [Authorize(Policy = IsOwnerOfTheSalonOfTheWorkerOrIsTheWorkerPolicy)]
+    [Authorize(Policy = IsOwnerOfTheSalonOfTheWorkerOrIsAdminPolicy)]
     public async Task<IActionResult> RemoveWorkerFromSalon(Id workerId)
     {
         var command = new RemoveWorkerFromSalonCommand(workerId);
@@ -84,7 +84,7 @@ public class WorkersController(ISender _mediator, IMapper _mapper) : V1ApiContro
 
     [HttpPost($"SendWorkerInvitationEmail")]
     [SuccessResponse(Status200OK)]
-    [Authorize(Policy = IsOwnerOrAdminPolicy)]
+    [Authorize(Policy = IsOwnerOrIsAdminPolicy)]
     public async Task<IActionResult> SendWorkerInvitationEmail(SendWorkerInvitationEmailRequest request)
     {
         var command = _mapper.Map<SendWorkerInvitationEmailCommand>(request);
@@ -95,7 +95,7 @@ public class WorkersController(ISender _mediator, IMapper _mapper) : V1ApiContro
 
     [HttpPatch("AddToSalon")]
     [SuccessResponse(Status200OK)]
-    [Authorize(Policy = IsOwnerOrAdminPolicy)]
+    [Authorize(Policy = IsOwnerOrIsAdminPolicy)]
     public async Task<IActionResult> AddWorkerToSalon(string token)
     {
         var command = new AddWorkerToSalonCommand(token);

@@ -1,21 +1,47 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.Lifetime;
+using SmartSalon.Application.Domain.Salons;
 
 namespace SmartSalon.Presentation.Web.Policies;
 
 internal class IsOwnerOfTheSalonOrIsAdminRequirement : IAuthorizationRequirement { }
 
-internal class IsOwnerOfTheSalonOrAdminHandler(IHttpContextAccessor _httpContextAccessor) : AuthorizationHandler<IsOwnerOfTheSalonOrIsAdminRequirement>, ISingletonLifetime
+internal class IsOwnerOfTheSalonOrIsAdminHandler(
+    IHttpContextAccessor _httpContextAccessor,
+    ICurrentUserAccessor _currentUser,
+    IEfRepository<Salon> _salons
+) : AuthorizationHandlerThatNeedsTheRequestBody, IAuthorizationHandler, IScopedLifetime
 {
-    protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IsOwnerOfTheSalonOrIsAdminRequirement requirement)
+    public async Task HandleAsync(AuthorizationHandlerContext context)
     {
-        var currentUserId = _httpContextAccessor.HttpContext!.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var requestedUserId = _httpContextAccessor.HttpContext.Request.RouteValues["userId"]?.ToString();
+        var requestBodyMap = await GetRequestBodyMapAsync(_httpContextAccessor);
+        var requirement = GetRequirement<IsOwnerOfTheSalonOrIsAdminRequirement>(context);
 
-        context.Succeed(requirement);
+        if (requirement is null || requestBodyMap is null)
+        {
+            return;
+        }
 
-        return Task.CompletedTask;
+        var requestedSalonId = requestBodyMap["salonId"];
+        var requestedSalonIdNotValid = !Id.TryParse(requestedSalonId, out var salonId);
+
+        if (requestedSalonIdNotValid)
+        {
+            return;
+        }
+
+        var isOwnerOfTheSalon = _salons
+            .All
+            .Include(salon => salon.Owners)
+            .Where(salon => salon.Id == salonId)
+            .Any(salon => salon.Owners!.Any(owner => owner.Id == _currentUser.Id));
+
+        if (_currentUser.IsAdmin || isOwnerOfTheSalon)
+        {
+            context.Succeed(requirement);
+        }
     }
 }

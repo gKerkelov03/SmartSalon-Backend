@@ -30,7 +30,7 @@ public class UsersController(ISender _mediator, IMapper _mapper) : V1ApiControll
     [HttpPatch(IdRoute)]
     [SuccessResponse(Status200OK)]
     [FailureResponse(Status404NotFound)]
-    [Authorize(Policy = IsTheSameUserOrAdminPolicy)]
+    [Authorize(Policy = IsTheSameUserOrIsAdminPolicy)]
     public async Task<IActionResult> UpdateUser(UpdateUserRequest request)
     {
         var command = _mapper.Map<UpdateUserCommand>(request);
@@ -41,7 +41,7 @@ public class UsersController(ISender _mediator, IMapper _mapper) : V1ApiControll
 
     [HttpPatch($"{IdRoute}/ChangePassword")]
     [SuccessResponse(Status200OK)]
-    [Authorize(Policy = IsTheSameUserOrAdminPolicy)]
+    [Authorize(Policy = IsTheSameUserOrIsAdminPolicy)]
     public async Task<IActionResult> ChangePassword(ChangePasswordRequest request)
     {
         var command = _mapper.Map<ChangePasswordCommand>(request);
@@ -52,9 +52,22 @@ public class UsersController(ISender _mediator, IMapper _mapper) : V1ApiControll
 
     [HttpPatch($"ChangeEmail")]
     [SuccessResponse(Status200OK)]
+    [AllowAnonymous]
     public async Task<IActionResult> ChangeEmail(string token)
     {
         var command = new ChangeEmailCommand(token);
+        var result = await _mediator.Send(command);
+
+        return ProblemDetailsOr<OkResult>(result);
+    }
+
+    [HttpPost($"{IdRoute}/SendEmailConfirmationEmail")]
+    [SuccessResponse(Status200OK)]
+    [FailureResponse(Status409Conflict)]
+    [Authorize(Policy = IsTheSameUserOrIsAdminPolicy)]
+    public async Task<IActionResult> SendEmailConfirmationEmail(SendEmailConfirmationEmailRequest request)
+    {
+        var command = _mapper.Map<SendEmailConfirmationEmailCommand>(request);
         var result = await _mediator.Send(command);
 
         return ProblemDetailsOr<OkResult>(result);
@@ -73,7 +86,7 @@ public class UsersController(ISender _mediator, IMapper _mapper) : V1ApiControll
 
     [HttpDelete(IdRoute)]
     [SuccessResponse(Status204NoContent)]
-    [Authorize(Policy = IsTheSameUserOrAdminPolicy)]
+    [Authorize(Policy = IsTheSameUserOrIsAdminPolicy)]
     public async Task<IActionResult> DeleteUser(Id userId)
     {
         var command = new DeleteUserCommand(userId);
@@ -82,15 +95,4 @@ public class UsersController(ISender _mediator, IMapper _mapper) : V1ApiControll
         return ProblemDetailsOr<NoContentResult>(result);
     }
 
-    [HttpPost($"{IdRoute}/SendEmailConfirmationEmail")]
-    [SuccessResponse(Status200OK)]
-    [FailureResponse(Status409Conflict)]
-    [Authorize(Policy = IsTheSameUserOrAdminPolicy)]
-    public async Task<IActionResult> SendEmailConfirmationEmail(SendEmailConfirmationEmailRequest request)
-    {
-        var command = _mapper.Map<SendEmailConfirmationEmailCommand>(request);
-        var result = await _mediator.Send(command);
-
-        return ProblemDetailsOr<OkResult>(result);
-    }
 }

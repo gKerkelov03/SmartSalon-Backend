@@ -5,6 +5,7 @@ using SmartSalon.Application.Abstractions.Services;
 
 namespace SmartSalon.Application.Services;
 
+//TODO: extract to IEncryptor and IDecryptor
 public class EncryptionHelper : IEncryptionHelper
 {
     public string Encrypt<TModel>(TModel model, string key)

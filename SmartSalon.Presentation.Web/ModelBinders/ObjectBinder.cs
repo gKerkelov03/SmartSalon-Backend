@@ -60,7 +60,7 @@ public class ObjectBinder : BaseBinder, IModelBinder, IModelBinderProvider
     {
         try
         {
-            using StreamReader requestBodyReader = new(bindingContext.HttpContext.Request.Body, Encoding.UTF8);
+            using var requestBodyReader = new StreamReader(bindingContext.HttpContext.Request.Body, Encoding.UTF8);
             var body = await requestBodyReader.ReadToEndAsync();
 
             return JsonConvert.DeserializeObject<Dictionary<string, string>>(body)!;

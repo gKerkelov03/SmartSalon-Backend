@@ -10,9 +10,9 @@ internal static class WebConstants
     internal static class PolicyNames
     {
         public const string IsAdminPolicy = nameof(IsAdminPolicy);
-        public const string IsOwnerOrAdminPolicy = nameof(IsOwnerOrAdminPolicy);
-        public const string IsTheSameUserOrAdminPolicy = nameof(IsTheSameUserOrAdminPolicy);
-        public const string IsOwnerOfTheSalonOfTheWorkerOrIsTheWorkerPolicy = nameof(IsOwnerOfTheSalonOfTheWorkerOrIsTheWorkerPolicy);
+        public const string IsOwnerOrIsAdminPolicy = nameof(IsOwnerOrIsAdminPolicy);
+        public const string IsTheSameUserOrIsAdminPolicy = nameof(IsTheSameUserOrIsAdminPolicy);
+        public const string IsOwnerOfTheSalonOfTheWorkerOrIsAdminPolicy = nameof(IsOwnerOfTheSalonOfTheWorkerOrIsAdminPolicy);
         public const string IsOwnerOfTheSalonOrIsAdminPolicy = nameof(IsOwnerOfTheSalonOrIsAdminPolicy);
     }
 }

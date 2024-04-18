@@ -1,22 +1,61 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.Lifetime;
+using SmartSalon.Application.Domain.Salons;
+using SmartSalon.Application.Domain.Users;
 
 namespace SmartSalon.Presentation.Web.Policies;
 
-internal class IsOwnerOfTheSalonOfTheWorkerOrIsTheWorkerRequirement : IAuthorizationRequirement { }
+internal class IsOwnerOfTheSalonOfTheWorkerOrIsAdminRequirement : IAuthorizationRequirement { }
 
-internal class IsOwnerOfTheSalonOfTheWorkerOrIsTheWorkerHandler(IHttpContextAccessor _httpContextAccessor)
-    : AuthorizationHandler<IsOwnerOfTheSalonOfTheWorkerOrIsTheWorkerRequirement>, ISingletonLifetime
+internal class IsOwnerOfTheSalonOfTheWorkerOrIsAdminHandler(
+    IHttpContextAccessor _httpContextAccessor,
+    ICurrentUserAccessor _currentUser,
+    IEfRepository<Worker> _workers,
+    IEfRepository<Salon> _salons
+) : AuthorizationHandlerThatNeedsTheRequestBody, IAuthorizationHandler, IScopedLifetime
 {
-    protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IsOwnerOfTheSalonOfTheWorkerOrIsTheWorkerRequirement requirement)
+    public async Task HandleAsync(AuthorizationHandlerContext context)
     {
-        var currentUserId = _httpContextAccessor.HttpContext!.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var requestedUserId = _httpContextAccessor.HttpContext.Request.RouteValues["userId"]?.ToString();
+        var requestBodyMap = await GetRequestBodyMapAsync(_httpContextAccessor);
+        var requirement = GetRequirement<IsOwnerOfTheSalonOfTheWorkerOrIsAdminRequirement>(context);
 
-        context.Succeed(requirement);
+        if (requirement is null || requestBodyMap is null)
+        {
+            return;
+        }
 
-        return Task.CompletedTask;
+        var requestedWorkerId = requestBodyMap["workerId"];
+        var requestedWorkerIdNotValid = !Id.TryParse(requestedWorkerId, out var workerId);
+
+        if (requestedWorkerIdNotValid)
+        {
+            return;
+        }
+
+        var salon = await _workers.All
+            .Include(worker => worker.Salon)
+            .Where(worker => worker.Id == workerId)
+            .FirstOrDefaultAsync();
+
+        if (salon is null)
+        {
+            return;
+        }
+
+        var salonId = salon.Id;
+        var isOwnerOfTheSalon = _salons
+            .All
+            .Include(salon => salon.Owners)
+            .Include(salon => salon.Workers)
+            .Where(salon => salon.Id == salonId)
+            .Any(salon => salon.Owners!.Any(owner => owner.Id == _currentUser.Id));
+
+        if (_currentUser.IsAdmin || isOwnerOfTheSalon)
+        {
+            context.Succeed(requirement);
+        }
     }
 }

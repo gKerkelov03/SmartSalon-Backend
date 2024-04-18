@@ -32,7 +32,7 @@ public class OwnersController(ISender _mediator, IMapper _mapper) : V1ApiControl
     [HttpGet("Search")]
     [SuccessResponse(Status200OK)]
     [FailureResponse(Status404NotFound)]
-    [Authorize(Policy = IsOwnerOrAdminPolicy)]
+    [Authorize(Policy = IsOwnerOrIsAdminPolicy)]
     public async Task<IActionResult> SearchForOwner(string searchTerm)
     {
         var query = new SearchForOwnerQuery(searchTerm);
@@ -60,7 +60,7 @@ public class OwnersController(ISender _mediator, IMapper _mapper) : V1ApiControl
 
     [HttpPatch($"{IdRoute}/RemoveFromSalon")]
     [SuccessResponse(Status204NoContent)]
-    [Authorize(Policy = IsTheSameUserOrAdminPolicy)]
+    [Authorize(Policy = IsTheSameUserOrIsAdminPolicy)]
     public async Task<IActionResult> RemoveOwnerFromSalon(RemoveOwnerFromSalonRequest request)
     {
         var command = _mapper.Map<RemoveOwnerFromSalonCommand>(request);
@@ -71,7 +71,8 @@ public class OwnersController(ISender _mediator, IMapper _mapper) : V1ApiControl
 
     [HttpPost($"SendOwnerInvitationEmail")]
     [SuccessResponse(Status200OK)]
-    [Authorize(Policy = IsOwnerOrAdminPolicy)]
+    [Authorize(Policy = IsOwnerOrIsAdminPolicy)]
+    [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]
     public async Task<IActionResult> SendOwnerInvitationEmail(SendOwnerInvitationEmailRequest request)
     {
         var command = _mapper.Map<SendOwnerInvitationEmailCommand>(request);
@@ -82,7 +83,6 @@ public class OwnersController(ISender _mediator, IMapper _mapper) : V1ApiControl
 
     [HttpPatch("AddToSalon")]
     [SuccessResponse(Status200OK)]
-    [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]
     public async Task<IActionResult> AddOwnerToSalon(string token)
     {
         var command = new AddOwnerToSalonCommand(token);
