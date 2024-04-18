@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartSalon.Integrations", "SmartSalon.Integrations.csproj", "{8E53E3F0-0967-41F2-8098-1ACA02236CEB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8E53E3F0-0967-41F2-8098-1ACA02236CEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E53E3F0-0967-41F2-8098-1ACA02236CEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E53E3F0-0967-41F2-8098-1ACA02236CEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E53E3F0-0967-41F2-8098-1ACA02236CEB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0D6D28FF-BF35-4712-8609-686703890F98}
+	EndGlobalSection
+EndGlobal
