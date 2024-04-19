@@ -9,7 +9,7 @@ namespace SmartSalon.Integrations.Emails;
 
 public class EmailsManager(
     IFluentEmail _emailSender,
-    IEncryptionHelper _encryptionHelper,
+    IEncryptor _encryptor,
     IOptions<EmailOptions> _emailOptions,
     IOptions<HostingOptions> _hostingOptions
 ) : IEmailsManager
@@ -26,7 +26,7 @@ public class EmailsManager(
         var template = File.ReadAllText(Path.Combine(_templatesFolder, templateName));
         var subject = "Confirm your email";
 
-        var token = _encryptionHelper.Encrypt(encryptionModel, _emailOptions.Value.EncryptionKey);
+        var token = _encryptor.Encrypt(encryptionModel, _emailOptions.Value.EncryptionKey);
 
         var viewModelWithFrontendUrl = new
         {
@@ -46,7 +46,7 @@ public class EmailsManager(
         var templateName = "invite-owner.html";
         var template = File.ReadAllText(Path.Combine(_templatesFolder, templateName));
         var subject = "Join a salon invitation";
-        var token = _encryptionHelper.Encrypt(encryptionModel, _emailOptions.Value.EncryptionKey);
+        var token = _encryptor.Encrypt(encryptionModel, _emailOptions.Value.EncryptionKey);
 
         var viewModelWithFrontendUrl = new
         {
@@ -67,7 +67,7 @@ public class EmailsManager(
         var templateName = "invite-worker.html";
         var template = File.ReadAllText(Path.Combine(_templatesFolder, templateName));
         var subject = "Join a salon invitation";
-        var token = _encryptionHelper.Encrypt(encryptionModel, _emailOptions.Value.EncryptionKey);
+        var token = _encryptor.Encrypt(encryptionModel, _emailOptions.Value.EncryptionKey);
 
         var viewModelWithFrontendUrl = new
         {
@@ -88,7 +88,7 @@ public class EmailsManager(
         var templateName = "restore-password.html";
         var template = File.ReadAllText(Path.Combine(_templatesFolder, templateName));
         var subject = "Your password was changed";
-        var token = _encryptionHelper.Encrypt(encryptionModel, _emailOptions.Value.EncryptionKey);
+        var token = _encryptor.Encrypt(encryptionModel, _emailOptions.Value.EncryptionKey);
 
         var viewModelWithFrontendUrl = new
         {

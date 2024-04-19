@@ -15,13 +15,13 @@ public class RestorePasswordCommand : ICommand
 
 internal class RestorePasswordCommandHandler(
     UsersManager _usersManager,
-    IEncryptionHelper _encryptionHelper,
+    IDecryptor _decryptor,
     IOptions<EmailOptions> _options
 ) : ICommandHandler<RestorePasswordCommand>
 {
     public async Task<Result> Handle(RestorePasswordCommand command, CancellationToken cancellationToken)
     {
-        var decryptedToken = _encryptionHelper.DecryptTo<RestorePasswordEncryptionModel>(command.Token, _options.Value.EncryptionKey);
+        var decryptedToken = _decryptor.DecryptTo<RestorePasswordEncryptionModel>(command.Token, _options.Value.EncryptionKey);
 
         if (decryptedToken is null)
         {

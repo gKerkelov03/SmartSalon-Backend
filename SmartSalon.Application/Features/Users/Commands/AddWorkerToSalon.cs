@@ -22,12 +22,12 @@ internal class AddWorkerToSalonCommandHandler(
     IEfRepository<Salon> _salons,
     IUnitOfWork _unitOfWork,
     IOptions<EmailOptions> _emailOptions,
-    IEncryptionHelper _encryptionHelper
+    IDecryptor _decryptor
 ) : ICommandHandler<AddWorkerToSalonCommand>
 {
     public async Task<Result> Handle(AddWorkerToSalonCommand command, CancellationToken cancellationToken)
     {
-        var decryptedToken = _encryptionHelper.DecryptTo<WorkerInvitationEncryptionModel>(command.Token, _emailOptions.Value.EncryptionKey);
+        var decryptedToken = _decryptor.DecryptTo<WorkerInvitationEncryptionModel>(command.Token, _emailOptions.Value.EncryptionKey);
 
         if (decryptedToken is null)
         {

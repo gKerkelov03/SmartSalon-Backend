@@ -23,12 +23,12 @@ internal class AddOwnerToSalonCommandHandler(
     IEfRepository<Salon> _salons,
     IUnitOfWork _unitOfWork,
     IOptions<EmailOptions> _emailOptions,
-    IEncryptionHelper _encryptionHelper
+    IDecryptor _decryptor
 ) : ICommandHandler<AddOwnerToSalonCommand>
 {
     public async Task<Result> Handle(AddOwnerToSalonCommand command, CancellationToken cancellationToken)
     {
-        var decryptedToken = _encryptionHelper.DecryptTo<OwnerInvitationEncryptionModel>(command.Token, _emailOptions.Value.EncryptionKey);
+        var decryptedToken = _decryptor.DecryptTo<OwnerInvitationEncryptionModel>(command.Token, _emailOptions.Value.EncryptionKey);
 
         if (decryptedToken is null)
         {

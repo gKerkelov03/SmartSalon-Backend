@@ -16,13 +16,13 @@ public class ChangeEmailCommand(string token) : ICommand
 
 internal class ChangeEmailCommandHandler(
     UsersManager _usersManager,
-    IEncryptionHelper _encryptionHelper,
+    IDecryptor _decryptor,
     IOptions<EmailOptions> _emailOptions
 ) : ICommandHandler<ChangeEmailCommand>
 {
     public async Task<Result> Handle(ChangeEmailCommand command, CancellationToken cancellationToken)
     {
-        var decryptedToken = _encryptionHelper.DecryptTo<EmailConfirmationEncryptionModel>(command.Token, _emailOptions.Value.EncryptionKey);
+        var decryptedToken = _decryptor.DecryptTo<EmailConfirmationEncryptionModel>(command.Token, _emailOptions.Value.EncryptionKey);
 
         if (decryptedToken is null)
         {
