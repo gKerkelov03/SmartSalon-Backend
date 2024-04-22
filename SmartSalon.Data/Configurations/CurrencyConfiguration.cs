@@ -1,13 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SmartSalon.Application.Domain;
-using static SmartSalon.Application.ApplicationConstants.Validation.SalonCurrency;
+using static SmartSalon.Application.ApplicationConstants.Validation.Currency;
 
 namespace SmartSalon.Data.Configurations;
 
-public class CurrencyConfiguration : IEntityTypeConfiguration<SalonCurrency>
+public class CurrencyConfiguration : IEntityTypeConfiguration<Currency>
 {
-    public void Configure(EntityTypeBuilder<SalonCurrency> builder)
+    public void Configure(EntityTypeBuilder<Currency> builder)
     {
         builder
             .Property(currency => currency.Code)

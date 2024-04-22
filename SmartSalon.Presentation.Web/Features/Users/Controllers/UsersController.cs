@@ -61,7 +61,7 @@ public class UsersController(ISender _mediator, IMapper _mapper) : V1ApiControll
         return ProblemDetailsOr<OkResult>(result);
     }
 
-    [HttpPost($"{IdRoute}/SendEmailConfirmationEmail")]
+    [HttpPost($"{IdRoute}/SendEmailConfirmation")]
     [SuccessResponse(Status200OK)]
     [FailureResponse(Status409Conflict)]
     [Authorize(Policy = IsTheSameUserOrIsAdminPolicy)]

@@ -12,20 +12,6 @@ namespace SmartSalon.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Currencies",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Code = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Country = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Currencies", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
                 {
@@ -54,22 +40,36 @@ namespace SmartSalon.Data.Migrations
                     SectionsEnabled = table.Column<bool>(type: "bit", nullable: false),
                     WorkersCanMoveBookings = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
                     WorkersCanSetNonWorkingPeriods = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
-                    WorkingTimeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    CurrencyId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    WorkingTimeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Salons", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Currencies",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Country = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    SalonId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Currencies", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Salons_Currencies_CurrencyId",
-                        column: x => x.CurrencyId,
-                        principalTable: "Currencies",
+                        name: "FK_Currencies_Salons_SalonId",
+                        column: x => x.SalonId,
+                        principalTable: "Salons",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "SalonImages",
+                name: "Images",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -78,28 +78,9 @@ namespace SmartSalon.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SalonImages", x => x.Id);
+                    table.PrimaryKey("PK_Images", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SalonImages_Salons_SalonId",
-                        column: x => x.SalonId,
-                        principalTable: "Salons",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "SalonSpecialties",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Text = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    SalonId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SalonSpecialties", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_SalonSpecialties_Salons_SalonId",
+                        name: "FK_Images_Salons_SalonId",
                         column: x => x.SalonId,
                         principalTable: "Salons",
                         principalColumn: "Id",
@@ -112,6 +93,7 @@ namespace SmartSalon.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PictureUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SalonId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -119,6 +101,25 @@ namespace SmartSalon.Data.Migrations
                     table.PrimaryKey("PK_Sections", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Sections_Salons_SalonId",
+                        column: x => x.SalonId,
+                        principalTable: "Salons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Specialties",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Text = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    SalonId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Specialties", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Specialties_Salons_SalonId",
                         column: x => x.SalonId,
                         principalTable: "Salons",
                         principalColumn: "Id",
@@ -349,15 +350,14 @@ namespace SmartSalon.Data.Migrations
                     DurationInMinutes = table.Column<int>(type: "int", nullable: false),
                     SalonId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CategorieId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     SubscriptionId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Services", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Services_Categories_CategorieId",
-                        column: x => x.CategorieId,
+                        name: "FK_Services_Categories_CategoryId",
+                        column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -480,9 +480,19 @@ namespace SmartSalon.Data.Migrations
                 column: "SectionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Currencies_SalonId",
+                table: "Currencies",
+                column: "SalonId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CustomerSubscription_SubscriptionsId",
                 table: "CustomerSubscription",
                 column: "SubscriptionsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Images_SalonId",
+                table: "Images",
+                column: "SalonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Logins_UserId",
@@ -501,29 +511,14 @@ namespace SmartSalon.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_SalonImages_SalonId",
-                table: "SalonImages",
-                column: "SalonId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Salons_CurrencyId",
-                table: "Salons",
-                column: "CurrencyId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SalonSpecialties_SalonId",
-                table: "SalonSpecialties",
-                column: "SalonId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Sections_SalonId",
                 table: "Sections",
                 column: "SalonId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Services_CategorieId",
+                name: "IX_Services_CategoryId",
                 table: "Services",
-                column: "CategorieId");
+                column: "CategoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Services_SalonId",
@@ -544,6 +539,11 @@ namespace SmartSalon.Data.Migrations
                 name: "IX_SpecialSlots_SubscriptionId",
                 table: "SpecialSlots",
                 column: "SubscriptionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Specialties_SalonId",
+                table: "Specialties",
+                column: "SalonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Subscriptions_SalonId",
@@ -585,7 +585,13 @@ namespace SmartSalon.Data.Migrations
                 name: "Bookings");
 
             migrationBuilder.DropTable(
+                name: "Currencies");
+
+            migrationBuilder.DropTable(
                 name: "CustomerSubscription");
+
+            migrationBuilder.DropTable(
+                name: "Images");
 
             migrationBuilder.DropTable(
                 name: "Logins");
@@ -594,13 +600,10 @@ namespace SmartSalon.Data.Migrations
                 name: "OwnerSalon");
 
             migrationBuilder.DropTable(
-                name: "SalonImages");
-
-            migrationBuilder.DropTable(
-                name: "SalonSpecialties");
-
-            migrationBuilder.DropTable(
                 name: "SpecialSlots");
+
+            migrationBuilder.DropTable(
+                name: "Specialties");
 
             migrationBuilder.DropTable(
                 name: "UserRole");
@@ -628,9 +631,6 @@ namespace SmartSalon.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Salons");
-
-            migrationBuilder.DropTable(
-                name: "Currencies");
         }
     }
 }

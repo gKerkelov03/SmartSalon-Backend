@@ -5,9 +5,9 @@ using static SmartSalon.Application.ApplicationConstants.Validation.Image;
 
 namespace SmartSalon.Data.Configurations;
 
-public class SalonImageConfiguration : IEntityTypeConfiguration<SalonImage>
+public class SalonImageConfiguration : IEntityTypeConfiguration<Image>
 {
-    public void Configure(EntityTypeBuilder<SalonImage> builder)
+    public void Configure(EntityTypeBuilder<Image> builder)
         => builder
             .Property(salonImage => salonImage.Url)
             .HasMaxLength(MaxUrlLength);

@@ -14,7 +14,15 @@ namespace SmartSalon.Data;
 
 public class SmartSalonDbContext : IdentityDbContext<User, Role, Id>
 {
+    public SmartSalonDbContext() { }
+
     public SmartSalonDbContext(DbContextOptions<SmartSalonDbContext> options) : base(options) { }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseSqlServer("Server=.,1433;Database=SmartSalon;TrustServerCertificate=True;User Id=sa;Password=P@ssw0rd123");
+    }
+
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -66,14 +74,14 @@ public class SmartSalonDbContext : IdentityDbContext<User, Role, Id>
     public DbSet<Worker> Workers { get; set; }
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Salon> Salons { get; set; }
-    public DbSet<SalonSpecialty> SalonSpecialties { get; set; }
-    public DbSet<SalonImage> SalonImages { get; set; }
+    public DbSet<Specialty> Specialties { get; set; }
+    public DbSet<Image> Images { get; set; }
     public DbSet<Service> Services { get; set; }
     public DbSet<SpecialSlot> SpecialSlots { get; set; }
     public DbSet<Subscription> Subscriptions { get; set; }
     public DbSet<Booking> Bookings { get; set; }
-    public DbSet<ServiceCategory> Categories { get; set; }
-    public DbSet<ServiceSection> Sections { get; set; }
-    public DbSet<SalonWorkingTime> WorkingTimes { get; set; }
-    public DbSet<SalonCurrency> Currencies { get; set; }
+    public DbSet<Category> Categories { get; set; }
+    public DbSet<Section> Sections { get; set; }
+    public DbSet<WorkingTime> WorkingTimes { get; set; }
+    public DbSet<Currency> Currencies { get; set; }
 }

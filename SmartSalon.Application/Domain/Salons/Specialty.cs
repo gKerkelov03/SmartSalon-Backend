@@ -2,7 +2,7 @@
 
 namespace SmartSalon.Application.Domain.Salons;
 
-public class SalonSpecialty : BaseEntity
+public class Specialty : BaseEntity
 {
     public required string Text { get; set; }
 

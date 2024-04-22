@@ -2,7 +2,7 @@
 
 namespace SmartSalon.Application.Domain.Salons;
 
-public class SalonImage : BaseEntity
+public class Image : BaseEntity
 {
     public required string Url { get; set; }
     public Id SalonId { get; set; }
