@@ -6,6 +6,7 @@ namespace SmartSalon.Presentation.Web.Features.Users.Responses;
 
 public class GetWorkerByIdResponse : IMapFrom<GetWorkerByIdQueryResponse>
 {
+    public Id Id { get; set; }
     public required string JobTitle { get; set; }
     public required string Nickname { get; set; }
     public required string FirstName { get; set; }
