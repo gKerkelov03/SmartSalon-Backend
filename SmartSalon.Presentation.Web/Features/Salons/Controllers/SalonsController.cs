@@ -8,7 +8,6 @@ using SmartSalon.Presentation.Web.Features.Salons.Responses;
 using AutoMapper;
 using SmartSalon.Presentation.Web.Controllers;
 using SmartSalon.Presentation.Web.Salons.Requests;
-using SmartSalon.Application.Features.Users.Commands;
 using Microsoft.AspNetCore.Authorization;
 
 namespace SmartSalon.Presentation.Web.Features.Salons.Controllers;

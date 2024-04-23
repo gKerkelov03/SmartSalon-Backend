@@ -23,7 +23,7 @@ public class UpdateSalonCommand : ICommand
     public bool WorkersCanSetNonWorkingPeriods { get; set; }
 }
 
-internal class UpdateCommandHandler(IEfRepository<Salon> _salons, IUnitOfWork unitOfWork)
+internal class UpdateSalonCommandHandler(IEfRepository<Salon> _salons, IUnitOfWork unitOfWork)
     : ICommandHandler<UpdateSalonCommand>
 {
     public async Task<Result> Handle(UpdateSalonCommand command, CancellationToken cancellationToken)
