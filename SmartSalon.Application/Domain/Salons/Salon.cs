@@ -16,7 +16,7 @@ public class Salon : BaseEntity
     public bool SectionsEnabled { get; set; }
     public bool WorkersCanMoveBookings { get; set; }
     public bool WorkersCanSetNonWorkingPeriods { get; set; }
-    public Id? WorkingTimeId { get; set; }
+    public Id WorkingTimeId { get; set; }
     public WorkingTime? WorkingTime { get; set; }
     public ICollection<Currency>? Currencies { get; set; }
     public virtual ICollection<Owner>? Owners { get; set; }

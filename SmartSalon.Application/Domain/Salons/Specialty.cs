@@ -2,12 +2,10 @@
 
 namespace SmartSalon.Application.Domain.Salons;
 
-public class Specialty : BaseEntity
+public class Specialty : DeletableEntity
 {
     public required string Text { get; set; }
-
     public Id SalonId { get; set; }
-
     public virtual Salon? Salon { get; set; }
 }
 

@@ -8,7 +8,7 @@ using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Users.Commands;
 
-public class UpdateUserCommand : ICommand, IMapTo<User>
+public class UpdateUserCommand : ICommand
 {
     public Id UserId { get; set; }
     public required string FirstName { get; set; }
