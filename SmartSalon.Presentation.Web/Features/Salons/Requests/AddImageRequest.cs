@@ -7,6 +7,6 @@ namespace SmartSalon.Presentation.Web.Salons.Requests;
 public class AddImageRequest : IMapTo<AddImageCommand>
 {
     public required string Url { get; set; }
-    public Id Salonid { get; set; }
+    public Id SalonId { get; set; }
 }
 

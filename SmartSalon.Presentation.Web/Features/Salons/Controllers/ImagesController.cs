@@ -6,21 +6,25 @@ using SmartSalon.Application.Features.Salons.Commands;
 using SmartSalon.Application.Features.Salons.Queries;
 using SmartSalon.Presentation.Web.Attributes;
 using SmartSalon.Presentation.Web.Controllers;
+using SmartSalon.Presentation.Web.Features.Salons.Responses;
 using SmartSalon.Presentation.Web.Salons.Requests;
 
 namespace SmartSalon.Presentation.Web.Features.Salons.Controllers;
 
-[Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]
 public class ImagesController(ISender _mediator, IMapper _mapper) : V1ApiController
 {
     [HttpPost]
     [SuccessResponse(Status200OK)]
+    [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]
     public async Task<IActionResult> AddImage(AddImageRequest request)
     {
         var command = _mapper.Map<AddImageCommand>(request);
         var result = await _mediator.Send(command);
 
-        return ProblemDetailsOr<OkResult>(result);
+        return ProblemDetailsOr(result =>
+            CreatedAndLocatedAt(nameof(GetImageById), result.Value.CreatedImageId),
+            result
+        );
     }
 
     [HttpGet(IdRoute)]
@@ -31,16 +35,20 @@ public class ImagesController(ISender _mediator, IMapper _mapper) : V1ApiControl
         var command = new GetImageByIdQuery(imageId);
         var result = await _mediator.Send(command);
 
-        return ProblemDetailsOr(result => Ok(result.Value), result);
+        return ProblemDetailsOr(result =>
+            Ok(_mapper.Map<GetImageByIdResponse>(result.Value)),
+            result
+        );
     }
 
     [HttpDelete]
     [SuccessResponse(Status200OK)]
-    public async Task<IActionResult> RemoveImage(RemoveImageRequest request)
+    [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]
+    public async Task<IActionResult> DeleteImage(DeleteImageRequest request)
     {
-        var command = _mapper.Map<RemoveImageCommand>(request);
+        var command = _mapper.Map<DeleteImageCommand>(request);
         var result = await _mediator.Send(command);
 
-        return ProblemDetailsOr<OkResult>(result);
+        return ProblemDetailsOr<NoContentResult>(result);
     }
 }

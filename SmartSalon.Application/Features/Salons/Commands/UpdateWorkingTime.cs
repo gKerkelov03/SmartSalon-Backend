@@ -14,7 +14,7 @@ public class UpdateWorkingTimeCommand : ICommand
     public required TimeOnly To { get; set; }
 }
 
-internal class UpdateWorkingTimeCommandHandler(IEfRepository<WorkingTime> _workingTimes, IUnitOfWork unitOfWork)
+internal class UpdateWorkingTimeCommandHandler(IEfRepository<WorkingTime> _workingTimes, IUnitOfWork _unitOfWork)
     : ICommandHandler<UpdateWorkingTimeCommand>
 {
     public async Task<Result> Handle(UpdateWorkingTimeCommand command, CancellationToken cancellationToken)
@@ -29,7 +29,7 @@ internal class UpdateWorkingTimeCommandHandler(IEfRepository<WorkingTime> _worki
         UpdateWorkingTimeForDayOfWeek(workingTime, command.DayOfWeek, command.From, command.To);
         _workingTimes.Update(workingTime);
 
-        await unitOfWork.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
     }

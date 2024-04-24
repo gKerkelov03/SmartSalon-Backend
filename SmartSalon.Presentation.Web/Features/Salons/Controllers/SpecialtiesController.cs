@@ -8,6 +8,7 @@ using SmartSalon.Application.Features.Users.Commands;
 using SmartSalon.Presentation.Web.Attributes;
 using SmartSalon.Presentation.Web.Controllers;
 using SmartSalon.Presentation.Web.Features.Salons.Requests;
+using SmartSalon.Presentation.Web.Features.Salons.Responses;
 
 namespace SmartSalon.Presentation.Web.Features.Salons.Controllers;
 
@@ -20,8 +21,9 @@ public class SpecialtiesController(ISender _mediator, IMapper _mapper) : V1ApiCo
     {
         var command = _mapper.Map<AddSpecialtyCommand>(request);
         var result = await _mediator.Send(command);
+
         return ProblemDetailsOr(result =>
-            Created(string.Empty, result.Value.CreatedSpecialtyId),
+            CreatedAndLocatedAt(nameof(GetSpecialtyById), result.Value.CreatedSpecialtyId),
             result
         );
     }
@@ -34,7 +36,10 @@ public class SpecialtiesController(ISender _mediator, IMapper _mapper) : V1ApiCo
         var command = new GetSpecialtyByIdQuery(specialtyId);
         var result = await _mediator.Send(command);
 
-        return ProblemDetailsOr(result => Ok(result.Value), result);
+        return ProblemDetailsOr(result =>
+            Ok(_mapper.Map<GetSpecialtyByIdResponse>(result.Value)),
+            result
+        );
     }
 
     [HttpPatch(IdRoute)]
@@ -43,13 +48,10 @@ public class SpecialtiesController(ISender _mediator, IMapper _mapper) : V1ApiCo
     [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]
     public async Task<IActionResult> UpdateSpecialty(UpdateSpecialtyRequest request)
     {
-        var command = _mapper.Map<RegisterCommand>(request);
+        var command = _mapper.Map<UpdateSpecialtyCommand>(request);
         var result = await _mediator.Send(command);
 
-        return ProblemDetailsOr(result =>
-            CreatedAndLocatedAt("GetUserById", result.Value.RegisteredUserId),
-            result
-        );
+        return ProblemDetailsOr<OkResult>(result);
     }
 
     [HttpDelete(IdRoute)]

@@ -17,7 +17,7 @@ public class UpdateUserCommand : ICommand
     public required string PhoneNumber { get; set; }
 }
 
-internal class UpdateCommandHandler(IEfRepository<User> users, IUnitOfWork unitOfWork)
+internal class UpdateCommandHandler(IEfRepository<User> users, IUnitOfWork _unitOfWork)
     : ICommandHandler<UpdateUserCommand>
 {
     public async Task<Result> Handle(UpdateUserCommand command, CancellationToken cancellationToken)
@@ -32,7 +32,7 @@ internal class UpdateCommandHandler(IEfRepository<User> users, IUnitOfWork unitO
         user.MapAgainst(command);
         users.Update(user);
 
-        await unitOfWork.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
     }

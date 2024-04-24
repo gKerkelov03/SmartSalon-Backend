@@ -3,7 +3,7 @@ using SmartSalon.Application.Features.Salons.Commands;
 
 namespace SmartSalon.Presentation.Web.Salons.Requests;
 
-public class RemoveImageRequest : IMapTo<RemoveImageCommand>
+public class DeleteImageRequest : IMapTo<DeleteImageCommand>
 {
     public Id ImageId { get; set; }
     public Id SalonId { get; set; }

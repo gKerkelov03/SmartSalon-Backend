@@ -11,11 +11,11 @@ public class UnitOfWork(SmartSalonDbContext _dbContext, ICurrentUserAccessor _cu
 {
     private IDbContextTransaction? _transaction;
 
-    public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         ApplySoftDelete(_dbContext.ChangeTracker, _currentUser.Id);
 
-        return _dbContext.SaveChangesAsync(cancellationToken);
+        return await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
     public void BeginTransaction()

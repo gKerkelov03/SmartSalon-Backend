@@ -17,7 +17,7 @@ public class RemoveCurrencyCommand : ICommand
 internal class RemoveCurrencyCommandHandler(
     IEfRepository<Currency> _currencies,
     IEfRepository<Salon> _salons,
-    IUnitOfWork unitOfWork
+    IUnitOfWork _unitOfWork
 )
     : ICommandHandler<RemoveCurrencyCommand>
 {
@@ -41,7 +41,7 @@ internal class RemoveCurrencyCommandHandler(
         }
 
         salon.Currencies!.Remove(currency);
-        await unitOfWork.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
     }

@@ -17,12 +17,12 @@ public class GetSalonByIdResponse : IMapFrom<GetSalonByIdQueryResponse>
     public bool WorkersCanMoveBookings { get; set; }
     public bool WorkersCanSetNonWorkingPeriods { get; set; }
     public Id WorkingTimeId { get; set; }
-    public IEnumerable<Id> Currencies { get; set; } = [];
-    public IEnumerable<Id> Owners { get; set; } = [];
-    public IEnumerable<Id> Workers { get; set; } = [];
-    public IEnumerable<Id> Specialties { get; set; } = [];
-    public IEnumerable<Id> Sections { get; set; } = [];
-    public IEnumerable<Id> Categories { get; set; } = [];
-    public IEnumerable<Id> Services { get; set; } = [];
-    public IEnumerable<Id> Images { get; set; } = [];
+    public required IEnumerable<Id> Currencies { get; set; }
+    public required IEnumerable<Id> Owners { get; set; }
+    public required IEnumerable<Id> Workers { get; set; }
+    public required IEnumerable<Id> Specialties { get; set; }
+    public required IEnumerable<Id> Sections { get; set; }
+    public required IEnumerable<Id> Categories { get; set; }
+    public required IEnumerable<Id> Services { get; set; }
+    public required IEnumerable<Id> Images { get; set; }
 }

@@ -23,7 +23,7 @@ public class UpdateSalonCommand : ICommand
     public bool WorkersCanSetNonWorkingPeriods { get; set; }
 }
 
-internal class UpdateSalonCommandHandler(IEfRepository<Salon> _salons, IUnitOfWork unitOfWork)
+internal class UpdateSalonCommandHandler(IEfRepository<Salon> _salons, IUnitOfWork _unitOfWork)
     : ICommandHandler<UpdateSalonCommand>
 {
     public async Task<Result> Handle(UpdateSalonCommand command, CancellationToken cancellationToken)
@@ -38,7 +38,7 @@ internal class UpdateSalonCommandHandler(IEfRepository<Salon> _salons, IUnitOfWo
         salon.MapAgainst(command);
         _salons.Update(salon);
 
-        await unitOfWork.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
     }

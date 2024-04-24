@@ -8,6 +8,7 @@ public class UpdateWorkingTimeRequest : IMapTo<UpdateWorkingTimeCommand>
 {
     [IdRouteParameter]
     public Id WorkingTimeId { get; set; }
+    public Id SalonId { get; set; }
     public required DayOfWeek DayOfWeek { get; set; }
     public TimeOnly From { get; set; }
     public TimeOnly To { get; set; }

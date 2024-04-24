@@ -14,9 +14,9 @@ public class GetImageByIdQuery(Id id) : IQuery<GetImageByIdQueryResponse>
 
 public class GetImageByIdQueryResponse : IMapFrom<Image>
 {
-    public required string Text { get; set; }
+    public Id Id { get; set; }
+    public required string Url { get; set; }
     public Id SalonId { get; set; }
-    public virtual Salon? Salon { get; set; }
 }
 
 internal class GetImageByIdQueryHandler(IEfRepository<Image> _images, IMapper _mapper)

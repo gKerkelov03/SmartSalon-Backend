@@ -20,15 +20,20 @@ public class AddSpecialtyCommandResponse(Id id)
     public Id CreatedSpecialtyId => id;
 }
 
-internal class AddSpecialtyCommandHandler(IEfRepository<Salon> _salons, IUnitOfWork _unitOfWork, IMapper _mapper)
+internal class AddSpecialtyCommandHandler(
+    IEfRepository<Salon> _salons,
+    IEfRepository<Specialty> _specialties,
+    IUnitOfWork _unitOfWork,
+    IMapper _mapper
+)
     : ICommandHandler<AddSpecialtyCommand, AddSpecialtyCommandResponse>
 {
     public async Task<Result<AddSpecialtyCommandResponse>> Handle(AddSpecialtyCommand command, CancellationToken cancellationToken)
     {
-        var specialty = _mapper.Map<Specialty>(command);
+        var newSpecialty = _mapper.Map<Specialty>(command);
 
         var salon = await _salons.All
-            .Include(salon => salon.Currencies)
+            .Include(salon => salon.Specialties)
             .Where(salon => salon.Id == command.SalonId)
             .FirstOrDefaultAsync();
 
@@ -37,16 +42,19 @@ internal class AddSpecialtyCommandHandler(IEfRepository<Salon> _salons, IUnitOfW
             return Error.NotFound;
         }
 
-        var salonAlreadyContainsSpecialty = salon.Specialties!.Any(specialty => specialty.Text == command.Text);
+        var salonAlreadyContainsSpecialty = salon.Specialties!.Any(specialty => specialty.Text == newSpecialty.Text);
 
         if (salonAlreadyContainsSpecialty)
         {
             return Error.Conflict;
         }
 
-        salon.Specialties!.Add(specialty);
+        //TODO: debug why this throws error, expected one row to be added but 0 were added
+        //salon.Specialties!.Add(newSpecialty);
+
+        await _specialties.AddAsync(newSpecialty);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return new AddSpecialtyCommandResponse(specialty.Id);
+        return new AddSpecialtyCommandResponse(newSpecialty.Id);
     }
 }
