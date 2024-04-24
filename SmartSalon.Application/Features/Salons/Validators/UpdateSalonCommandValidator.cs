@@ -9,7 +9,7 @@ internal class UpdateSalonCommandValidator : AbstractValidator<UpdateSalonComman
 {
     public UpdateSalonCommandValidator()
     {
-        RuleFor(command => command.Name).MinimumLength(MaxNameLength);
+        RuleFor(command => command.Name).MaximumLength(MaxNameLength);
         RuleFor(command => command.Description).MaximumLength(MaxDescriptionLength);
         RuleFor(command => command.Location).MaximumLength(MaxLocationLength);
         RuleFor(command => command.ProfilePictureUrl).NotEmpty();

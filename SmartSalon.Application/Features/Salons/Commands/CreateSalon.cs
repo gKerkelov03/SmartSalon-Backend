@@ -4,6 +4,7 @@ using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.Mapping;
 using SmartSalon.Application.Abstractions.MediatR;
 using SmartSalon.Application.Domain.Salons;
+using SmartSalon.Application.Extensions;
 using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Salons.Commands;
@@ -14,12 +15,6 @@ public class CreateSalonCommand : ICommand<CreateSalonCommandResponse>, IMapTo<S
     public required string Description { get; set; }
     public required string Location { get; set; }
     public string? ProfilePictureUrl { get; set; }
-    public required int DefaultTimePenalty { get; set; }
-    public required int DefaultBookingsInAdvance { get; set; }
-    public bool SubscriptionsEnabled { get; set; }
-    public bool SectionsEnabled { get; set; }
-    public bool WorkersCanMoveBookings { get; set; }
-    public bool WorkersCanSetNonWorkingPeriods { get; set; }
 }
 
 public class CreateSalonCommandResponse(Id id)
@@ -33,24 +28,23 @@ internal class CreateSalonCommandHandler(
     IMapper _mapper
 ) : ICommandHandler<CreateSalonCommand, CreateSalonCommandResponse>
 {
-    public async Task<Result<CreateSalonCommandResponse>> Handle(CreateSalonCommand command, CancellationToken cancellationToken)
+    private static object _defaultSalonSettings = new
     {
-        var salon = _mapper.Map<Salon>(command);
-        salon.WorkingTime = GetDefaultWorkingTime();
+        WorkingTimeId = CreateDefaultWorkingTime().Id,
+        DefaultBookingsInAdvance = 5,
+        DefaultTimePenalty = 5,
+        SubscriptionsEnabled = true,
+        SectionsEnabled = true,
+        WorkersCanMoveBookings = true,
+        WorkersCanSetNonWorkingPeriods = true,
+    };
 
-        await _salons.AddAsync(salon);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-        return new CreateSalonCommandResponse(salon.Id);
-    }
-
-    private WorkingTime GetDefaultWorkingTime()
+    private static WorkingTime CreateDefaultWorkingTime()
     {
-        //From nine to five all days
         var startTime = new TimeOnly(9, 0);
         var endTime = new TimeOnly(17, 0);
 
-        return new WorkingTime()
+        var workingTime = new WorkingTime()
         {
             MondayFrom = startTime,
             MondayTo = endTime,
@@ -73,5 +67,18 @@ internal class CreateSalonCommandHandler(
             SundayFrom = startTime,
             SundayTo = endTime
         };
+
+        return workingTime;
+    }
+
+    public async Task<Result<CreateSalonCommandResponse>> Handle(CreateSalonCommand command, CancellationToken cancellationToken)
+    {
+        var newSalon = _mapper.Map<Salon>(command);
+        newSalon.MapAgainst(_defaultSalonSettings);
+
+        await _salons.AddAsync(newSalon);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        return new CreateSalonCommandResponse(newSalon.Id);
     }
 }

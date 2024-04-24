@@ -4,14 +4,14 @@ using SmartSalon.Application.Domain.Users;
 
 namespace SmartSalon.Application.Domain.Salons;
 
-public class Salon : BaseEntity
+public class Salon : DeletableEntity
 {
     public required string Name { get; set; }
     public required string Description { get; set; }
     public required string Location { get; set; }
     public string? ProfilePictureUrl { get; set; }
-    public required int DefaultTimePenalty { get; set; }
-    public required int DefaultBookingsInAdvance { get; set; }
+    public int DefaultTimePenalty { get; set; }
+    public int DefaultBookingsInAdvance { get; set; }
     public bool SubscriptionsEnabled { get; set; }
     public bool SectionsEnabled { get; set; }
     public bool WorkersCanMoveBookings { get; set; }

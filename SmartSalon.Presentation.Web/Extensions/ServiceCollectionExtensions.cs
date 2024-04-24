@@ -14,6 +14,7 @@ using SmartSalon.Application.Options;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace SmartSalon.Presentation.Web.Extensions;
 
@@ -181,4 +182,5 @@ public static partial class ServiceCollectionExtensions
         => services
             .AddSingleton<ISeeder, DatabaseSeeder>()
             .AddSingleton<JwtSecurityTokenHandler>();
+
 }

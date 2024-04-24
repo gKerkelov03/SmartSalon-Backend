@@ -12,7 +12,7 @@ public static class MappingExtensions
         {
             var targetProperty = targetType.GetProperty(property.Name);
 
-            if (targetProperty is null || targetProperty.PropertyType != property.GetType())
+            if (targetProperty is null || targetProperty.PropertyType != property.PropertyType)
             {
                 return;
             }

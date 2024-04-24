@@ -6,7 +6,6 @@ namespace SmartSalon.Presentation.Web.Features.Salons.Requests;
 
 public class UpdateSalonRequest : IMapTo<UpdateSalonCommand>
 {
-    //TODO: think about the id route param here
     [IdRouteParameter]
     public Id SalonId { get; set; }
     public required string Name { get; set; }

@@ -1,16 +1,28 @@
 using SmartSalon.Application.Abstractions.Mapping;
-using SmartSalon.Application.Features.Users.Queries;
+using SmartSalon.Application.Features.Salons.Queries;
 
 namespace SmartSalon.Presentation.Web.Features.Salons.Responses;
 
-public class GetSalonByIdResponse : IMapFrom<GetOwnerByIdQueryResponse>
+public class GetSalonByIdResponse : IMapFrom<GetSalonByIdQueryResponse>
 {
-    public Id OwnerId { get; set; }
-    public required string FirstName { get; set; }
-    public required string LastName { get; set; }
-    public required string Email { get; set; }
-    public bool IsEmailConfirmed { get; set; }
-    public required string ProfilePictureUrl { get; set; }
-    public required string PhoneNumber { get; set; }
-    public required IEnumerable<Id> SalonsOwned { get; set; }
+    public Id Id { get; set; }
+    public required string Name { get; set; }
+    public required string Description { get; set; }
+    public required string Location { get; set; }
+    public string? ProfilePictureUrl { get; set; }
+    public required int DefaultTimePenalty { get; set; }
+    public required int DefaultBookingsInAdvance { get; set; }
+    public bool SubscriptionsEnabled { get; set; }
+    public bool SectionsEnabled { get; set; }
+    public bool WorkersCanMoveBookings { get; set; }
+    public bool WorkersCanSetNonWorkingPeriods { get; set; }
+    public Id WorkingTimeId { get; set; }
+    public IEnumerable<Id> Currencies { get; set; } = [];
+    public IEnumerable<Id> Owners { get; set; } = [];
+    public IEnumerable<Id> Workers { get; set; } = [];
+    public IEnumerable<Id> Specialties { get; set; } = [];
+    public IEnumerable<Id> Sections { get; set; } = [];
+    public IEnumerable<Id> Categories { get; set; } = [];
+    public IEnumerable<Id> Services { get; set; } = [];
+    public IEnumerable<Id> Images { get; set; } = [];
 }

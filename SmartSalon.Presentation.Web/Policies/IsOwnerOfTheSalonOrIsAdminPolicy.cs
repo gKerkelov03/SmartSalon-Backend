@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.Lifetime;
 using SmartSalon.Application.Domain.Salons;
+using SmartSalon.Application.Extensions;
 
 namespace SmartSalon.Presentation.Web.Policies;
 
@@ -18,6 +19,8 @@ internal class IsOwnerOfTheSalonOrIsAdminHandler(
     public async Task HandleAsync(AuthorizationHandlerContext context)
     {
         var requirement = GetRequirement<IsOwnerOfTheSalonOrIsAdminRequirement>(context);
+        var passedIdRouteParameter = _httpContextAccessor.HttpContext?.Request.RouteValues[IdRouteParameterName]?.ToString();
+        var salonIdPropertyName = "salonId";
 
         if (requirement is null)
         {
@@ -31,7 +34,17 @@ internal class IsOwnerOfTheSalonOrIsAdminHandler(
             return;
         }
 
-        var requestedSalonId = requestBodyMap["salonId"];
+        var requestedSalonId = passedIdRouteParameter;
+
+        if (requestBodyMap.ContainsKey(salonIdPropertyName))
+        {
+            requestedSalonId = requestBodyMap[salonIdPropertyName];
+        }
+        else if (passedIdRouteParameter is null)
+        {
+            return;
+        }
+
         var requestedSalonIdNotValid = !Id.TryParse(requestedSalonId, out var salonId);
 
         if (requestedSalonIdNotValid)
