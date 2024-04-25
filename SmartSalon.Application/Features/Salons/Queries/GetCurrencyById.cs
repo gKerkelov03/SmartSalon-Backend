@@ -14,6 +14,7 @@ public class GetCurrencyByIdQuery(Id id) : IQuery<GetCurrencyByIdQueryResponse>
 
 public class GetCurrencyByIdQueryResponse : IMapFrom<Currency>
 {
+    public Id Id { get; set; }
     public required string Code { get; set; }
     public required string Name { get; set; }
     public required string Country { get; set; }

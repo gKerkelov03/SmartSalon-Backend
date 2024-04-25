@@ -4,12 +4,12 @@ using SmartSalon.Application.Abstractions.Lifetime;
 
 namespace SmartSalon.Presentation.Web.Policies;
 
-internal class IsOwnerOrAdminRequirement : IAuthorizationRequirement { }
+internal class IsOwnerOrIsAdminRequirement : IAuthorizationRequirement { }
 
-internal class IsOwnerOrAdminHandler(ICurrentUserAccessor _currentUser)
-    : AuthorizationHandler<IsOwnerOrAdminRequirement>, IScopedLifetime
+internal class IsOwnerOrIsAdminHandler(ICurrentUserAccessor _currentUser)
+    : AuthorizationHandler<IsOwnerOrIsAdminRequirement>, IScopedLifetime
 {
-    protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IsOwnerOrAdminRequirement requirement)
+    protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IsOwnerOrIsAdminRequirement requirement)
     {
         if (_currentUser.IsOwner || _currentUser.IsAdmin)
         {

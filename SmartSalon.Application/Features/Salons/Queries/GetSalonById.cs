@@ -36,7 +36,7 @@ public class GetSalonByIdQueryResponse
     public required IEnumerable<Id> Images { get; set; }
 }
 
-internal class GetSalonByIdQueryHandler(IEfRepository<Salon> _salons, IMapper _mapper)
+internal class GetSalonByIdQueryHandler(IEfRepository<Salon> _salons)
     : IQueryHandler<GetSalonByIdQuery, GetSalonByIdQueryResponse>
 {
     public async Task<Result<GetSalonByIdQueryResponse>> Handle(GetSalonByIdQuery query, CancellationToken cancellationToken)
