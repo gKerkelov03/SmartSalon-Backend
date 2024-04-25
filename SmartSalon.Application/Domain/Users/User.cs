@@ -15,7 +15,6 @@ public class User : IdentityUser<Id>, IDeletableEntity
     public DateTimeOffset? DeletedOn { get; set; }
     public Id? DeletedBy { get; set; }
 
-
     public override required string Email { get; set; }
     public override required string PhoneNumber { get; set; }
     public override required string UserName { get; set; }

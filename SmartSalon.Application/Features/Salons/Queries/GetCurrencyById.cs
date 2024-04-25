@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.Mapping;
-using SmartSalon.Application.Domain;
+using SmartSalon.Application.Domain.Salons;
 using SmartSalon.Application.Errors;
 using SmartSalon.Application.ResultObject;
 

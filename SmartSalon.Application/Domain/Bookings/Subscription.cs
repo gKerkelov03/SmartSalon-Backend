@@ -1,10 +1,9 @@
 ﻿using SmartSalon.Application.Domain.Base;
 using SmartSalon.Application.Domain.Salons;
 using SmartSalon.Application.Domain.Services;
-using SmartSalon.Application.Domain.Subscriptions;
 using SmartSalon.Application.Domain.Users;
 
-namespace SmartSalon.Application.Domain;
+namespace SmartSalon.Application.Domain.Bookings;
 
 public class Subscription : BaseEntity
 {

@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using SmartSalon.Application.Domain;
 using Microsoft.EntityFrameworkCore.Metadata;
 using SmartSalon.Application.Domain.Base;
 using System.Reflection;
@@ -9,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Domain.Salons;
 using SmartSalon.Application.Domain.Services;
+using SmartSalon.Application.Domain.Bookings;
 
 namespace SmartSalon.Data;
 

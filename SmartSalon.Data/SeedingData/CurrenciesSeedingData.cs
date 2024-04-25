@@ -1,5 +1,5 @@
 ﻿
-using SmartSalon.Application.Domain;
+using SmartSalon.Application.Domain.Salons;
 
 namespace SmartSalon.Data.SeedingData;
 

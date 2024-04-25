@@ -3,7 +3,7 @@ using SmartSalon.Application.Domain.Salons;
 using SmartSalon.Application.Domain.Services;
 using SmartSalon.Application.Domain.Users;
 
-namespace SmartSalon.Application.Domain;
+namespace SmartSalon.Application.Domain.Bookings;
 
 public class Booking : DeletableEntity
 {

@@ -1,7 +1,6 @@
 using SmartSalon.Application.Domain.Base;
-using SmartSalon.Application.Domain.Salons;
 
-namespace SmartSalon.Application.Domain;
+namespace SmartSalon.Application.Domain.Salons;
 
 public class Currency : BaseEntity
 {
