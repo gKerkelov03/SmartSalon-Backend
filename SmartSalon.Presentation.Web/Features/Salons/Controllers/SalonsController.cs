@@ -20,6 +20,7 @@ public class SalonsController(ISender _mediator, IMapper _mapper) : V1ApiControl
     public async Task<IActionResult> CreateSalon(CreateSalonRequest request)
     {
         var command = _mapper.Map<CreateSalonCommand>(request);
+
         var result = await _mediator.Send(command);
 
         return ProblemDetailsOr(

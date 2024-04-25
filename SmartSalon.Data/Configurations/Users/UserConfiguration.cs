@@ -1,6 +1,9 @@
+global using PasswordHasher = Microsoft.AspNetCore.Identity.PasswordHasher<SmartSalon.Application.Domain.Users.User>;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SmartSalon.Application.Domain.Users;
+using SmartSalon.Application.Extensions;
+using SmartSalon.Data.SeedingData;
 using static SmartSalon.Application.ApplicationConstants.Validation.User;
 
 namespace SmartSalon.Data.Configurations.Users;
@@ -9,6 +12,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
+        builder.HasData(UsersSeedingData.AdminsData);
+
         builder.ToTable("Users");
 
         builder
@@ -24,8 +29,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired();
 
         builder
-            .Property(user => user.Email)
-            .HasMaxLength(MaxUserNameLength)
+            .Property(user => user.NormalizedEmail)
+            .HasMaxLength(MaxEmailLength)
             .IsRequired();
 
         builder
@@ -51,9 +56,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasMaxLength(MaxPhoneNumberLength)
             .IsRequired();
 
-        // builder
-        //     .Property(user => user.PasswordHash)
-        //     .IsRequired();
+        builder
+            .Property(user => user.PasswordHash)
+            .IsRequired();
 
         builder
             .Property(user => user.SecurityStamp)
