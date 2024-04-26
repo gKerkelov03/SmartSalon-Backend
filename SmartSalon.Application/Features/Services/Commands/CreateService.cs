@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.Mapping;
 using SmartSalon.Application.Abstractions.MediatR;
-using SmartSalon.Application.Domain.Salons;
 using SmartSalon.Application.Domain.Services;
 using SmartSalon.Application.Errors;
 using SmartSalon.Application.ResultObject;
@@ -16,39 +15,44 @@ public class CreateServiceCommand : ICommand, IMapTo<Service>
     public required string Description { get; set; }
     public required double Price { get; set; }
     public required int DurationInMinutes { get; set; }
-    public Id SalonId { get; set; }
     public Id CategoryId { get; set; }
 }
 
 internal class CreateServiceCommandHandler(
-    IEfRepository<Salon> _salons,
+    IEfRepository<Category> _categories,
+    IEfRepository<Service> _services,
     IUnitOfWork _unitOfWork,
     IMapper _mapper
 ) : ICommandHandler<CreateServiceCommand>
 {
     public async Task<Result> Handle(CreateServiceCommand command, CancellationToken cancellationToken)
     {
-        //TODO: set order last
         var newService = _mapper.Map<Service>(command);
 
-        var salon = await _salons.All
-            .Include(salon => salon.Services)
-            .Where(salon => salon.Id == command.SalonId)
+        var category = await _categories.All
+            .Include(category => category.Services)
+            .Where(category => category.Id == command.CategoryId)
             .FirstOrDefaultAsync();
 
-        if (salon is null)
+        if (category is null)
         {
             return Error.NotFound;
         }
 
-        var salonAlreadyContainsService = salon.Services!.Any(service => service.Name == command.Name);
+        var categoryAlreadyContainsService = category.Services!.Any(service => service.Name == newService.Name);
 
-        if (salonAlreadyContainsService)
+        if (categoryAlreadyContainsService)
         {
             return Error.Conflict;
         }
 
-        salon.Services!.Add(newService);
+        var atTheEndOfTheList = category.Services!.MaxBy(service => service.Order)!.Order + 1;
+        newService.Order = atTheEndOfTheList;
+
+        //TODO: debug why this throws error, expected one row to be added but 0 were added
+        //category.Services!.Add(newService);
+
+        await _services.AddAsync(newService);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

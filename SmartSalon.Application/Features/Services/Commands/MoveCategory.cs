@@ -11,8 +11,7 @@ namespace SmartCategory.Application.Features.Services.Commands;
 public class MoveCategoryCommand : ICommand
 {
     public Id CategoryId { get; set; }
-    public Id SalonId { get; set; }
-    public Id? SectionId { get; set; }
+    public Id SectionId { get; set; }
 }
 
 internal class MoveCategoryCommandHandler(IEfRepository<Category> _categories, IUnitOfWork _unitOfWork)

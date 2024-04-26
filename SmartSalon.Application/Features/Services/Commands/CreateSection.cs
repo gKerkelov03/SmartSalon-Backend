@@ -31,10 +31,10 @@ internal class CreateSectionCommandHandler(
 {
     public async Task<Result<CreateSectionCommandResponse>> Handle(CreateSectionCommand command, CancellationToken cancellationToken)
     {
-        //TODO: set order last
         var newSection = _mapper.Map<Section>(command);
 
         var salon = await _salons.All
+            .Include(salon => salon.Sections)
             .Where(salon => salon.Id == command.SalonId)
             .FirstOrDefaultAsync();
 
@@ -43,12 +43,15 @@ internal class CreateSectionCommandHandler(
             return Error.NotFound;
         }
 
-        var salonAlreadyContainsCategory = salon.Categories!.Any();
+        var salonAlreadyContainsSection = salon.Sections!.Any(section => section.Name == newSection.Name);
 
-        if (salonAlreadyContainsCategory)
+        if (salonAlreadyContainsSection)
         {
             return Error.Conflict;
         }
+
+        var atTheEndOfTheList = salon.Sections!.MaxBy(section => section.Order)!.Order + 1;
+        newSection.Order = atTheEndOfTheList;
 
         //TODO: debug why this throws error, expected one row to be added but 0 were added
         //salon.Sectionss!.Add(newService);

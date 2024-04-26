@@ -13,7 +13,6 @@ public class Salon : DeletableEntity
     public int DefaultTimePenalty { get; set; }
     public int DefaultBookingsInAdvance { get; set; }
     public bool SubscriptionsEnabled { get; set; }
-    public bool SectionsEnabled { get; set; }
     public bool WorkersCanMoveBookings { get; set; }
     public bool WorkersCanSetNonWorkingPeriods { get; set; }
     public Id WorkingTimeId { get; set; }

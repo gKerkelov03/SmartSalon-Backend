@@ -13,8 +13,7 @@ namespace SmartSalon.Application.Features.Services.Commands;
 public class CreateCategoryCommand : ICommand<CreateCategoryCommandResponse>, IMapTo<Category>
 {
     public required string Name { get; set; }
-    public Id SalonId { get; set; }
-    public Id? SectionId { get; set; }
+    public Id SectionId { get; set; }
 }
 
 public class CreateCategoryCommandResponse(Id id)
@@ -24,6 +23,7 @@ public class CreateCategoryCommandResponse(Id id)
 
 internal class CreateCategoryCommandHandler(
     IEfRepository<Category> _categories,
+    IEfRepository<Section> _sections,
     IEfRepository<Salon> _salons,
     IUnitOfWork _unitOfWork,
     IMapper _mapper
@@ -32,28 +32,37 @@ internal class CreateCategoryCommandHandler(
 {
     public async Task<Result<CreateCategoryCommandResponse>> Handle(CreateCategoryCommand command, CancellationToken cancellationToken)
     {
-        //TODO: set order last
         var newCategory = _mapper.Map<Category>(command);
 
-        var salon = await _salons.All
-            .Where(salon => salon.Id == command.SalonId)
+        var section = await _sections.All
+            .Include(section => section.Categories)
+            .Where(section => section.Id == command.SectionId)
             .FirstOrDefaultAsync();
+
+        if (section is null)
+        {
+            return Error.NotFound;
+        }
+
+        var salon = await _salons.GetByIdAsync(section.SalonId);
 
         if (salon is null)
         {
             return Error.NotFound;
         }
 
-        var salonAlreadyContainsCategory = salon.Categories!.Any();
+        var sectionAlreadyContainsCategory = section.Categories!.Any(category => category.Name == newCategory.Name);
 
-        if (salonAlreadyContainsCategory)
+        if (sectionAlreadyContainsCategory)
         {
             return Error.Conflict;
         }
 
+        var atTheEndOfTheList = salon.Categories!.MaxBy(category => category.Order)!.Order + 1;
+        newCategory.Order = atTheEndOfTheList;
+
         //TODO: debug why this throws error, expected one row to be added but 0 were added
         //salon.Categories!.Add(newService);
-
         await _categories.AddAsync(newCategory);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
