@@ -66,4 +66,26 @@ public class SalonsController(ISender _mediator, IMapper _mapper) : V1ApiControl
 
         return ProblemDetailsOr<NoContentResult>(result);
     }
+
+    [HttpPost($"InviteWorker")]
+    [SuccessResponse(Status200OK)]
+    [Authorize(Policy = IsOwnerOrIsAdminPolicy)]
+    public async Task<IActionResult> InviteWorker(InviteWorkerRequest request)
+    {
+        var command = _mapper.Map<InviteWorkerCommand>(request);
+        var result = await _mediator.Send(command);
+
+        return ProblemDetailsOr<OkResult>(result);
+    }
+
+    [HttpPost($"InviteOwner")]
+    [SuccessResponse(Status200OK)]
+    [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]
+    public async Task<IActionResult> InvitateOwner(InviteOwnerRequest request)
+    {
+        var command = _mapper.Map<InviteOwnerCommand>(request);
+        var result = await _mediator.Send(command);
+
+        return ProblemDetailsOr<OkResult>(result);
+    }
 }

@@ -9,22 +9,22 @@ using SmartSalon.Application.Errors;
 using SmartSalon.Application.Models.Emails;
 using SmartSalon.Application.ResultObject;
 
-namespace SmartSalon.Application.Features.Users.Commands;
+namespace SmartSalon.Application.Features.Salons.Commands;
 
-public class SendOwnerInvitationEmailCommand : ICommand, IMapTo<OwnerInvitationEncryptionModel>
+public class InviteOwnerCommand : ICommand, IMapTo<OwnerInvitationEncryptionModel>
 {
     public Id OwnerId { get; set; }
     public Id SalonId { get; set; }
 }
 
-public class SendOwnerInvitationEmailHandler(
+public class InviteOwnerHandler(
     UsersManager _usersManager,
     IEfRepository<Salon> _salons,
     IEmailsManager _emailsManager,
     IMapper _mapper
-) : ICommandHandler<SendOwnerInvitationEmailCommand>
+) : ICommandHandler<InviteOwnerCommand>
 {
-    public async Task<Result> Handle(SendOwnerInvitationEmailCommand command, CancellationToken cancellationToken)
+    public async Task<Result> Handle(InviteOwnerCommand command, CancellationToken cancellationToken)
     {
         var invitedOwner = await _usersManager.FindByIdAsync(command.OwnerId.ToString());
 

@@ -69,18 +69,6 @@ public class OwnersController(ISender _mediator, IMapper _mapper) : V1ApiControl
         return ProblemDetailsOr<NoContentResult>(result);
     }
 
-    [HttpPost($"SendOwnerInvitationEmail")]
-    [SuccessResponse(Status200OK)]
-    [Authorize(Policy = IsOwnerOrIsAdminPolicy)]
-    [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]
-    public async Task<IActionResult> SendOwnerInvitationEmail(SendOwnerInvitationEmailRequest request)
-    {
-        var command = _mapper.Map<SendOwnerInvitationEmailCommand>(request);
-        var result = await _mediator.Send(command);
-
-        return ProblemDetailsOr<OkResult>(result);
-    }
-
     [HttpPatch("AddToSalon")]
     [SuccessResponse(Status200OK)]
     public async Task<IActionResult> AddOwnerToSalon(string token)
