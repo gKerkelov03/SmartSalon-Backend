@@ -1,7 +1,7 @@
 using FluentValidation;
 using static SmartSalon.Application.ApplicationConstants.Validation.User;
 
-namespace SmartSalon.Application.Validators;
+namespace SmartSalon.Application.Features.Users.Validators;
 
 internal class RestorePasswordCommandValidator : AbstractValidator<RestorePasswordCommand>
 {
