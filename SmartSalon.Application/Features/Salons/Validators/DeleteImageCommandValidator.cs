@@ -5,9 +5,9 @@ using SmartSalon.Application.Features.Salons.Commands;
 
 namespace SmartSalon.Application.Validators;
 
-internal class RemoveImageCommandValidator : AbstractValidator<DeleteImageCommand>
+internal class DeleteImageCommandValidator : AbstractValidator<DeleteImageCommand>
 {
-    public RemoveImageCommandValidator()
+    public DeleteImageCommandValidator()
     {
         RuleFor(command => command.ImageId).MustBeValidGuid();
     }

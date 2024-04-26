@@ -10,6 +10,20 @@ public class SalonConfiguration : IEntityTypeConfiguration<Salon>
 {
     public void Configure(EntityTypeBuilder<Salon> builder)
     {
+        builder
+            .HasOne(salon => salon.WorkingTime)
+            .WithOne(workingTime => workingTime.Salon)
+            .HasForeignKey<WorkingTime>(workingTime => workingTime.SalonId);
+
+        builder
+            .HasOne(salon => salon.MainCurrency)
+            .WithMany()
+            .HasForeignKey(bs => bs.MainCurrencyId);
+
+        builder
+            .HasMany(salon => salon.AcceptedCurrencies)
+            .WithMany(currency => currency.Salons);
+
         builder.HasData(SalonsSeedingData.Data);
 
         builder
@@ -43,10 +57,5 @@ public class SalonConfiguration : IEntityTypeConfiguration<Salon>
         builder
             .Property(salon => salon.SubscriptionsEnabled)
             .HasDefaultValue(true);
-
-        builder
-            .HasOne(salon => salon.WorkingTime)
-            .WithOne(workingTime => workingTime.Salon)
-            .HasForeignKey<WorkingTime>(workingTime => workingTime.SalonId);
     }
 }

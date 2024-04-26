@@ -31,7 +31,7 @@ internal class RemoveCurrencyCommandHandler(
         }
 
         var salon = await _salons.All
-            .Include(salon => salon.Currencies)
+            .Include(salon => salon.AcceptedCurrencies)
             .Where(salon => salon.Id == command.SalonId)
             .FirstOrDefaultAsync();
 
@@ -40,7 +40,7 @@ internal class RemoveCurrencyCommandHandler(
             return Error.NotFound;
         }
 
-        salon.Currencies!.Remove(currency);
+        salon.AcceptedCurrencies!.Remove(currency);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

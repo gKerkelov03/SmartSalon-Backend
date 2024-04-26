@@ -5,7 +5,21 @@ namespace SmartSalon.Data.SeedingData;
 
 internal static class CurrenciesSeedingData
 {
+    public static Id BulgarianLevId = Id.NewGuid();
+
     public static Currency[] Data = [
+        new()
+        {
+            Name = "Bitcoin",
+            Code = "BTC",
+            Country = null,
+        },
+        new()
+        {
+            Name = "Ethereum",
+            Code = "ETH",
+            Country = null,
+        },
         new()
         {
             Name = "United States Dollar",
@@ -188,6 +202,7 @@ internal static class CurrenciesSeedingData
         },
         new()
         {
+            Id = BulgarianLevId,
             Name = "Bulgarian Lev",
             Code = "BGN",
             Country = "Bulgaria",

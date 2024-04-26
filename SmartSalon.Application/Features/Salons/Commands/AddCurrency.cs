@@ -27,7 +27,7 @@ internal class AddCurrencyCommandHandler(IEfRepository<Currency> _currencies, IE
         }
 
         var salon = await _salons.All
-            .Include(salon => salon.Currencies)
+            .Include(salon => salon.AcceptedCurrencies)
             .Where(salon => salon.Id == command.SalonId)
             .FirstOrDefaultAsync();
 
@@ -36,14 +36,14 @@ internal class AddCurrencyCommandHandler(IEfRepository<Currency> _currencies, IE
             return Error.NotFound;
         }
 
-        var salonAlreadyContainsCurrency = salon.Currencies!.Any(currency => currency.Id == command.CurrencyId);
+        var salonAlreadyContainsCurrency = salon.AcceptedCurrencies!.Any(currency => currency.Id == command.CurrencyId);
 
         if (salonAlreadyContainsCurrency)
         {
             return Error.Conflict;
         }
 
-        salon.Currencies!.Add(currency);
+        salon.AcceptedCurrencies!.Add(currency);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

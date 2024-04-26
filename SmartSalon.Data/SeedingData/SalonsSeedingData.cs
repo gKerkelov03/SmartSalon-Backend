@@ -7,6 +7,7 @@ internal class SalonsSeedingData
 {
     public static Id FirstSalonId = Id.NewGuid();
     public static Id SecondSalonId = Id.NewGuid();
+
     public static IEnumerable<Salon> Data = [
         new()
         {
@@ -19,7 +20,8 @@ internal class SalonsSeedingData
             SubscriptionsEnabled = true,
             WorkersCanMoveBookings = true,
             WorkersCanSetNonWorkingPeriods = true,
-            WorkingTimeId = WorkingTimesSeedingData.Data[0].Id
+            WorkingTimeId = WorkingTimesSeedingData.Data[0].Id,
+            MainCurrencyId = CurrenciesSeedingData.BulgarianLevId,
         },
         new()
         {
@@ -32,7 +34,8 @@ internal class SalonsSeedingData
             SubscriptionsEnabled = true,
             WorkersCanMoveBookings = true,
             WorkersCanSetNonWorkingPeriods = true,
-            WorkingTimeId = WorkingTimesSeedingData.Data[1].Id
+            WorkingTimeId = WorkingTimesSeedingData.Data[1].Id,
+            MainCurrencyId = CurrenciesSeedingData.BulgarianLevId,
         }
     ];
 }
