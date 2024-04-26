@@ -58,7 +58,7 @@ public class CategoriesController(ISender _mediator, IMapper _mapper) : V1ApiCon
     [SuccessResponse(Status200OK)]
     [FailureResponse(Status404NotFound)]
     [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]
-    public async Task<IActionResult> MoveService(MoveCategoryRequest request)
+    public async Task<IActionResult> MoveCategory(MoveCategoryRequest request)
     {
         var command = _mapper.Map<MoveCategoryCommand>(request);
         var result = await _mediator.Send(command);
