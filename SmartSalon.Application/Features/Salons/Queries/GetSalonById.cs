@@ -62,7 +62,6 @@ internal class GetSalonByIdQueryHandler(IEfRepository<Salon> _salons)
                 DefaultTimePenalty = salon.DefaultTimePenalty,
                 DefaultBookingsInAdvance = salon.DefaultBookingsInAdvance,
                 SubscriptionsEnabled = salon.SubscriptionsEnabled,
-                SectionsEnabled = salon.SectionsEnabled,
                 WorkersCanMoveBookings = salon.WorkersCanMoveBookings,
                 WorkersCanSetNonWorkingPeriods = salon.WorkersCanSetNonWorkingPeriods,
                 WorkingTimeId = salon.WorkingTimeId,

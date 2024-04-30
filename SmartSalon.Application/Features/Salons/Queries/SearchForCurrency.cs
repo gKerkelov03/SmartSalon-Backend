@@ -23,7 +23,7 @@ internal class SearchForCurrencyQueryHandler(IEfRepository<Currency> _owners, IM
         var currenciesMatchingTheSearchTerm = await _owners.FindAllAsync(currency =>
             currency.Name.ToLower().StartsWith(loweredSearchTerm) ||
             currency.Code.ToLower().StartsWith(loweredSearchTerm) ||
-            currency.Country.ToLower().StartsWith(loweredSearchTerm)
+            currency.Country == null ? false : currency.Country.ToLower().StartsWith(loweredSearchTerm)
         );
 
         if (currenciesMatchingTheSearchTerm.IsEmpty())

@@ -13,4 +13,5 @@ public class GetUserByIdResponse : IMapFrom<GetUserByIdQueryResponse>
     public bool EmailConfirmed { get; set; }
     public required string ProfilePictureUrl { get; set; }
     public required string PhoneNumber { get; set; }
+    public required string[] Roles { get; set; }
 }
