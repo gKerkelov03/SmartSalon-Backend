@@ -1,5 +1,6 @@
 ﻿
 using SmartSalon.Application.Domain.Salons;
+using static SmartSalon.Data.SeedingData.CurrenciesSeedingData;
 
 namespace SmartSalon.Data.SeedingData;
 
@@ -21,7 +22,7 @@ internal class SalonsSeedingData
             WorkersCanMoveBookings = true,
             WorkersCanSetNonWorkingPeriods = true,
             WorkingTimeId = WorkingTimesSeedingData.Data[0].Id,
-            MainCurrencyId = CurrenciesSeedingData.BulgarianLevId,
+            MainCurrencyId = BulgarianLevId,
         },
         new()
         {
@@ -35,7 +36,7 @@ internal class SalonsSeedingData
             WorkersCanMoveBookings = true,
             WorkersCanSetNonWorkingPeriods = true,
             WorkingTimeId = WorkingTimesSeedingData.Data[1].Id,
-            MainCurrencyId = CurrenciesSeedingData.BulgarianLevId,
+            MainCurrencyId = BulgarianLevId,
         }
     ];
 }

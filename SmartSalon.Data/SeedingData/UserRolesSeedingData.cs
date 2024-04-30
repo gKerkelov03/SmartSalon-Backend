@@ -1,5 +1,8 @@
 ﻿
 using Microsoft.AspNetCore.Identity;
+using static SmartSalon.Data.SeedingData.UsersSeedingData;
+using static SmartSalon.Data.SeedingData.RolesSeedingData;
+
 
 namespace SmartSalon.Data.SeedingData;
 
@@ -9,13 +12,23 @@ internal static class UserRolesSeedingData
     [
         new()
         {
-            UserId = UsersSeedingData.FirstAdminId,
-            RoleId = RolesSeedingData.AdminRoleId,
+            UserId = FirstAdminId,
+            RoleId = AdminRoleId,
         },
         new()
         {
-            UserId = UsersSeedingData.SecondAdminId,
-            RoleId = RolesSeedingData.AdminRoleId,
+            UserId = FirstAdminId,
+            RoleId = CustomerRoleId,
+        },
+        new()
+        {
+            UserId = SecondAdminId,
+            RoleId = AdminRoleId,
+        },
+        new()
+        {
+            UserId = SecondAdminId,
+            RoleId = CustomerRoleId,
         },
     ];
 }

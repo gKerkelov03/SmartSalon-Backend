@@ -22,6 +22,7 @@ internal static class UsersSeedingData
             PhoneNumber = "0895105609",
             UserName= "gkerkelov03@abv.bg",
             Email = "gkerkelov03@abv.bg",
+            EmailConfirmed = true,
         },
         new()
         {
@@ -31,6 +32,7 @@ internal static class UsersSeedingData
             PhoneNumber = "0899829897",
             UserName= "pivanov03@abv.bg",
             Email = "pivanov03@abv.bg",
+            EmailConfirmed = true,
         }
     }
     .Select(user =>
