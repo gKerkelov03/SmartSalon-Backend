@@ -1,5 +1,6 @@
 ﻿
 using FluentValidation;
+using SmartSalon.Application.Extensions;
 using SmartSalon.Application.Features.Services.Commands;
 using static SmartSalon.Application.ApplicationConstants.Validation.Category;
 
@@ -10,5 +11,6 @@ internal class CreateCategoryCommandValidator : AbstractValidator<CreateCategory
     public CreateCategoryCommandValidator()
     {
         RuleFor(command => command.Name).MaximumLength(MaxNameLength);
+        RuleFor(command => command.SectionId).MustBeValidGuid();
     }
 }
