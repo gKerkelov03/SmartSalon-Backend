@@ -76,11 +76,13 @@ public class SwaggerGenOptionsConfigurator : IConfigureOptions<SwaggerGenOptions
 
         var operationFilterTypes = allTypes
             .Where(type => typeof(IOperationFilter).IsAssignableFrom(type) && type.IsNotAbsctractOrInterface());
+
         var schemaFilterTypes = allTypes
             .Where(type => typeof(ISchemaFilter).IsAssignableFrom(type) && type.IsNotAbsctractOrInterface());
 
         var operationFiltersRegistrationMethod = typeof(SwaggerGenOptionsExtensions)
             .GetMethod(nameof(SwaggerGenOptionsExtensions.OperationFilter))!;
+
         var schemaFiltersRegistrationMethod = typeof(SwaggerGenOptionsExtensions)
             .GetMethod(nameof(SwaggerGenOptionsExtensions.SchemaFilter))!;
 

@@ -30,13 +30,14 @@ builder
     .RegisterIdentityServices()
     .RegisterMapper(applicationLayer, dataLayer, presentationLayer)
 
-    .AddVersioning()
-    .AddSwaggerGen()
     .AddExceptionHandler<GlobalExceptionHandler>()
     .AddAuth(builder.Configuration)
     .AddHttpContextAccessor()
     .AddHttpClient()
-    .AddCors();
+    .AddCors()
+    .AddSwaggerGen()
+    .AddApiVersioning()
+    .AddApiExplorer();
 
 var app = builder.Build();
 

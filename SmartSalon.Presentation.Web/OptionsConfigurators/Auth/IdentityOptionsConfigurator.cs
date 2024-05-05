@@ -8,12 +8,13 @@ public class IdentityOptionsConfigurator : IConfigureOptions<IdentityOptions>, I
 {
     public void Configure(IdentityOptions options)
     {
-        options.Password.RequireLowercase = false;
+        options.Password.RequiredLength = 6;
         options.Password.RequireUppercase = true;
         options.Password.RequireDigit = true;
-        options.Password.RequireNonAlphanumeric = false;
-        options.Password.RequiredLength = 6;
 
         options.User.RequireUniqueEmail = true;
+
+        options.Password.RequireLowercase = false;
+        options.Password.RequireNonAlphanumeric = false;
     }
 }

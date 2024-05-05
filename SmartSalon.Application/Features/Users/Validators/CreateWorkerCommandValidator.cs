@@ -34,9 +34,5 @@ internal class CreateWorkerCommandValidator : AbstractValidator<CreateWorkerComm
         RuleFor(command => command.Nickname)
             .NotEmpty()
             .MaximumLength(MaxNicknameLength);
-
-        RuleFor(command => command.JobTitle)
-            .NotEmpty()
-            .MaximumLength(MaxNicknameLength);
     }
 }

@@ -42,7 +42,7 @@ public class JobTitlesController(ISender _mediator, IMapper _mapper) : V1ApiCont
         );
     }
 
-    [HttpPatch(IdRoute)]
+    [HttpPatch]
     [SuccessResponse(Status200OK)]
     [FailureResponse(Status404NotFound)]
     [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]
