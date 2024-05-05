@@ -53,6 +53,7 @@ internal class CreateOwnerCommandHandler(
             return Error.NotFound;
         }
 
+        //TODO: remember you set EmailConfirmed to true, you might want to change that in the future
         var newOwner = _mapper.Map<Owner>(command);
         newOwner.UserName = command.Email;
         newOwner.EmailConfirmed = true;

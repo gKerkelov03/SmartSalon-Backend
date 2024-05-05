@@ -119,6 +119,28 @@ namespace SmartSalon.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "JobTitle",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SalonId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DeletedOn = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_JobTitle", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_JobTitle_Salons_SalonId",
+                        column: x => x.SalonId,
+                        principalTable: "Salons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Sections",
                 columns: table => new
                 {
@@ -205,12 +227,11 @@ namespace SmartSalon.Data.Migrations
                     PhoneNumber = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     SalonId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    JobTitle = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Nickname = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     NormalizedEmail = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
@@ -314,6 +335,30 @@ namespace SmartSalon.Data.Migrations
                     table.ForeignKey(
                         name: "FK_CustomerSubscription_Users_ActiveCustomersId",
                         column: x => x.ActiveCustomersId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "JobTitleWorker",
+                columns: table => new
+                {
+                    JobTitlesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    WorkersId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_JobTitleWorker", x => new { x.JobTitlesId, x.WorkersId });
+                    table.ForeignKey(
+                        name: "FK_JobTitleWorker_JobTitle_JobTitlesId",
+                        column: x => x.JobTitlesId,
+                        principalTable: "JobTitle",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_JobTitleWorker_Users_WorkersId",
+                        column: x => x.WorkersId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -506,39 +551,39 @@ namespace SmartSalon.Data.Migrations
                 columns: new[] { "Id", "Code", "Country", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("06d6a6d2-78e2-474a-8ffb-0eed4efa84a2"), "JPY", "Japan", "Japanese Yen" },
-                    { new Guid("087ae8ac-7fe4-4d09-b837-c4b3e17c5b60"), "NZD", "New Zealand", "New Zealand Dollar" },
-                    { new Guid("174786f6-5ad0-4437-b84f-fad2af6cf468"), "NOK", "Norway", "Norwegian Krone" },
-                    { new Guid("1beb71b9-4561-4824-a133-51f04d99bd72"), "SEK", "Sweden", "Swedish Krona" },
-                    { new Guid("20c7eb09-1e7f-4684-af60-2872761769c5"), "ETH", null, "Ethereum" },
-                    { new Guid("2693154f-13d4-4c8d-8e5a-48f6c44ca547"), "ZAR", "South Africa", "South African Rand" },
-                    { new Guid("2b96f512-8e80-4bb6-b3e4-4a9346f42d3e"), "DKK", "Denmark", "Danish Krone" },
-                    { new Guid("33a3830e-c761-43e6-9d01-e90bf9208f5d"), "KRW", "South Korea", "South Korean Won" },
-                    { new Guid("33f498b5-4489-4c45-b265-56626a1f513c"), "RUB", "Russia", "Russian Ruble" },
-                    { new Guid("44e0957e-4119-47cc-a9a4-7086afed3cc2"), "HKD", "Hong Kong", "Hong Kong Dollar" },
-                    { new Guid("4781f9cf-558d-458f-8215-783a04097059"), "INR", "India", "Indian Rupee" },
-                    { new Guid("4aba7030-9078-4cb4-9ed3-162a88677077"), "GBP", "United Kingdom", "British Pound Sterling" },
-                    { new Guid("63e43190-a00d-4f9f-ae9a-cddb12cda1f6"), "ARS", "Argentina", "Argentine Peso" },
-                    { new Guid("688bcad4-ee76-4b90-b94c-ce6c841c7df3"), "CHF", "Switzerland", "Swiss Franc" },
-                    { new Guid("68c4a1a6-b824-4167-a2fe-a4fdd7f5c75b"), "CNY", "China", "Chinese Yuan" },
-                    { new Guid("77966803-0924-4ecc-ae86-480891fb74bb"), "BRL", "Brazil", "Brazilian Real" },
-                    { new Guid("7c5e812f-54a6-4dcd-b0a2-7c41b6a5557b"), "AED", "United Arab Emirates", "UAE Dirham" },
-                    { new Guid("7e6e93f2-88eb-4570-b738-97e4d3bd1023"), "IDR", "Indonesia", "Indonesian Rupiah" },
-                    { new Guid("7e864948-16c9-4472-be76-db16abd7e17b"), "PLN", "Poland", "Polish Zloty" },
-                    { new Guid("80099b3e-cf64-440d-83ec-4bec4196cdce"), "PHP", "Philippines", "Philippine Peso" },
-                    { new Guid("878902cd-8424-4a95-aae1-ee05761bcbe0"), "USD", "United States", "United States Dollar" },
-                    { new Guid("89a0ad80-2f26-457f-ae97-2e90fea0b1e0"), "MXN", "Mexico", "Mexican Peso" },
-                    { new Guid("8b62adb9-360e-4bc9-89a9-73c87853c3c0"), "SGD", "Singapore", "Singapore Dollar" },
-                    { new Guid("94d4d9df-6263-4cfc-868f-18b2803b80d1"), "MYR", "Malaysia", "Malaysian Ringgit" },
-                    { new Guid("979a5b1c-2045-49e4-ae53-cb87f8da7c0d"), "CAD", "Canada", "Canadian Dollar" },
-                    { new Guid("9c91a710-c865-4e89-9a38-7e22c72facbd"), "BGN", "Bulgaria", "Bulgarian Lev" },
-                    { new Guid("a10fbc39-5324-431d-93ac-099bd4304eb3"), "THB", "Thailand", "Thai Baht" },
-                    { new Guid("a53e896f-1b5e-45a8-85e9-0313d27aded8"), "AUD", "Australia", "Australian Dollar" },
-                    { new Guid("aa1b511b-0ba1-4e37-a3be-09c593bd323e"), "SAR", "Saudi Arabia", "Saudi Riyal" },
-                    { new Guid("b72fa053-f530-47b5-8054-73b2a35ec31b"), "TRY", "Turkey", "Turkish Lira" },
-                    { new Guid("bca82dc6-6b12-4820-abef-ed34aeac69ae"), "ILS", "Israel", "Israeli New Shekel" },
-                    { new Guid("cd3956c9-e814-4e37-9a70-b920e07c71bc"), "BTC", null, "Bitcoin" },
-                    { new Guid("df89552e-b891-4692-85a7-709327e72d5a"), "EUR", "Eurozone", "Euro" }
+                    { new Guid("121cde5d-3d88-45e5-a280-c7c56be6cdcf"), "THB", "Thailand", "Thai Baht" },
+                    { new Guid("189071c2-b42b-4270-954e-098c85220dd4"), "ILS", "Israel", "Israeli New Shekel" },
+                    { new Guid("1f770c9b-ab82-4873-baea-95fe591062c6"), "HKD", "Hong Kong", "Hong Kong Dollar" },
+                    { new Guid("207d10aa-4041-4943-9ce9-25ddc7e01d8f"), "DKK", "Denmark", "Danish Krone" },
+                    { new Guid("29686a75-c9ae-4b5e-8594-956c48e9af63"), "AUD", "Australia", "Australian Dollar" },
+                    { new Guid("29e0f1d3-edda-4be2-87d3-9f484564961a"), "EUR", "Eurozone", "Euro" },
+                    { new Guid("3ac679af-fd41-4674-bf42-57b087709f56"), "PHP", "Philippines", "Philippine Peso" },
+                    { new Guid("41e3d321-a7b2-4cd6-b6e1-862a37fcb56b"), "SAR", "Saudi Arabia", "Saudi Riyal" },
+                    { new Guid("44ba8e22-34de-4550-a6ed-c75c12fa2819"), "NZD", "New Zealand", "New Zealand Dollar" },
+                    { new Guid("50261a49-c680-4972-a493-6a68ceee6c64"), "JPY", "Japan", "Japanese Yen" },
+                    { new Guid("62904ed3-2847-4989-b89a-d51aa6e0bcf5"), "MXN", "Mexico", "Mexican Peso" },
+                    { new Guid("7136f915-a3b4-4368-bbe1-86f299a714f3"), "SGD", "Singapore", "Singapore Dollar" },
+                    { new Guid("7e6dd2fd-a7cb-4be4-9950-c87035b7e2ec"), "ZAR", "South Africa", "South African Rand" },
+                    { new Guid("7f7b6c3b-cc87-4783-a894-e566b4888c0f"), "KRW", "South Korea", "South Korean Won" },
+                    { new Guid("87fdd591-c974-46d4-a37c-ead6ae8a0822"), "PLN", "Poland", "Polish Zloty" },
+                    { new Guid("8f9e617c-5642-49ad-923d-8a8e6ec5253a"), "IDR", "Indonesia", "Indonesian Rupiah" },
+                    { new Guid("9302dcde-e53b-4dd2-a2d3-b9a8bb849333"), "ETH", null, "Ethereum" },
+                    { new Guid("95e6019d-0856-458e-8bd2-68735d9d0ee9"), "SEK", "Sweden", "Swedish Krona" },
+                    { new Guid("aa9f2671-a517-48d3-8a0e-34cd5ccd70b9"), "RUB", "Russia", "Russian Ruble" },
+                    { new Guid("aeb62cda-7a36-4b5d-b72b-0b7a339dcefe"), "CNY", "China", "Chinese Yuan" },
+                    { new Guid("b061bafc-cebb-42e1-84e1-07e6a90ba094"), "TRY", "Turkey", "Turkish Lira" },
+                    { new Guid("ba4c5a15-f4c8-438e-8dba-c52dcdf640a8"), "GBP", "United Kingdom", "British Pound Sterling" },
+                    { new Guid("c78d2650-09d7-4212-a89f-319389ced1e8"), "ARS", "Argentina", "Argentine Peso" },
+                    { new Guid("cadeff46-8683-49ff-ae2a-7be938be6c65"), "AED", "United Arab Emirates", "UAE Dirham" },
+                    { new Guid("d2744c00-116a-4af0-8afb-96a12a40cd23"), "BGN", "Bulgaria", "Bulgarian Lev" },
+                    { new Guid("dcbf1545-89bc-4714-8ca6-ba922803baed"), "CAD", "Canada", "Canadian Dollar" },
+                    { new Guid("dd2f17f9-e37e-41ef-bc1b-9a00ad18c05b"), "INR", "India", "Indian Rupee" },
+                    { new Guid("e223f8b6-4c8f-4569-aac3-27b17c7fc69c"), "CHF", "Switzerland", "Swiss Franc" },
+                    { new Guid("e30dcc24-fd86-49d3-b6a0-78f3ef1775df"), "BTC", null, "Bitcoin" },
+                    { new Guid("f77fc9bb-3418-48a1-b5b1-3a1b3de9ccea"), "USD", "United States", "United States Dollar" },
+                    { new Guid("f7abe7c1-f60a-4584-bbf0-2bf69483110f"), "NOK", "Norway", "Norwegian Krone" },
+                    { new Guid("f8b79ae8-a4fe-4ac5-bcfc-fa4603dded37"), "MYR", "Malaysia", "Malaysian Ringgit" },
+                    { new Guid("fe475a9c-baa3-4db2-a82f-b4b40b7c0304"), "BRL", "Brazil", "Brazilian Real" }
                 });
 
             migrationBuilder.InsertData(
@@ -546,10 +591,10 @@ namespace SmartSalon.Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { new Guid("4bc0b2ba-d09b-486c-9e42-84c60894efdf"), "360abe3f-738f-4016-9a12-6b2d0a660cb0", "Owner", "OWNER" },
-                    { new Guid("5295ebb6-ff71-4a89-979c-125ad836eca8"), "da88271b-f0d2-4cc4-9657-975665753b70", "Customer", "CUSTOMER" },
-                    { new Guid("79faba59-5c78-4bb8-9ce4-ed376cba8932"), "63e926ae-3eff-4e27-8bf6-098d49021056", "Worker", "WORKER" },
-                    { new Guid("8dd3958b-4c31-4faa-9b59-46e71ade3471"), "fb11345b-0cca-47fd-8959-237b72651a92", "Admin", "ADMIN" }
+                    { new Guid("08ea05e9-c308-441e-b5fb-68bd5d7a95c2"), "ca146348-78cf-4820-9029-29ea070cd8b6", "Customer", "CUSTOMER" },
+                    { new Guid("b5025778-3eb3-482c-aea5-3f4edaafaa62"), "23c15345-eee1-46ea-9b8d-3edab606f9c2", "Worker", "WORKER" },
+                    { new Guid("dcdfaae9-93a3-4595-a3f7-23f3a7580d0d"), "ad25b1a2-d69e-4dad-8cf1-7bb5ea0ef268", "Admin", "ADMIN" },
+                    { new Guid("f8514b94-72d4-482a-a0ea-bc82e7e26f1d"), "c5b0a121-1bca-45c6-a59e-a0be79806fbd", "Owner", "OWNER" }
                 });
 
             migrationBuilder.InsertData(
@@ -557,8 +602,8 @@ namespace SmartSalon.Data.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "DeletedBy", "DeletedOn", "Email", "EmailConfirmed", "FirstName", "IsDeleted", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "ProfilePictureUrl", "SecurityStamp", "TwoFactorEnabled", "UserName", "UserType" },
                 values: new object[,]
                 {
-                    { new Guid("660ccaff-6e95-4070-82ca-1f8859049688"), 0, "40d10104-7a36-4744-8916-f6e5d9001c96", null, null, "pivanov03@abv.bg", true, "Petar", false, "Ivanov", false, null, "PIVANOV03@ABV.BG", "PIVANOV03@ABV.BG", "AQAAAAIAAYagAAAAEINKu+SI1bHylC0xDYRUVXi3EXP3FrJztkL/W7eRQ8IhQZqZcxZu3WGjquK6gFIJZw==", "0899829897", false, null, "0c86d59d-7ab5-4575-9d81-35c60bc890d8", false, "pivanov03@abv.bg", "Admin" },
-                    { new Guid("d78f2bf6-0da0-422f-897b-8084be1a1d56"), 0, "191fb82c-78a6-4128-8b6c-62bd835d53af", null, null, "gkerkelov03@abv.bg", true, "Georgi", false, "Kerkelov", false, null, "GKERKELOV03@ABV.BG", "GKERKELOV03@ABV.BG", "AQAAAAIAAYagAAAAEI7N1lMRLqEtDjPuCJJcw+ywl2Fe9rmgOuMI81nhOxDXwDonmsBH5PmoKSxXNs1MYg==", "0895105609", false, null, "f6b3642d-6c09-453b-97a5-99c286c73ad6", false, "gkerkelov03@abv.bg", "Admin" }
+                    { new Guid("33b8891d-1adc-4dcf-9a0b-ddbefaaf2712"), 0, "f7890cac-2899-4e65-8b21-18abf46d6b0c", null, null, "gkerkelov03@abv.bg", true, "Georgi", false, "Kerkelov", false, null, "GKERKELOV03@ABV.BG", "GKERKELOV03@ABV.BG", "AQAAAAIAAYagAAAAEOoCgiOfep4Z2QPug9Oq2uVaulzo7biQhpy2nUMersLQBW0/3Ad/lEwzIIROWOx47A==", "0895105609", false, null, "08945676-3710-44bd-9532-1bce6b991039", false, "gkerkelov03@abv.bg", "Admin" },
+                    { new Guid("bf744efd-24d6-4318-b539-981d8a54cec9"), 0, "7de015b8-918a-4776-a9c1-117a1e9900dd", null, null, "pivanov03@abv.bg", true, "Petar", false, "Ivanov", false, null, "PIVANOV03@ABV.BG", "PIVANOV03@ABV.BG", "AQAAAAIAAYagAAAAEPDhJ5lGMgXKmJzFJ0bY2DhY00+XWy9tYEmHfeIbzFzW20jM1NX/uc1rS82Fdc7kxA==", "0899829897", false, null, "069e8406-34ab-4d95-b67d-67f6bfdf8e52", false, "pivanov03@abv.bg", "Admin" }
                 });
 
             migrationBuilder.InsertData(
@@ -566,8 +611,8 @@ namespace SmartSalon.Data.Migrations
                 columns: new[] { "Id", "BookingsInAdvance", "DeletedBy", "DeletedOn", "Description", "IsDeleted", "Location", "MainCurrencyId", "Name", "ProfilePictureUrl", "SubscriptionsEnabled", "TimePenalty", "WorkersCanMoveBookings", "WorkersCanSetNonWorkingPeriods", "WorkingTimeId" },
                 values: new object[,]
                 {
-                    { new Guid("7b6e8336-b400-4577-aceb-307516e1cef3"), 5, null, null, "Description", false, "Location", new Guid("9c91a710-c865-4e89-9a38-7e22c72facbd"), "Cosa Nostra", null, true, 5, true, true, new Guid("fa49e340-a2ef-481f-866d-495bf53b273a") },
-                    { new Guid("8b20b529-1d2c-4071-915a-e360010c1d91"), 5, null, null, "Description", false, "Location", new Guid("9c91a710-c865-4e89-9a38-7e22c72facbd"), "Gosho shop", null, true, 5, true, true, new Guid("d679a205-c736-4e2e-9279-adb43d585bf0") }
+                    { new Guid("5080350e-7992-4782-a528-96063bd6c2e6"), 5, null, null, "Description", false, "Location", new Guid("d2744c00-116a-4af0-8afb-96a12a40cd23"), "Gosho shop", null, true, 5, true, true, new Guid("c8941c52-348a-43fd-8c6a-e4434486e2b7") },
+                    { new Guid("68c8c1bb-f802-4254-84ea-4a5e6d064591"), 5, null, null, "Description", false, "Location", new Guid("d2744c00-116a-4af0-8afb-96a12a40cd23"), "Cosa Nostra", null, true, 5, true, true, new Guid("e5b59c8c-e3b9-4329-a31a-028ef998d757") }
                 });
 
             migrationBuilder.InsertData(
@@ -575,10 +620,10 @@ namespace SmartSalon.Data.Migrations
                 columns: new[] { "RoleId", "UserId" },
                 values: new object[,]
                 {
-                    { new Guid("5295ebb6-ff71-4a89-979c-125ad836eca8"), new Guid("660ccaff-6e95-4070-82ca-1f8859049688") },
-                    { new Guid("8dd3958b-4c31-4faa-9b59-46e71ade3471"), new Guid("660ccaff-6e95-4070-82ca-1f8859049688") },
-                    { new Guid("5295ebb6-ff71-4a89-979c-125ad836eca8"), new Guid("d78f2bf6-0da0-422f-897b-8084be1a1d56") },
-                    { new Guid("8dd3958b-4c31-4faa-9b59-46e71ade3471"), new Guid("d78f2bf6-0da0-422f-897b-8084be1a1d56") }
+                    { new Guid("08ea05e9-c308-441e-b5fb-68bd5d7a95c2"), new Guid("33b8891d-1adc-4dcf-9a0b-ddbefaaf2712") },
+                    { new Guid("dcdfaae9-93a3-4595-a3f7-23f3a7580d0d"), new Guid("33b8891d-1adc-4dcf-9a0b-ddbefaaf2712") },
+                    { new Guid("08ea05e9-c308-441e-b5fb-68bd5d7a95c2"), new Guid("bf744efd-24d6-4318-b539-981d8a54cec9") },
+                    { new Guid("dcdfaae9-93a3-4595-a3f7-23f3a7580d0d"), new Guid("bf744efd-24d6-4318-b539-981d8a54cec9") }
                 });
 
             migrationBuilder.InsertData(
@@ -586,8 +631,8 @@ namespace SmartSalon.Data.Migrations
                 columns: new[] { "Id", "DeletedBy", "DeletedOn", "FridayFrom", "FridayTo", "IsDeleted", "MondayFrom", "MondayTo", "SalonId", "SaturdayFrom", "SaturdayTo", "SundayFrom", "SundayTo", "ThursdayFrom", "ThursdayTo", "TuesdayFrom", "TuesdayTo", "WednesdayFrom", "WednesdayTo" },
                 values: new object[,]
                 {
-                    { new Guid("d679a205-c736-4e2e-9279-adb43d585bf0"), null, null, new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), false, new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new Guid("8b20b529-1d2c-4071-915a-e360010c1d91"), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0) },
-                    { new Guid("fa49e340-a2ef-481f-866d-495bf53b273a"), null, null, new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), false, new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new Guid("7b6e8336-b400-4577-aceb-307516e1cef3"), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0) }
+                    { new Guid("c8941c52-348a-43fd-8c6a-e4434486e2b7"), null, null, new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), false, new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new Guid("5080350e-7992-4782-a528-96063bd6c2e6"), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0) },
+                    { new Guid("e5b59c8c-e3b9-4329-a31a-028ef998d757"), null, null, new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), false, new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new Guid("68c8c1bb-f802-4254-84ea-4a5e6d064591"), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0) }
                 });
 
             migrationBuilder.CreateIndex(
@@ -634,6 +679,16 @@ namespace SmartSalon.Data.Migrations
                 name: "IX_Images_SalonId",
                 table: "Images",
                 column: "SalonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_JobTitle_SalonId",
+                table: "JobTitle",
+                column: "SalonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_JobTitleWorker_WorkersId",
+                table: "JobTitleWorker",
+                column: "WorkersId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Logins_UserId",
@@ -740,6 +795,9 @@ namespace SmartSalon.Data.Migrations
                 name: "Images");
 
             migrationBuilder.DropTable(
+                name: "JobTitleWorker");
+
+            migrationBuilder.DropTable(
                 name: "Logins");
 
             migrationBuilder.DropTable(
@@ -756,6 +814,9 @@ namespace SmartSalon.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "WorkingTimes");
+
+            migrationBuilder.DropTable(
+                name: "JobTitle");
 
             migrationBuilder.DropTable(
                 name: "Services");

@@ -83,15 +83,4 @@ public class UsersController(ISender _mediator, IMapper _mapper) : V1ApiControll
 
         return ProblemDetailsOr<OkResult>(result);
     }
-
-    [HttpDelete(IdRoute)]
-    [SuccessResponse(Status204NoContent)]
-    [Authorize(Policy = IsTheSameUserOrIsAdminPolicy)]
-    public async Task<IActionResult> DeleteUser(Id userId)
-    {
-        var command = new DeleteUserCommand(userId);
-        var result = await _mediator.Send(command);
-
-        return ProblemDetailsOr<NoContentResult>(result);
-    }
 }

@@ -57,10 +57,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired();
 
         builder
-            .Property(user => user.PasswordHash)
-            .IsRequired();
-
-        builder
             .Property(user => user.SecurityStamp)
             .IsRequired();
 

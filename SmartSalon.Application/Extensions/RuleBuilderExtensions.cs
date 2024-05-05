@@ -21,10 +21,11 @@ public static class RuleBuilderExtensions
     {
         return ruleBuilder
             .Must((rootObject, propertyValue, context) =>
-                propertyValue.Length > MinPasswordLength &&
+                propertyValue.Length >= MinPasswordLength &&
                 propertyValue.Any(char.IsUpper) &&
+                propertyValue.Any(char.IsLower) &&
                 propertyValue.Any(char.IsDigit)
             )
-            .WithMessage("{PropertyPath}  must be at least 6 characters long, with uppercase and lowercase letters");
+            .WithMessage("{PropertyPath}  must be at least 6 characters long, with uppercase letter and a digit");
     }
 }

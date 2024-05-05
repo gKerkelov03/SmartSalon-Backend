@@ -50,6 +50,7 @@ internal class CreateWorkerCommandHandler(
             return Error.NotFound;
         }
 
+        //TODO: remember you set EmailConfirmed to true, you might want to change that in the future
         var newWorker = _mapper.Map<Worker>(command);
         newWorker.UserName = command.Email;
         newWorker.JobTitles = (await _jobTitles.FindAllAsync(JobTitle => command.JobTitlesIds.Contains(JobTitle.Id))).ToList();

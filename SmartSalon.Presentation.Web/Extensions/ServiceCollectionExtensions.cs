@@ -10,6 +10,9 @@ using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Extensions;
 using SmartSalon.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Text;
+using SmartSalon.Application.Options;
+using Microsoft.IdentityModel.Tokens;
 
 namespace SmartSalon.Presentation.Web.Extensions;
 
@@ -123,7 +126,21 @@ public static partial class ServiceCollectionExtensions
     {
         services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer();
+            .AddJwtBearer(options =>
+            {
+                //TODO: why extracting this options configuration in optionsConfigurator class doesn't get called
+                var jwtOptions = config.GetSection(JwtOptions.SectionName).Get<JwtOptions>()!;
+                var signingKey = Encoding.ASCII.GetBytes(jwtOptions.EncryptionKey);
+
+                options.TokenValidationParameters = new()
+                {
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtOptions.Issuer,
+                    ValidAudience = jwtOptions.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(signingKey),
+                };
+            }
+            );
 
         services.AddAuthorization();
 
