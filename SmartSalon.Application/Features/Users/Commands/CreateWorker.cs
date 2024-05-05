@@ -15,10 +15,10 @@ public class CreateWorkerCommand : ICommand<CreateWorkerCommandResponse>, IMapTo
     public required string LastName { get; set; }
     public required string Nickname { get; set; }
     public required string PhoneNumber { get; set; }
-    public required string JobTitle { get; set; }
     public required string Email { get; set; }
     public required string Password { get; set; }
     public Id SalonId { get; set; }
+    public required IEnumerable<Id> JobTitlesIds { get; set; }
 }
 
 public class CreateWorkerCommandResponse(Id createdWorkerId)
@@ -26,7 +26,12 @@ public class CreateWorkerCommandResponse(Id createdWorkerId)
     public Id CreatedWorkerId => createdWorkerId;
 }
 
-internal class CreateWorkerCommandHandler(UsersManager _users, IEfRepository<Salon> _salons, IMapper _mapper)
+internal class CreateWorkerCommandHandler(
+    UsersManager _users,
+    IEfRepository<Salon> _salons,
+    IEfRepository<JobTitle> _jobTitles,
+    IMapper _mapper
+)
     : ICommandHandler<CreateWorkerCommand, CreateWorkerCommandResponse>
 {
     public async Task<Result<CreateWorkerCommandResponse>> Handle(CreateWorkerCommand command, CancellationToken cancellationToken)
@@ -47,6 +52,8 @@ internal class CreateWorkerCommandHandler(UsersManager _users, IEfRepository<Sal
 
         var newWorker = _mapper.Map<Worker>(command);
         newWorker.UserName = command.Email;
+        newWorker.JobTitles = (await _jobTitles.FindAllAsync(JobTitle => command.JobTitlesIds.Contains(JobTitle.Id))).ToList();
+        newWorker.EmailConfirmed = true;
 
         var identityResultForCreation = await _users.CreateAsync(newWorker);
         var identityResultForAddingToRole = await _users.AddToRoleAsync(newWorker, WorkerRoleName);

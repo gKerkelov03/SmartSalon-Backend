@@ -55,6 +55,7 @@ internal class CreateOwnerCommandHandler(
 
         var newOwner = _mapper.Map<Owner>(command);
         newOwner.UserName = command.Email;
+        newOwner.EmailConfirmed = true;
 
         salon.Owners!.Add(newOwner);
 

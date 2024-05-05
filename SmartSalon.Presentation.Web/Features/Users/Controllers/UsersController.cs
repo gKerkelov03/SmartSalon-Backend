@@ -94,5 +94,4 @@ public class UsersController(ISender _mediator, IMapper _mapper) : V1ApiControll
 
         return ProblemDetailsOr<NoContentResult>(result);
     }
-
 }

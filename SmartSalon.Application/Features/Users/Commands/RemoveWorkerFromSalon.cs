@@ -18,24 +18,20 @@ internal class RemoveWorkerFromSalonCommandHandler(IEfRepository<Worker> _worker
 {
     public async Task<Result> Handle(RemoveWorkerFromSalonCommand command, CancellationToken cancellationToken)
     {
-        var worker = await _workers.GetByIdAsync(command.WorkerId);
+        var worker = await _workers.All
+            .Include(worker => worker.JobTitles)
+            .Include(worker => worker.Salon)
+            .Where(worker => worker.Id == command.WorkerId)
+            .FirstOrDefaultAsync();
 
         if (worker is null)
         {
             return Error.NotFound;
         }
 
-        var salon = await _salons.All
-            .Where(salon => salon.Id == worker.SalonId)
-            .Include(salon => salon.Workers)
-            .FirstOrDefaultAsync();
+        worker.JobTitles = null;
+        worker.SalonId = null;
 
-        if (salon is null)
-        {
-            return Error.NotFound;
-        }
-
-        salon.Workers!.Remove(worker);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
