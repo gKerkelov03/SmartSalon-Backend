@@ -13,14 +13,21 @@ internal class IsTheSameUserOrIsAdminHandler(IHttpContextAccessor _httpContextAc
 {
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IsTheSameUserOrIsAdminRequirement requirement)
     {
-        var idRouteParameterName = IdRoute.Remove(['{', '}']);
-        var requestedUserId = _httpContextAccessor.HttpContext?.Request.RouteValues[idRouteParameterName]?.ToString();
-
-        if (_currentUser.IsAdmin || requestedUserId == _currentUser.Id.ToString())
+        try
         {
-            context.Succeed(requirement);
-        }
+            var idRouteParameterName = IdRoute.Remove(['{', '}']);
+            var requestedUserId = _httpContextAccessor.HttpContext?.Request.RouteValues[idRouteParameterName]?.ToString();
 
-        return Task.CompletedTask;
+            if (_currentUser.IsAdmin || requestedUserId == _currentUser.Id.ToString())
+            {
+                context.Succeed(requirement);
+            }
+
+            return Task.CompletedTask;
+        }
+        catch
+        {
+            return Task.CompletedTask;
+        }
     }
 }

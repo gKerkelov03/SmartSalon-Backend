@@ -11,11 +11,18 @@ internal class IsOwnerOrIsAdminHandler(ICurrentUserAccessor _currentUser)
 {
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IsOwnerOrIsAdminRequirement requirement)
     {
-        if (_currentUser.IsOwner || _currentUser.IsAdmin)
+        try
         {
-            context.Succeed(requirement);
-        }
+            if (_currentUser.IsOwner || _currentUser.IsAdmin)
+            {
+                context.Succeed(requirement);
+            }
 
-        return Task.CompletedTask;
+            return Task.CompletedTask;
+        }
+        catch
+        {
+            return Task.CompletedTask;
+        }
     }
 }

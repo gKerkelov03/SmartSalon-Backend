@@ -11,10 +11,6 @@ internal class UpdateWorkerCommandValidator : AbstractValidator<UpdateWorkerComm
     {
         RuleFor(command => command.WorkerId).MustBeValidGuid();
 
-        RuleFor(command => command.JobTitle)
-            .NotEmpty()
-            .MaximumLength(MaxJobTitleLength);
-
         RuleFor(command => command.Nickname)
             .NotEmpty()
             .MaximumLength(MaxNicknameLength);

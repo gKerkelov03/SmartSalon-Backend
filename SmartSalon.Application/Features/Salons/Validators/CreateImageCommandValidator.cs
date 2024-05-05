@@ -5,7 +5,7 @@ using SmartSalon.Application.Features.Salons.Commands;
 
 namespace SmartSalon.Application.Features.Salons.Validators;
 
-internal class AddImageCommandValidator : AbstractValidator<AddImageCommand>
+internal class AddImageCommandValidator : AbstractValidator<CreateImageCommand>
 {
     public AddImageCommandValidator()
     {

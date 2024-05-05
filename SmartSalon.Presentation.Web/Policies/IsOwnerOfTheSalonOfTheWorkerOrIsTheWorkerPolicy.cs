@@ -19,49 +19,57 @@ internal class IsOwnerOfTheSalonOfTheWorkerOrIsAdminHandler(
 {
     public async Task HandleAsync(AuthorizationHandlerContext context)
     {
-        var requirement = GetRequirement<IsOwnerOfTheSalonOfTheWorkerOrIsAdminRequirement>(context);
+        try
+        {
 
-        if (requirement is null)
+            var requirement = GetRequirement<IsOwnerOfTheSalonOfTheWorkerOrIsAdminRequirement>(context);
+
+            if (requirement is null)
+            {
+                return;
+            }
+
+            var requestBodyMap = await GetRequestBodyMapAsync(_httpContextAccessor);
+
+            if (requestBodyMap is null)
+            {
+                return;
+            }
+
+            var requestedWorkerId = requestBodyMap["workerId"];
+            var requestedWorkerIdNotValid = !Id.TryParse(requestedWorkerId, out var workerId);
+
+            if (requestedWorkerIdNotValid)
+            {
+                return;
+            }
+
+            var salon = await _workers.All
+                .Include(worker => worker.Salon)
+                .Where(worker => worker.Id == workerId)
+                .FirstOrDefaultAsync();
+
+            if (salon is null)
+            {
+                return;
+            }
+
+            var salonId = salon.Id;
+            var isOwnerOfTheSalon = _salons
+                .All
+                .Include(salon => salon.Owners)
+                .Include(salon => salon.Workers)
+                .Where(salon => salon.Id == salonId)
+                .Any(salon => salon.Owners!.Any(owner => owner.Id == _currentUser.Id));
+
+            if (_currentUser.IsAdmin || isOwnerOfTheSalon)
+            {
+                context.Succeed(requirement);
+            }
+        }
+        catch
         {
             return;
-        }
-
-        var requestBodyMap = await GetRequestBodyMapAsync(_httpContextAccessor);
-
-        if (requestBodyMap is null)
-        {
-            return;
-        }
-
-        var requestedWorkerId = requestBodyMap["workerId"];
-        var requestedWorkerIdNotValid = !Id.TryParse(requestedWorkerId, out var workerId);
-
-        if (requestedWorkerIdNotValid)
-        {
-            return;
-        }
-
-        var salon = await _workers.All
-            .Include(worker => worker.Salon)
-            .Where(worker => worker.Id == workerId)
-            .FirstOrDefaultAsync();
-
-        if (salon is null)
-        {
-            return;
-        }
-
-        var salonId = salon.Id;
-        var isOwnerOfTheSalon = _salons
-            .All
-            .Include(salon => salon.Owners)
-            .Include(salon => salon.Workers)
-            .Where(salon => salon.Id == salonId)
-            .Any(salon => salon.Owners!.Any(owner => owner.Id == _currentUser.Id));
-
-        if (_currentUser.IsAdmin || isOwnerOfTheSalon)
-        {
-            context.Succeed(requirement);
         }
     }
 }

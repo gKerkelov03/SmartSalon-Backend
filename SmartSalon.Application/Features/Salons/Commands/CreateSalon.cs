@@ -31,8 +31,8 @@ internal class CreateSalonCommandHandler(
     private static object _defaultSalonSettings = new
     {
         WorkingTimeId = CreateDefaultWorkingTime().Id,
-        DefaultBookingsInAdvance = 5,
-        DefaultTimePenalty = 5,
+        BookingsInAdvance = 5,
+        TimePenalty = 5,
         SubscriptionsEnabled = true,
         SectionsEnabled = true,
         WorkersCanMoveBookings = true,

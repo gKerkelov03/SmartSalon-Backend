@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Domain.Salons;
 using SmartSalon.Application.Errors;
@@ -7,40 +6,14 @@ using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Salons.Queries;
 
-public class GetSalonByIdQuery(Id id) : IQuery<GetSalonByIdQueryResponse>
+public class GetAllSalonsQuery : IQuery<IEnumerable<GetSalonByIdQueryResponse>>
 {
-    public Id SalonId => id;
 }
 
-public class GetSalonByIdQueryResponse
+internal class GetAllSalons(IEfRepository<Salon> _salons)
+    : IQueryHandler<GetAllSalonsQuery, IEnumerable<GetSalonByIdQueryResponse>>
 {
-    public Id Id { get; set; }
-    public required string Name { get; set; }
-    public required string Description { get; set; }
-    public required string Location { get; set; }
-    public string? ProfilePictureUrl { get; set; }
-    public required int TimePenalty { get; set; }
-    public required int BookingsInAdvance { get; set; }
-    public bool SubscriptionsEnabled { get; set; }
-    public bool SectionsEnabled { get; set; }
-    public bool WorkersCanMoveBookings { get; set; }
-    public bool WorkersCanSetNonWorkingPeriods { get; set; }
-    public Id WorkingTimeId { get; set; }
-    public Id MainCurrencyId { get; set; }
-    public required IEnumerable<Id> Currencies { get; set; }
-    public required IEnumerable<Id> Owners { get; set; }
-    public required IEnumerable<Id> Workers { get; set; }
-    public required IEnumerable<Id> Specialties { get; set; }
-    public required IEnumerable<Id> Sections { get; set; }
-    public required IEnumerable<Id> Categories { get; set; }
-    public required IEnumerable<Id> Services { get; set; }
-    public required IEnumerable<Id> Images { get; set; }
-}
-
-internal class GetSalonByIdQueryHandler(IEfRepository<Salon> _salons)
-    : IQueryHandler<GetSalonByIdQuery, GetSalonByIdQueryResponse>
-{
-    public async Task<Result<GetSalonByIdQueryResponse>> Handle(GetSalonByIdQuery query, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<GetSalonByIdQueryResponse>>> Handle(GetAllSalonsQuery query, CancellationToken cancellationToken)
     {
         var queryResponse = await _salons.All
             .Include(salon => salon.Workers)
@@ -51,7 +24,6 @@ internal class GetSalonByIdQueryHandler(IEfRepository<Salon> _salons)
             .Include(salon => salon.Services)
             .Include(salon => salon.Images)
             .Include(salon => salon.Specialties)
-            .Where(salon => salon.Id == query.SalonId)
             .Select(salon => new GetSalonByIdQueryResponse
             {
                 Id = salon.Id,
@@ -74,8 +46,7 @@ internal class GetSalonByIdQueryHandler(IEfRepository<Salon> _salons)
                 Categories = salon.Categories!.Select(category => category.Id),
                 Services = salon.Services!.Select(service => service.Id),
                 Images = salon.Images!.Select(image => image.Id)
-            })
-            .FirstOrDefaultAsync();
+            }).ToListAsync();
 
         if (queryResponse is null)
         {

@@ -12,9 +12,5 @@ public class WorkerConfiguration : IEntityTypeConfiguration<Worker>
         builder
             .Property(user => user.Nickname)
             .HasMaxLength(MaxNicknameLength);
-
-        builder
-            .Property(user => user.JobTitle)
-            .HasMaxLength(MaxJobTitleLength);
     }
 }

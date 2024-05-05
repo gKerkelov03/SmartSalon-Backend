@@ -54,7 +54,7 @@ public class CategoriesController(ISender _mediator, IMapper _mapper) : V1ApiCon
         return ProblemDetailsOr<OkResult>(result);
     }
 
-    [HttpPatch(IdRoute)]
+    [HttpPatch($"Move/{IdRoute}")]
     [SuccessResponse(Status200OK)]
     [FailureResponse(Status404NotFound)]
     [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]

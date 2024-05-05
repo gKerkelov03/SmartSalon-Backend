@@ -10,11 +10,18 @@ internal class IsAdminHandler(ICurrentUserAccessor _currentUser) : Authorization
 {
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IsAdminRequirement requirement)
     {
-        if (_currentUser.IsAdmin)
+        try
         {
-            context.Succeed(requirement);
-        }
+            if (_currentUser.IsAdmin)
+            {
+                context.Succeed(requirement);
+            }
 
-        return Task.CompletedTask;
+            return Task.CompletedTask;
+        }
+        catch
+        {
+            return Task.CompletedTask;
+        }
     }
 }

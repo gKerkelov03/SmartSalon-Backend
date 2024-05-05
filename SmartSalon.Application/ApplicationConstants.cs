@@ -42,7 +42,6 @@ public static class ApplicationConstants
 
         public static class Worker
         {
-            public const int MaxJobTitleLength = 50;
             public const int MaxNicknameLength = 50;
         }
 
@@ -51,13 +50,18 @@ public static class ApplicationConstants
             public const int MaxNameLength = 50;
             public const int MaxDescriptionLength = 50;
             public const int MaxLocationLength = 50;
-            public const int MaxDefaultTimePenalty = 20;
-            public const int MaxDefaultBookingsInAdvance = 20;
+            public const int MaxTimePenalty = 20;
+            public const int MaxBookingsInAdvance = 20;
         }
 
         public static class Specialty
         {
             public const int MaxTextLength = 200;
+        }
+
+        public static class JobTitle
+        {
+            public const int MaxNameLength = 200;
         }
 
         public static class Currency

@@ -39,12 +39,12 @@ public class SalonConfiguration : IEntityTypeConfiguration<Salon>
             .HasMaxLength(MaxLocationLength);
 
         builder
-            .Property(salon => salon.DefaultTimePenalty)
-            .HasMaxLength(MaxDefaultTimePenalty);
+            .Property(salon => salon.TimePenalty)
+            .HasMaxLength(MaxTimePenalty);
 
         builder
-            .Property(salon => salon.DefaultBookingsInAdvance)
-            .HasMaxLength(MaxDefaultBookingsInAdvance);
+            .Property(salon => salon.BookingsInAdvance)
+            .HasMaxLength(MaxBookingsInAdvance);
 
         builder
             .Property(salon => salon.WorkersCanMoveBookings)

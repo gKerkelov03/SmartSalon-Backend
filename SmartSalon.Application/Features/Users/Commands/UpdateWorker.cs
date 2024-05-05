@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SmartSalon.Application.Abstractions;
-using SmartSalon.Application.Abstractions.Mapping;
+﻿using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.MediatR;
 using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Errors;
@@ -12,7 +10,6 @@ namespace SmartSalon.Application.Features.Users.Commands;
 public class UpdateWorkerCommand : ICommand
 {
     public Id WorkerId { get; set; }
-    public required string JobTitle { get; set; }
     public required string Nickname { get; set; }
 }
 

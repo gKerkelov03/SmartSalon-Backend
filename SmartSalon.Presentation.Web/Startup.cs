@@ -35,6 +35,7 @@ builder
     .AddExceptionHandler<GlobalExceptionHandler>()
     .AddAuth(builder.Configuration)
     .AddHttpContextAccessor()
+    .AddHttpClient()
     .AddCors();
 
 var app = builder.Build();

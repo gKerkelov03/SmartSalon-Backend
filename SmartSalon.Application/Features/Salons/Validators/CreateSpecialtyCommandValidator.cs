@@ -5,7 +5,7 @@ using SmartSalon.Application.Features.Salons.Commands;
 
 namespace SmartSalon.Application.Features.Salons.Validators;
 
-internal class AddSpecialtyCommandValidator : AbstractValidator<AddSpecialtyCommand>
+internal class AddSpecialtyCommandValidator : AbstractValidator<CreateSpecialtyCommand>
 {
     public AddSpecialtyCommandValidator()
     {

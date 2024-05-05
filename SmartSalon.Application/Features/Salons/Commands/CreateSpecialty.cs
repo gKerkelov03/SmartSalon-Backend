@@ -9,26 +9,26 @@ using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Salons.Commands;
 
-public class AddSpecialtyCommand : ICommand<AddSpecialtyCommandResponse>, IMapTo<Specialty>
+public class CreateSpecialtyCommand : ICommand<CreateSpecialtyCommandResponse>, IMapTo<Specialty>
 {
     public required Id SalonId { get; set; }
     public required string Text { get; set; }
 }
 
-public class AddSpecialtyCommandResponse(Id id)
+public class CreateSpecialtyCommandResponse(Id id)
 {
     public Id CreatedSpecialtyId => id;
 }
 
-internal class AddSpecialtyCommandHandler(
+internal class CreateSpecialtyCommandHandler(
     IEfRepository<Salon> _salons,
     IEfRepository<Specialty> _specialties,
     IUnitOfWork _unitOfWork,
     IMapper _mapper
 )
-    : ICommandHandler<AddSpecialtyCommand, AddSpecialtyCommandResponse>
+    : ICommandHandler<CreateSpecialtyCommand, CreateSpecialtyCommandResponse>
 {
-    public async Task<Result<AddSpecialtyCommandResponse>> Handle(AddSpecialtyCommand command, CancellationToken cancellationToken)
+    public async Task<Result<CreateSpecialtyCommandResponse>> Handle(CreateSpecialtyCommand command, CancellationToken cancellationToken)
     {
         var newSpecialty = _mapper.Map<Specialty>(command);
 
@@ -50,11 +50,11 @@ internal class AddSpecialtyCommandHandler(
         }
 
         //TODO: debug why this throws error, expected one row to be added but 0 were added
-        //salon.Specialties!.Add(newSpecialty);
+        //salon.Specialties!.Create(newSpecialty);
 
         await _specialties.AddAsync(newSpecialty);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return new AddSpecialtyCommandResponse(newSpecialty.Id);
+        return new CreateSpecialtyCommandResponse(newSpecialty.Id);
     }
 }

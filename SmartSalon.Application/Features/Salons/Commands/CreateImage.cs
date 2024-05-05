@@ -7,24 +7,24 @@ using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Salons.Commands;
 
-public class AddImageCommand : ICommand<AddImageCommandResponse>
+public class CreateImageCommand : ICommand<CreateImageCommandResponse>
 {
     public required string Url { get; set; }
     public Id SalonId { get; set; }
 }
 
-public class AddImageCommandResponse(Id id)
+public class CreateImageCommandResponse(Id id)
 {
     public Id CreatedImageId => id;
 }
 
-internal class AddImageCommandHandler(
+internal class CreateImageCommandHandler(
     IEfRepository<Salon> _salons,
     IEfRepository<Image> _images,
     IUnitOfWork _unitOfWork
-) : ICommandHandler<AddImageCommand, AddImageCommandResponse>
+) : ICommandHandler<CreateImageCommand, CreateImageCommandResponse>
 {
-    public async Task<Result<AddImageCommandResponse>> Handle(AddImageCommand command, CancellationToken cancellationToken)
+    public async Task<Result<CreateImageCommandResponse>> Handle(CreateImageCommand command, CancellationToken cancellationToken)
     {
         var salon = await _salons.All
             .Include(salon => salon.Images)
@@ -39,11 +39,11 @@ internal class AddImageCommandHandler(
         }
 
         //TODO: debug why this throws error, expected one row to be added but 0 were added
-        //salon.Images!.Add(newImage);
+        //salon.Images!.Create(newImage);
 
         await _images!.AddAsync(newImage);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return new AddImageCommandResponse(newImage.Id);
+        return new CreateImageCommandResponse(newImage.Id);
     }
 }
