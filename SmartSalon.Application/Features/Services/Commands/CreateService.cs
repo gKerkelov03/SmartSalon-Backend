@@ -9,23 +9,30 @@ using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Services.Commands;
 
-public class CreateServiceCommand : ICommand, IMapTo<Service>
+public class CreateServiceCommand : ICommand<CreateServiceCommandResponse>, IMapTo<Service>
 {
     public required string Name { get; set; }
     public required string Description { get; set; }
     public required double Price { get; set; }
     public required int DurationInMinutes { get; set; }
     public Id CategoryId { get; set; }
+    public Id SalonId { get; set; }
+}
+
+public class CreateServiceCommandResponse(Id id)
+{
+    public Id CreatedServiceId => id;
 }
 
 internal class CreateServiceCommandHandler(
+    IIncreasingNumbersProvider _increasingNumbersProvider,
     IEfRepository<Category> _categories,
     IEfRepository<Service> _services,
     IUnitOfWork _unitOfWork,
     IMapper _mapper
-) : ICommandHandler<CreateServiceCommand>
+) : ICommandHandler<CreateServiceCommand, CreateServiceCommandResponse>
 {
-    public async Task<Result> Handle(CreateServiceCommand command, CancellationToken cancellationToken)
+    public async Task<Result<CreateServiceCommandResponse>> Handle(CreateServiceCommand command, CancellationToken cancellationToken)
     {
         var newService = _mapper.Map<Service>(command);
 
@@ -46,8 +53,7 @@ internal class CreateServiceCommandHandler(
             return Error.Conflict;
         }
 
-        var atTheEndOfTheList = category.Services!.MaxBy(service => service.Order)!.Order + 1;
-        newService.Order = atTheEndOfTheList;
+        newService.Order = _increasingNumbersProvider.Next;
 
         //TODO: debug why this throws error, expected one row to be added but 0 were added
         //category.Services!.Add(newService);
@@ -55,6 +61,6 @@ internal class CreateServiceCommandHandler(
         await _services.AddAsync(newService);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Result.Success();
+        return new CreateServiceCommandResponse(newService.Id);
     }
 }

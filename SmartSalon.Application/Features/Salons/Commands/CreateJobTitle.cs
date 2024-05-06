@@ -33,7 +33,7 @@ internal class CreateJobTitleCommandHandler(
         var newJobTitle = _mapper.Map<JobTitle>(command);
 
         var salon = await _salons.All
-            .Include(salon => salon.Specialties)
+            .Include(salon => salon.JobTitles)
             .Where(salon => salon.Id == command.SalonId)
             .FirstOrDefaultAsync();
 
@@ -50,7 +50,7 @@ internal class CreateJobTitleCommandHandler(
         }
 
         //TODO: debug why this throws error, expected one row to be added but 0 were added
-        //salon.JobTitles!.Create(newJobTitle);
+        // salon.JobTitles!.Add(newJobTitle);
 
         await _jobTitles.AddAsync(newJobTitle);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

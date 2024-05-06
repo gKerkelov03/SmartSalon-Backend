@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.Mapping;
+using SmartSalon.Application.Domain.Salons;
 using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Errors;
 using SmartSalon.Application.ResultObject;
@@ -16,28 +18,44 @@ public class GetWorkerByIdQueryResponse : IMapFrom<Worker>
 {
     public Id Id { get; set; }
     public required string PhoneNumber { get; set; }
-    public required string JobTitle { get; set; }
     public required string ProfilePictureUrl { get; set; }
     public required string LastName { get; set; }
     public required string Email { get; set; }
-    public bool IsEmailConfirmed { get; set; }
+    public bool EmailConfirmed { get; set; }
     public required string Nickname { get; set; }
     public required string FirstName { get; set; }
     public Id? SalonId { get; set; }
+    public required IEnumerable<Id> JobTitles { get; set; }
 }
 
-internal class GetWorkerByIdQueryHandler(IEfRepository<Worker> _workers, IMapper _mapper)
+internal class GetWorkerByIdQueryHandler(IEfRepository<Worker> _workers)
     : IQueryHandler<GetWorkerByIdQuery, GetWorkerByIdQueryResponse>
 {
     public async Task<Result<GetWorkerByIdQueryResponse>> Handle(GetWorkerByIdQuery query, CancellationToken cancellationToken)
     {
-        var worker = await _workers.GetByIdAsync(query.WorkerId);
+        var queryResponse = await _workers.All
+            .Include(worker => worker.JobTitles)
+            .Where(worker => worker.Id == query.WorkerId)
+            .Select(worker => new GetWorkerByIdQueryResponse
+            {
+                Id = worker.Id,
+                PhoneNumber = worker.PhoneNumber,
+                ProfilePictureUrl = worker.ProfilePictureUrl,
+                LastName = worker.LastName,
+                Email = worker.Email,
+                EmailConfirmed = worker.EmailConfirmed,
+                Nickname = worker.Nickname,
+                FirstName = worker.FirstName,
+                SalonId = worker.SalonId,
+                JobTitles = worker.JobTitles!.Select(jobTitle => jobTitle.Id)
+            })
+            .FirstOrDefaultAsync();
 
-        if (worker is null)
+        if (queryResponse is null)
         {
             return Error.NotFound;
         }
 
-        return _mapper.Map<GetWorkerByIdQueryResponse>(worker);
+        return queryResponse;
     }
 }

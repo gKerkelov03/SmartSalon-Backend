@@ -12,11 +12,13 @@ public class GetCategoryByIdQuery(Id id) : IQuery<GetCategoryByIdQueryResponse>
     public Id CategoryId => id;
 }
 
+//TODO: maybe add IEnumerable<Id> ServicesIds; same for section 
 public class GetCategoryByIdQueryResponse : IMapFrom<Category>
 {
-    public Id Id { get; set; }
-    public required string Url { get; set; }
+    public required string Name { get; set; }
+    public required int Order { get; set; }
     public Id SalonId { get; set; }
+    public Id SectionId { get; set; }
 }
 
 internal class GetCategoryByIdQueryHandler(IEfRepository<Category> _category, IMapper _mapper)

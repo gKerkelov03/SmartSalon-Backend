@@ -15,6 +15,7 @@ public class CreateWorkerCommand : ICommand<CreateWorkerCommandResponse>, IMapTo
     public required string LastName { get; set; }
     public required string Nickname { get; set; }
     public required string PhoneNumber { get; set; }
+    public required string ProfilePictureUrl { get; set; }
     public required string Email { get; set; }
     public required string Password { get; set; }
     public Id SalonId { get; set; }
@@ -53,10 +54,10 @@ internal class CreateWorkerCommandHandler(
         //TODO: remember you set EmailConfirmed to true, you might want to change that in the future
         var newWorker = _mapper.Map<Worker>(command);
         newWorker.UserName = command.Email;
-        newWorker.JobTitles = (await _jobTitles.FindAllAsync(JobTitle => command.JobTitlesIds.Contains(JobTitle.Id))).ToList();
+        newWorker.JobTitles = (await _jobTitles.FindAllAsync(jobTitle => command.JobTitlesIds.Contains(jobTitle.Id))).ToList();
         newWorker.EmailConfirmed = true;
 
-        var identityResultForCreation = await _users.CreateAsync(newWorker);
+        var identityResultForCreation = await _users.CreateAsync(newWorker, command.Password);
         var identityResultForAddingToRole = await _users.AddToRoleAsync(newWorker, WorkerRoleName);
 
         if (identityResultForCreation.Failure())

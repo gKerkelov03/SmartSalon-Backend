@@ -83,4 +83,5 @@ public class SmartSalonDbContext : IdentityDbContext<User, Role, Id>
     public DbSet<Section> Sections { get; set; }
     public DbSet<WorkingTime> WorkingTimes { get; set; }
     public DbSet<Currency> Currencies { get; set; }
+    public DbSet<JobTitle> JobTitles { get; set; }
 }

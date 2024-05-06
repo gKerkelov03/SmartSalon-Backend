@@ -1,9 +1,9 @@
 using SmartSalon.Application.Abstractions.Mapping;
-using SmartSalon.Application.Features.Salons.Queries;
+using SmartSalon.Application.Features.Services.Queries;
 
 namespace SmartSalon.Presentation.Web.Features.Services.Responses;
 
-public class GetSectionByIdResponse : IMapFrom<GetSalonByIdQueryResponse>
+public class GetSectionByIdResponse : IMapFrom<GetSectionByIdQueryResponse>
 {
     public Id Id { get; set; }
     public Id SalonId { get; set; }

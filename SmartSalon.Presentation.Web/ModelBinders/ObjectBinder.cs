@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Http;
@@ -57,7 +58,7 @@ public class ObjectBinder : BaseBinder, IModelBinder, IModelBinderProvider
         context.Result = ModelBindingResult.Success(requestModel);
     }
 
-    private static async Task<IDictionary<string, string>?> GetRequestBodyMapAsync(ModelBindingContext bindingContext)
+    private static async Task<IDictionary<string, object>?> GetRequestBodyMapAsync(ModelBindingContext bindingContext)
     {
         try
         {
@@ -68,7 +69,7 @@ public class ObjectBinder : BaseBinder, IModelBinder, IModelBinderProvider
             var bodyAsText = await requestBodyReader.ReadToEndAsync();
             request.Body.Position = 0;
 
-            return JsonConvert.DeserializeObject<Dictionary<string, string>>(bodyAsText)!;
+            return JsonConvert.DeserializeObject<Dictionary<string, object>>(bodyAsText)!;
         }
         catch (Exception ex)
         {
@@ -77,17 +78,13 @@ public class ObjectBinder : BaseBinder, IModelBinder, IModelBinderProvider
         }
     }
 
-    private static object ConvertToType(Type targetType, ModelBindingContext bindingContext, string propertyName, string propertyValue)
+    private static object ConvertToType(Type targetType, ModelBindingContext bindingContext, string propertyName, object propertyValue)
     {
         object convertedValue;
 
         if (targetType == typeof(Id))
         {
             convertedValue = ConvertToId(bindingContext, propertyName, propertyValue);
-        }
-        else if (targetType == typeof(DateTimeOffset))
-        {
-            convertedValue = ConvertToDateTimeOffset(bindingContext, propertyName, propertyValue);
         }
         else if (targetType == typeof(DateTime))
         {
@@ -101,6 +98,10 @@ public class ObjectBinder : BaseBinder, IModelBinder, IModelBinderProvider
         {
             convertedValue = ConvertToTimeOnly(bindingContext, propertyName, propertyValue);
         }
+        else if (targetType == typeof(IEnumerable<Id>))
+        {
+            convertedValue = ConvertToListOfIds(bindingContext, propertyName, propertyValue);
+        }
         else
         {
             convertedValue = Convert.ChangeType(propertyValue, targetType);
@@ -109,21 +110,10 @@ public class ObjectBinder : BaseBinder, IModelBinder, IModelBinderProvider
         return convertedValue;
     }
 
-    private static DateTimeOffset ConvertToDateTimeOffset(ModelBindingContext bindingContext, string propertyName, string propertyValue)
+    private static DateTimeOffset ConvertToDateTime(ModelBindingContext bindingContext, string propertyName, object propertyValue)
     {
-        var isNotValidDateTimeOffset = !DateTimeOffset.TryParse(propertyValue, out var dateTimeOffset);
-
-        if (isNotValidDateTimeOffset)
-        {
-            bindingContext.ModelState.TryAddModelError(propertyName, "Invalid format");
-        }
-
-        return dateTimeOffset;
-    }
-
-    private static DateTimeOffset ConvertToDateTime(ModelBindingContext bindingContext, string propertyName, string propertyValue)
-    {
-        var isNotValidDateTime = !DateTime.TryParse(propertyValue, out var dateTime);
+        var propertyValueAsString = propertyValue.CastTo<string>();
+        var isNotValidDateTime = !DateTime.TryParse(propertyValueAsString, out var dateTime);
 
         if (isNotValidDateTime)
         {
@@ -133,9 +123,10 @@ public class ObjectBinder : BaseBinder, IModelBinder, IModelBinderProvider
         return dateTime;
     }
 
-    private static TimeOnly ConvertToTimeOnly(ModelBindingContext bindingContext, string propertyName, string propertyValue)
+    private static TimeOnly ConvertToTimeOnly(ModelBindingContext bindingContext, string propertyName, object propertyValue)
     {
-        var isNotValidTime = !TimeOnly.TryParse(propertyValue, out var timeOnly);
+        var propertyValueAsString = propertyValue.CastTo<string>();
+        var isNotValidTime = !TimeOnly.TryParse(propertyValueAsString, out var timeOnly);
 
         if (isNotValidTime)
         {
@@ -145,16 +136,29 @@ public class ObjectBinder : BaseBinder, IModelBinder, IModelBinderProvider
         return timeOnly;
     }
 
-    private static object ConvertToEnum(ModelBindingContext bindingContext, Type enumType, string propertyName, string propertyValue)
+    private static List<Id> ConvertToListOfIds(ModelBindingContext bindingContext, string propertyName, object propertyValue)
     {
-        var isNumber = int.TryParse(propertyValue, out var _);
+        var result = new List<Id>();
+
+        foreach (var id in propertyValue.CastTo<IEnumerable>())
+        {
+            result.Add(ConvertToId(bindingContext, propertyName, id.ToString()));
+        }
+
+        return result;
+    }
+
+    private static object ConvertToEnum(ModelBindingContext bindingContext, Type enumType, string propertyName, object propertyValue)
+    {
+        var propertyValueAsString = propertyValue.CastTo<string>();
+        var isNumber = int.TryParse(propertyValueAsString, out var _);
 
         if (isNumber)
         {
             bindingContext.ModelState.TryAddModelError(propertyName, "Invalid format");
         }
 
-        var convertedValue = Enum.Parse(enumType, propertyValue);
+        var convertedValue = Enum.Parse(enumType, propertyValueAsString);
 
         return convertedValue;
     }

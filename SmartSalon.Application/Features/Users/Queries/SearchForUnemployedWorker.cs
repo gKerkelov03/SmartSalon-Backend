@@ -13,7 +13,7 @@ public class SearchForUnemployedWorkerQuery(string searchTerm) : IQuery<IEnumera
     public string SearchTerm => searchTerm;
 }
 
-internal class SearchForUnemployedWorkerQueryHandler(IEfRepository<Worker> _workers, IMapper _mapper)
+internal class SearchForUnemployedWorkerQueryHandler(IEfRepository<Worker> _workers)
     : IQueryHandler<SearchForUnemployedWorkerQuery, IEnumerable<GetWorkerByIdQueryResponse>>
 {
     public async Task<Result<IEnumerable<GetWorkerByIdQueryResponse>>> Handle(
@@ -21,18 +21,33 @@ internal class SearchForUnemployedWorkerQueryHandler(IEfRepository<Worker> _work
         CancellationToken cancellationToken
     )
     {
-        var matchingUnemployedWorkers = await _workers.All
+        var queryResponse = await _workers.All
+            .Include(worker => worker.JobTitles)
             .Where(worker => worker.SalonId == null && (
                 worker.NormalizedEmail!.Contains(query.SearchTerm.ToUpper()) ||
                 worker.PhoneNumber!.Contains(query.SearchTerm) ||
                 (worker.FirstName.ToUpper() + " " + worker.LastName.ToUpper()).Contains(query.SearchTerm.ToUpper()))
-            ).ToListAsync();
+            )
+            .Select(worker => new GetWorkerByIdQueryResponse
+            {
+                //TODO: we repeat this code tiwce (here and in the GetWorkerById) can we reuse it somehow
+                Id = worker.Id,
+                PhoneNumber = worker.PhoneNumber,
+                ProfilePictureUrl = worker.ProfilePictureUrl,
+                LastName = worker.LastName,
+                Email = worker.Email,
+                EmailConfirmed = worker.EmailConfirmed,
+                Nickname = worker.Nickname,
+                FirstName = worker.FirstName,
+                SalonId = worker.SalonId,
+                JobTitles = worker.JobTitles!.Select(jobTitle => jobTitle.Id)
+            }).ToListAsync();
 
-        if (matchingUnemployedWorkers.IsEmpty())
+        if (queryResponse.IsEmpty())
         {
             return Error.NotFound;
         }
 
-        return matchingUnemployedWorkers.ToListOf<GetWorkerByIdQueryResponse>(_mapper);
+        return queryResponse;
     }
 }

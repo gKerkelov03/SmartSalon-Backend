@@ -60,7 +60,7 @@ internal class CreateOwnerCommandHandler(
 
         salon.Owners!.Add(newOwner);
 
-        var identityResultForCreation = await _users.CreateAsync(newOwner);
+        var identityResultForCreation = await _users.CreateAsync(newOwner, command.Password);
         var identityResultForAddingToRole = await _users.AddToRoleAsync(newOwner, OwnerRoleName);
 
         if (identityResultForCreation.Failure())

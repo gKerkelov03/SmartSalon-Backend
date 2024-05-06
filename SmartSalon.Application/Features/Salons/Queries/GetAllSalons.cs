@@ -45,7 +45,8 @@ internal class GetAllSalons(IEfRepository<Salon> _salons)
                 Sections = salon.Sections!.Select(section => section.Id),
                 Categories = salon.Categories!.Select(category => category.Id),
                 Services = salon.Services!.Select(service => service.Id),
-                Images = salon.Images!.Select(image => image.Id)
+                Images = salon.Images!.Select(image => image.Id),
+                JobTitles = salon.JobTitles!.Select(jobTitle => jobTitle.Id)
             }).ToListAsync();
 
         if (queryResponse is null)

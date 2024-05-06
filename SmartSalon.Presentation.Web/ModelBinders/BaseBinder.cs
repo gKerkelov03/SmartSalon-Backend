@@ -1,14 +1,16 @@
 
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using SmartSalon.Application.Extensions;
 
 public abstract class BaseBinder
 {
     protected string? GetTheIdRouteParameter(ModelBindingContext bindingContext)
         => bindingContext.ActionContext.RouteData.Values[IdRouteParameterName]?.ToString();
 
-    protected static Id ConvertToId(ModelBindingContext bindingContext, string propertyName, string? propertyValue)
+    protected static Id ConvertToId(ModelBindingContext bindingContext, string propertyName, object? propertyValue)
     {
-        var isValidId = Id.TryParse(propertyValue, out var id);
+        var propertyValueAsString = propertyValue?.CastTo<string>();
+        var isValidId = Id.TryParse(propertyValueAsString, out var id);
 
         if (!isValidId)
         {

@@ -35,6 +35,7 @@ public class GetSalonByIdQueryResponse
     public required IEnumerable<Id> Categories { get; set; }
     public required IEnumerable<Id> Services { get; set; }
     public required IEnumerable<Id> Images { get; set; }
+    public required IEnumerable<Id> JobTitles { get; set; }
 }
 
 internal class GetSalonByIdQueryHandler(IEfRepository<Salon> _salons)
@@ -51,6 +52,7 @@ internal class GetSalonByIdQueryHandler(IEfRepository<Salon> _salons)
             .Include(salon => salon.Services)
             .Include(salon => salon.Images)
             .Include(salon => salon.Specialties)
+            .Include(salon => salon.JobTitles)
             .Where(salon => salon.Id == query.SalonId)
             .Select(salon => new GetSalonByIdQueryResponse
             {
@@ -73,7 +75,8 @@ internal class GetSalonByIdQueryHandler(IEfRepository<Salon> _salons)
                 Sections = salon.Sections!.Select(section => section.Id),
                 Categories = salon.Categories!.Select(category => category.Id),
                 Services = salon.Services!.Select(service => service.Id),
-                Images = salon.Images!.Select(image => image.Id)
+                Images = salon.Images!.Select(image => image.Id),
+                JobTitles = salon.JobTitles!.Select(jobTitle => jobTitle.Id)
             })
             .FirstOrDefaultAsync();
 

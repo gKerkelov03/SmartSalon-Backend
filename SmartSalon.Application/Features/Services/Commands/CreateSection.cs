@@ -23,6 +23,7 @@ public class CreateSectionCommandResponse(Id id)
 }
 
 internal class CreateSectionCommandHandler(
+    IIncreasingNumbersProvider _increasingNumbersProvider,
     IEfRepository<Section> _sections,
     IEfRepository<Salon> _salons,
     IUnitOfWork _unitOfWork,
@@ -50,11 +51,10 @@ internal class CreateSectionCommandHandler(
             return Error.Conflict;
         }
 
-        var atTheEndOfTheList = salon.Sections!.MaxBy(section => section.Order)!.Order + 1;
-        newSection.Order = atTheEndOfTheList;
+        newSection.Order = _increasingNumbersProvider.Next;
 
         //TODO: debug why this throws error, expected one row to be added but 0 were added
-        //salon.Sectionss!.Add(newService);
+        //salon.Sectionss!.Add(newSection);
 
         await _sections.AddAsync(newSection);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

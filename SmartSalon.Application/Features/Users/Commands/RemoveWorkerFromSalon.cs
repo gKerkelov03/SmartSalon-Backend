@@ -13,7 +13,7 @@ public class RemoveWorkerFromSalonCommand(Id workerId) : ICommand
     public Id WorkerId => workerId;
 }
 
-internal class RemoveWorkerFromSalonCommandHandler(IEfRepository<Worker> _workers, IEfRepository<Salon> _salons, IUnitOfWork _unitOfWork)
+internal class RemoveWorkerFromSalonCommandHandler(IEfRepository<Worker> _workers, IUnitOfWork _unitOfWork)
     : ICommandHandler<RemoveWorkerFromSalonCommand>
 {
     public async Task<Result> Handle(RemoveWorkerFromSalonCommand command, CancellationToken cancellationToken)

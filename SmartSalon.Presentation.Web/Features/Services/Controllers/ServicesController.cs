@@ -17,12 +17,15 @@ public class ServicesController(ISender _mediator, IMapper _mapper) : V1ApiContr
     [SuccessResponse(Status200OK)]
     [FailureResponse(Status409Conflict)]
     [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]
-    public async Task<IActionResult> AddService(CreateServiceRequest request)
+    public async Task<IActionResult> CreateService(CreateServiceRequest request)
     {
         var command = _mapper.Map<CreateServiceCommand>(request);
         var result = await _mediator.Send(command);
 
-        return ProblemDetailsOr<OkResult>(result);
+        return ProblemDetailsOr(result => CreatedAndLocatedAt(
+            nameof(GetServiceById), result.Value.CreatedServiceId),
+            result
+        );
     }
 
     [HttpGet(IdRoute)]
@@ -68,6 +71,6 @@ public class ServicesController(ISender _mediator, IMapper _mapper) : V1ApiContr
         var command = _mapper.Map<DeleteServiceCommand>(request);
         var result = await _mediator.Send(command);
 
-        return ProblemDetailsOr<OkResult>(result);
+        return ProblemDetailsOr<NoContentResult>(result);
     }
 }

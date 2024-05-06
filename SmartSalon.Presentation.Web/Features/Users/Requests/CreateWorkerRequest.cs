@@ -13,5 +13,6 @@ public class CreateWorkerRequest : IMapTo<CreateWorkerCommand>
     public required string Email { get; set; }
     public required string PhoneNumber { get; set; }
     public required string Password { get; set; }
-    public required string PictureUrl { get; set; }
+    public required string ProfilePictureUrl { get; set; }
+    public required IEnumerable<Id> JobTitlesIds { get; set; }
 }

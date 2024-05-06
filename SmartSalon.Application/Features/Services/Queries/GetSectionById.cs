@@ -15,16 +15,18 @@ public class GetSectionByIdQuery(Id id) : IQuery<GetSectionByIdQueryResponse>
 public class GetSectionByIdQueryResponse : IMapFrom<Section>
 {
     public Id Id { get; set; }
-    public required string Url { get; set; }
+    public required string PictureUrl { get; set; }
+    public required string Name { get; set; }
+    public int Order { get; set; }
     public Id SalonId { get; set; }
 }
 
-internal class GetSectionByIdQueryHandler(IEfRepository<Section> _services, IMapper _mapper)
+internal class GetSectionByIdQueryHandler(IEfRepository<Section> _sections, IMapper _mapper)
     : IQueryHandler<GetSectionByIdQuery, GetSectionByIdQueryResponse>
 {
     public async Task<Result<GetSectionByIdQueryResponse>> Handle(GetSectionByIdQuery query, CancellationToken cancellationToken)
     {
-        var service = await _services.GetByIdAsync(query.SectionId);
+        var service = await _sections.GetByIdAsync(query.SectionId);
 
         if (service is null)
         {

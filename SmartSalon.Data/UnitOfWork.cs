@@ -61,7 +61,7 @@ public class UnitOfWork(SmartSalonDbContext _dbContext, ICurrentUserAccessor _cu
 
                 deletableEntity.IsDeleted = true;
                 deletableEntity.DeletedBy = currentUserId;
-                deletableEntity.DeletedOn = _timeProvider.GetUtcNow();
+                deletableEntity.DeletedOn = _timeProvider.GetUtcNow().LocalDateTime;
 
                 entry.State = EntityState.Modified;
             });
