@@ -18,7 +18,6 @@ public class BookingsController(ISender _mediator, IMapper _mapper) : V1ApiContr
 {
     [HttpPost]
     [SuccessResponse(Status200OK)]
-    [Authorize]
     public async Task<IActionResult> CreateBooking(CreateBookingRequest request)
     {
         var command = _mapper.Map<CreateBookingCommand>(request);
@@ -59,9 +58,9 @@ public class BookingsController(ISender _mediator, IMapper _mapper) : V1ApiContr
     [HttpDelete]
     [SuccessResponse(Status200OK)]
     [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]
-    public async Task<IActionResult> CancelBooking(CancelBookingRequest request)
+    public async Task<IActionResult> DeleteBooking(DeleteBookingRequest request)
     {
-        var command = _mapper.Map<CancelBookingCommand>(request);
+        var command = _mapper.Map<DeleteBookingCommand>(request);
         var result = await _mediator.Send(command);
 
         return ProblemDetailsOr<NoContentResult>(result);

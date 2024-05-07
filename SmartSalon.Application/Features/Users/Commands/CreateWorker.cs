@@ -13,7 +13,6 @@ public class CreateWorkerCommand : ICommand<CreateWorkerCommandResponse>, IMapTo
 {
     public required string FirstName { get; set; }
     public required string LastName { get; set; }
-    public required string Nickname { get; set; }
     public required string PhoneNumber { get; set; }
     public required string ProfilePictureUrl { get; set; }
     public required string Email { get; set; }
@@ -66,11 +65,12 @@ internal class CreateWorkerCommandHandler(
             }
         };
 
+        //TODO: remember you set EmailConfirmed to true, you might want to change that in the future
         var newWorker = _mapper.Map<Worker>(command);
         newWorker.UserName = command.Email;
         newWorker.JobTitles = jobTitlesFound;
-        //TODO: remember you set EmailConfirmed to true, you might want to change that in the future
         newWorker.EmailConfirmed = true;
+        newWorker.Nickname = $"{newWorker.FirstName} {newWorker.LastName}";
 
         var identityResultForCreation = await _users.CreateAsync(newWorker, command.Password);
         var identityResultForAddingToRole = await _users.AddToRoleAsync(newWorker, WorkerRoleName);

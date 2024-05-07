@@ -16,7 +16,6 @@ public class CreateServiceCommand : ICommand<CreateServiceCommandResponse>, IMap
     public required double Price { get; set; }
     public required int DurationInMinutes { get; set; }
     public Id CategoryId { get; set; }
-    public Id SalonId { get; set; }
 }
 
 public class CreateServiceCommandResponse(Id id)

@@ -7,5 +7,14 @@ namespace SmartSalon.Application.Features.Bookings.Validators;
 
 internal class UpdateBookingCommandValidator : AbstractValidator<UpdateBookingCommand>
 {
-    public UpdateBookingCommandValidator() => RuleFor(query => query.BookingId).MustBeValidGuid();
+    public UpdateBookingCommandValidator()
+    {
+        RuleFor(query => query.BookingId).MustBeValidGuid();
+        RuleFor(query => query.WorkerId).MustBeValidGuid();
+        RuleFor(query => query.Date).NotEmpty();
+        RuleFor(query => query.From).NotEmpty();
+        RuleFor(query => query.To).NotEmpty();
+        RuleFor(query => query.Done);
+        RuleFor(query => query.Note).NotNull();
+    }
 }

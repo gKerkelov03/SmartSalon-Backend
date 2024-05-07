@@ -7,6 +7,8 @@ namespace SmartSalon.Application.Domain.Bookings;
 
 public class Booking : DeletableEntity
 {
+    public required string Note { get; set; }
+    public bool Done { get; set; }
     public DateOnly Date { get; set; }
     public TimeOnly From { get; set; }
     public TimeOnly To { get; set; }

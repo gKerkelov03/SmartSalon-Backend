@@ -11,9 +11,12 @@ namespace SmartBooking.Application.Features.Bookings.Commands;
 public class UpdateBookingCommand : ICommand
 {
     public Id BookingId { get; set; }
+    public Id WorkerId { get; set; }
     public DateOnly Date { get; set; }
     public TimeOnly From { get; set; }
     public TimeOnly To { get; set; }
+    public bool Done { get; set; }
+    public required string Note { get; set; }
 }
 
 internal class UpdateBookingCommandHandler(IEfRepository<Booking> _bookings, IUnitOfWork _unitOfWork)

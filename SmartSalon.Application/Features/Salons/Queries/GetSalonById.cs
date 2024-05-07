@@ -32,8 +32,6 @@ public class GetSalonByIdQueryResponse
     public required IEnumerable<Id> Workers { get; set; }
     public required IEnumerable<Id> Specialties { get; set; }
     public required IEnumerable<Id> Sections { get; set; }
-    public required IEnumerable<Id> Categories { get; set; }
-    public required IEnumerable<Id> Services { get; set; }
     public required IEnumerable<Id> Images { get; set; }
     public required IEnumerable<Id> JobTitles { get; set; }
 }
@@ -47,9 +45,7 @@ internal class GetSalonByIdQueryHandler(IEfRepository<Salon> _salons)
             .Include(salon => salon.Workers)
             .Include(salon => salon.Owners)
             .Include(salon => salon.AcceptedCurrencies)
-            .Include(salon => salon.Categories)
             .Include(salon => salon.Sections)
-            .Include(salon => salon.Services)
             .Include(salon => salon.Images)
             .Include(salon => salon.Specialties)
             .Include(salon => salon.JobTitles)
@@ -73,8 +69,6 @@ internal class GetSalonByIdQueryHandler(IEfRepository<Salon> _salons)
                 Workers = salon.Workers!.Select(workers => workers.Id),
                 Specialties = salon.Specialties!.Select(specialty => specialty.Id),
                 Sections = salon.Sections!.Select(section => section.Id),
-                Categories = salon.Categories!.Select(category => category.Id),
-                Services = salon.Services!.Select(service => service.Id),
                 Images = salon.Images!.Select(image => image.Id),
                 JobTitles = salon.JobTitles!.Select(jobTitle => jobTitle.Id)
             })

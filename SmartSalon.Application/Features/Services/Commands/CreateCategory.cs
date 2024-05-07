@@ -14,7 +14,6 @@ public class CreateCategoryCommand : ICommand<CreateCategoryCommandResponse>, IM
 {
     public required string Name { get; set; }
     public Id SectionId { get; set; }
-    public Id SalonId { get; set; }
 }
 
 public class CreateCategoryCommandResponse(Id id)

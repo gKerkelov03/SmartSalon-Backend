@@ -6,15 +6,15 @@ using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Services.Commands;
 
-public class CancelBookingCommand : ICommand
+public class DeleteBookingCommand : ICommand
 {
     public Id BookingId { get; set; }
 }
 
-internal class CancelBookingCommandHandler(IEfRepository<Booking> _bookings, IUnitOfWork _unitOfWork)
-    : ICommandHandler<CancelBookingCommand>
+internal class DeleteBookingCommandHandler(IEfRepository<Booking> _bookings, IUnitOfWork _unitOfWork)
+    : ICommandHandler<DeleteBookingCommand>
 {
-    public async Task<Result> Handle(CancelBookingCommand command, CancellationToken cancellationToken)
+    public async Task<Result> Handle(DeleteBookingCommand command, CancellationToken cancellationToken)
     {
         var booking = await _bookings.GetByIdAsync(command.BookingId);
 

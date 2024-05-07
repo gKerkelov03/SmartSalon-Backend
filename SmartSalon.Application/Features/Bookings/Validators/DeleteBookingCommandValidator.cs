@@ -5,7 +5,7 @@ using SmartSalon.Application.Features.Services.Commands;
 
 namespace SmartSalon.Application.Features.Bookings.Validators;
 
-internal class CancelBookingCommandValidator : AbstractValidator<CancelBookingCommand>
+internal class DeleteBookingCommandValidator : AbstractValidator<DeleteBookingCommand>
 {
-    public CancelBookingCommandValidator() => RuleFor(command => command.BookingId).MustBeValidGuid();
+    public DeleteBookingCommandValidator() => RuleFor(command => command.BookingId).MustBeValidGuid();
 }
