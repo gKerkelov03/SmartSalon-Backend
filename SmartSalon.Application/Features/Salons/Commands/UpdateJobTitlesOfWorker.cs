@@ -39,7 +39,10 @@ internal class UpdateJobTitlesOfWorkerCommandHandler(
             return Error.NotFound;
         }
 
-        worker.JobTitles = (await _jobTitles.FindAllAsync(JobTitle => command.JobTitlesIds.Contains(JobTitle.Id))).ToList();
+        worker.JobTitles = _jobTitles.All
+            .Where(jobTitle => jobTitle.SalonId == worker.SalonId && command.JobTitlesIds.Contains(jobTitle.Id))
+            .ToList();
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

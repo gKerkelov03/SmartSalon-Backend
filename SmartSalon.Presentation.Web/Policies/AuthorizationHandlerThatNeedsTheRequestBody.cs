@@ -8,7 +8,7 @@ public abstract class AuthorizationHandlerThatNeedsTheRequestBody
     protected IAuthorizationRequirement? GetRequirement<TRequirement>(AuthorizationHandlerContext context)
         => context.PendingRequirements.FirstOrDefault(requirement => requirement is TRequirement);
 
-    protected async Task<IDictionary<string, string>?> GetRequestBodyMapAsync(IHttpContextAccessor httpContextAccessor)
+    protected async Task<IDictionary<string, object>?> GetRequestBodyMapAsync(IHttpContextAccessor httpContextAccessor)
     {
         var request = httpContextAccessor.HttpContext!.Request;
         request.EnableBuffering();
@@ -17,6 +17,6 @@ public abstract class AuthorizationHandlerThatNeedsTheRequestBody
         var body = await requestBodyReader.ReadToEndAsync();
         request.Body.Position = 0;
 
-        return JsonConvert.DeserializeObject<Dictionary<string, string>>(body);
+        return JsonConvert.DeserializeObject<Dictionary<string, object>>(body);
     }
 }

@@ -24,6 +24,7 @@ public class CreateSalonCommandResponse(Id id)
 
 internal class CreateSalonCommandHandler(
     IEfRepository<Salon> _salons,
+    IEfRepository<Currency> _currencies,
     IUnitOfWork _unitOfWork,
     IMapper _mapper
 ) : ICommandHandler<CreateSalonCommand, CreateSalonCommandResponse>
@@ -73,8 +74,11 @@ internal class CreateSalonCommandHandler(
 
     public async Task<Result<CreateSalonCommandResponse>> Handle(CreateSalonCommand command, CancellationToken cancellationToken)
     {
+        //TODO: this default currency can be cached
+        var defaultCurrency = await _currencies.FirstOrDefaultAsync(currency => currency.Code == "BGN");
         var newSalon = _mapper.Map<Salon>(command);
         newSalon.MapAgainst(_defaultSalonSettings);
+        newSalon.MainCurrency = defaultCurrency;
 
         await _salons.AddAsync(newSalon);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

@@ -27,7 +27,7 @@ public class GetSalonByIdQueryResponse
     public bool WorkersCanSetNonWorkingPeriods { get; set; }
     public Id WorkingTimeId { get; set; }
     public Id MainCurrencyId { get; set; }
-    public required IEnumerable<Id> Currencies { get; set; }
+    public required IEnumerable<Id> AcceptedCurrencies { get; set; }
     public required IEnumerable<Id> Owners { get; set; }
     public required IEnumerable<Id> Workers { get; set; }
     public required IEnumerable<Id> Specialties { get; set; }
@@ -68,7 +68,7 @@ internal class GetSalonByIdQueryHandler(IEfRepository<Salon> _salons)
                 WorkersCanSetNonWorkingPeriods = salon.WorkersCanSetNonWorkingPeriods,
                 WorkingTimeId = salon.WorkingTimeId,
                 MainCurrencyId = salon.MainCurrencyId,
-                Currencies = salon.AcceptedCurrencies!.Select(currency => currency.Id),
+                AcceptedCurrencies = salon.AcceptedCurrencies!.Select(currency => currency.Id),
                 Owners = salon.Owners!.Select(owners => owners.Id),
                 Workers = salon.Workers!.Select(workers => workers.Id),
                 Specialties = salon.Specialties!.Select(specialty => specialty.Id),

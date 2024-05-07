@@ -5,9 +5,9 @@ using static SmartSalon.Application.ApplicationConstants.Validation.Worker;
 
 namespace SmartSalon.Application.Features.Users.Validators;
 
-internal class UpdateWorkerCommandValidator : AbstractValidator<UpdateWorkerCommand>
+internal class UpdateWorkerNicknameCommandValidator : AbstractValidator<UpdateWorkerNicknameCommand>
 {
-    public UpdateWorkerCommandValidator()
+    public UpdateWorkerNicknameCommandValidator()
     {
         RuleFor(command => command.WorkerId).MustBeValidGuid();
 

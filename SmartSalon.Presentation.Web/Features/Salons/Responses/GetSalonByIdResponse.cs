@@ -17,7 +17,8 @@ public class GetSalonByIdResponse : IMapFrom<GetSalonByIdQueryResponse>
     public bool WorkersCanMoveBookings { get; set; }
     public bool WorkersCanSetNonWorkingPeriods { get; set; }
     public Id WorkingTimeId { get; set; }
-    public required IEnumerable<Id> Currencies { get; set; }
+    public Id MainCurrencyId { get; set; }
+    public required IEnumerable<Id> AcceptedCurrencies { get; set; }
     public required IEnumerable<Id> Owners { get; set; }
     public required IEnumerable<Id> Workers { get; set; }
     public required IEnumerable<Id> Specialties { get; set; }

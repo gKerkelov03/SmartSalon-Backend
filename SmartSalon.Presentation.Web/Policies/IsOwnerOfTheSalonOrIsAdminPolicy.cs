@@ -39,7 +39,7 @@ internal class IsOwnerOfTheSalonOrIsAdminHandler(
 
             if (requestBodyMap.ContainsKey(salonIdPropertyName))
             {
-                requestedSalonId = requestBodyMap[salonIdPropertyName];
+                requestedSalonId = requestBodyMap[salonIdPropertyName].ToString();
             }
             else if (passedIdRouteParameter is null)
             {

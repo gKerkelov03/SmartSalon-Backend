@@ -36,7 +36,7 @@ internal class IsOwnerOfTheSalonOfTheWorkerOrIsAdminHandler(
                 return;
             }
 
-            var requestedWorkerId = requestBodyMap["workerId"];
+            var requestedWorkerId = requestBodyMap["workerId"].ToString();
             var requestedWorkerIdNotValid = !Id.TryParse(requestedWorkerId, out var workerId);
 
             if (requestedWorkerIdNotValid)

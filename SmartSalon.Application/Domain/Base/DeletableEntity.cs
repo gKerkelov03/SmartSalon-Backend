@@ -1,5 +1,4 @@
 ﻿
-
 namespace SmartSalon.Application.Domain.Base;
 
 public abstract class DeletableEntity : BaseEntity, IDeletableEntity

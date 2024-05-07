@@ -38,7 +38,7 @@ internal class GetAllSalons(IEfRepository<Salon> _salons)
                 WorkersCanSetNonWorkingPeriods = salon.WorkersCanSetNonWorkingPeriods,
                 WorkingTimeId = salon.WorkingTimeId,
                 MainCurrencyId = salon.MainCurrencyId,
-                Currencies = salon.AcceptedCurrencies!.Select(currency => currency.Id),
+                AcceptedCurrencies = salon.AcceptedCurrencies!.Select(currency => currency.Id),
                 Owners = salon.Owners!.Select(owners => owners.Id),
                 Workers = salon.Workers!.Select(workers => workers.Id),
                 Specialties = salon.Specialties!.Select(specialty => specialty.Id),

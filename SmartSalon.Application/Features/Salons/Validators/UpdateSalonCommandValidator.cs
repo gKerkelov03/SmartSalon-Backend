@@ -11,7 +11,6 @@ internal class UpdateSalonCommandValidator : AbstractValidator<UpdateSalonComman
     {
         RuleFor(command => command.Name).MaximumLength(MaxNameLength);
         RuleFor(command => command.Description).MaximumLength(MaxDescriptionLength);
-        RuleFor(command => command.Location).MaximumLength(MaxLocationLength);
         RuleFor(command => command.ProfilePictureUrl).NotEmpty();
         RuleFor(command => command.TimePenalty).LessThan(MaxTimePenalty);
         RuleFor(command => command.BookingsInAdvance).LessThan(MaxBookingsInAdvance);

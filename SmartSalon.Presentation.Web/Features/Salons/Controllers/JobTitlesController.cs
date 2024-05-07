@@ -54,18 +54,6 @@ public class JobTitlesController(ISender _mediator, IMapper _mapper) : V1ApiCont
         return ProblemDetailsOr<OkResult>(result);
     }
 
-    [HttpPatch(IdRoute)]
-    [SuccessResponse(Status200OK)]
-    [FailureResponse(Status404NotFound)]
-    [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]
-    public async Task<IActionResult> UpdateJobTitlesOfWorker(UpdateJobTitlesOfWorkerRequest request)
-    {
-        var command = _mapper.Map<UpdateJobTitlesOfWorkerCommand>(request);
-        var result = await _mediator.Send(command);
-
-        return ProblemDetailsOr<OkResult>(result);
-    }
-
     [HttpDelete(IdRoute)]
     [SuccessResponse(Status204NoContent)]
     [FailureResponse(Status404NotFound)]

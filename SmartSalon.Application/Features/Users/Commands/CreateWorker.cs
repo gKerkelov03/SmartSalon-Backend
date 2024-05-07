@@ -51,10 +51,25 @@ internal class CreateWorkerCommandHandler(
             return Error.NotFound;
         }
 
-        //TODO: remember you set EmailConfirmed to true, you might want to change that in the future
+
+        var jobTitlesFound = _jobTitles.All
+            .Where(jobTitle => jobTitle.SalonId == command.SalonId && command.JobTitlesIds.Contains(jobTitle.Id))
+            .ToList();
+
+        foreach (var jobTitleId in command.JobTitlesIds)
+        {
+            var jobTitleNotFound = !jobTitlesFound.Any(jobTitle => jobTitle.Id == jobTitleId);
+
+            if (jobTitleNotFound)
+            {
+                return Error.NotFound;
+            }
+        };
+
         var newWorker = _mapper.Map<Worker>(command);
         newWorker.UserName = command.Email;
-        newWorker.JobTitles = (await _jobTitles.FindAllAsync(jobTitle => command.JobTitlesIds.Contains(jobTitle.Id))).ToList();
+        newWorker.JobTitles = jobTitlesFound;
+        //TODO: remember you set EmailConfirmed to true, you might want to change that in the future
         newWorker.EmailConfirmed = true;
 
         var identityResultForCreation = await _users.CreateAsync(newWorker, command.Password);
