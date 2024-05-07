@@ -5,8 +5,8 @@ namespace SmartSalon.Application.Domain.Bookings;
 
 public class SpecialSlot : BaseEntity
 {
-    public TimeOnly From { get; set; }
-    public TimeOnly To { get; set; }
+    public TimeOnly StartTime { get; set; }
+    public TimeOnly EndTime { get; set; }
     public DayOfWeek DayOfWeek { get; set; }
     public int ExpirationInDays { get; set; }
     public Id ServiceId { get; set; }

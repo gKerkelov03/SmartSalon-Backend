@@ -11,7 +11,7 @@ internal class UpdateWorkingTimeCommandValidator : AbstractValidator<UpdateWorki
     {
         RuleFor(command => command.WorkingTimeId).MustBeValidGuid();
         RuleFor(command => command.DayOfWeek).NotNull();
-        RuleFor(command => command.From).NotNull();
-        RuleFor(command => command.To).NotNull();
+        RuleFor(command => command.StartTime).NotNull();
+        RuleFor(command => command.EndTime).NotNull();
     }
 }

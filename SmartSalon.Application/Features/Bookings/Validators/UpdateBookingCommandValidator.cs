@@ -12,8 +12,8 @@ internal class UpdateBookingCommandValidator : AbstractValidator<UpdateBookingCo
         RuleFor(query => query.BookingId).MustBeValidGuid();
         RuleFor(query => query.WorkerId).MustBeValidGuid();
         RuleFor(query => query.Date).NotEmpty();
-        RuleFor(query => query.From).NotEmpty();
-        RuleFor(query => query.To).NotEmpty();
+        RuleFor(query => query.StartTime).NotEmpty();
+        RuleFor(query => query.EndTime).NotEmpty();
         RuleFor(query => query.Done);
         RuleFor(query => query.Note).NotNull();
     }

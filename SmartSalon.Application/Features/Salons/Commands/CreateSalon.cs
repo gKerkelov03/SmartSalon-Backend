@@ -47,32 +47,32 @@ internal class CreateSalonCommandHandler(
 
         var workingTime = new WorkingTime()
         {
-            MondayFrom = startTime,
-            MondayTo = endTime,
+            MondayOpeningTime = startTime,
+            MondayClosingTime = endTime,
 
-            TuesdayFrom = startTime,
-            TuesdayTo = endTime,
+            TuesdayOpeningTime = startTime,
+            TuesdayClosingTime = endTime,
 
-            WednesdayFrom = startTime,
-            WednesdayTo = endTime,
+            WednesdayOpeningTime = startTime,
+            WednesdayClosingTime = endTime,
 
-            ThursdayFrom = startTime,
-            ThursdayTo = endTime,
+            ThursdayOpeningTime = startTime,
+            ThursdayClosingTime = endTime,
 
-            FridayFrom = startTime,
-            FridayTo = endTime,
+            FridayOpeningTime = startTime,
+            FridayClosingTime = endTime,
 
-            SaturdayFrom = startTime,
-            SaturdayTo = endTime,
+            SaturdayOpeningTime = startTime,
+            SaturdayClosingTime = endTime,
 
-            SundayFrom = startTime,
-            SundayTo = endTime
+            SundayOpeningTime = startTime,
+            SundayClosingTime = endTime
         };
 
         return workingTime;
     }
 
-    public async Task<Result<CreateSalonCommandResponse>> Handle(CreateSalonCommand command, CancellationToken cancellationToken)
+    public async Task<Result<CreateSalonCommandResponse>> Handle(CreateSalonCommand command, CancellationToken cancellationClosingTimeken)
     {
         //TODO: this default currency can be cached but I don't know how would be the best to do it because the handler is transient
         var defaultCurrency = _currencies.FirstOrDefault(currency => currency.Code == "BGN");
@@ -82,7 +82,7 @@ internal class CreateSalonCommandHandler(
         newSalon.MainCurrency = defaultCurrency;
 
         await _salons.AddAsync(newSalon);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationClosingTimeken);
 
         return new CreateSalonCommandResponse(newSalon.Id);
     }

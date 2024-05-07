@@ -9,50 +9,50 @@ internal static class WorkingTimesSeedingData
         new(){
             SalonId = SalonsSeedingData.FirstSalonId,
 
-            MondayFrom = new (7, 0),
-            MondayTo = new (19, 0),
+            MondayOpeningTime = new (7, 0),
+            MondayClosingTime = new (19, 0),
 
-            TuesdayFrom = new (7, 0),
-            TuesdayTo = new (19, 0),
+            TuesdayOpeningTime = new (7, 0),
+            TuesdayClosingTime = new (19, 0),
 
-            WednesdayFrom = new (7, 0),
-            WednesdayTo = new (19, 0),
+            WednesdayOpeningTime = new (7, 0),
+            WednesdayClosingTime = new (19, 0),
 
-            ThursdayFrom = new (7, 0),
-            ThursdayTo = new (19, 0),
+            ThursdayOpeningTime = new (7, 0),
+            ThursdayClosingTime = new (19, 0),
 
-            FridayFrom = new (7, 0),
-            FridayTo = new (19, 0),
+            FridayOpeningTime = new (7, 0),
+            FridayClosingTime = new (19, 0),
 
-            SaturdayFrom = new (7, 0),
-            SaturdayTo = new (19, 0),
+            SaturdayOpeningTime = new (7, 0),
+            SaturdayClosingTime = new (19, 0),
 
-            SundayFrom = new (7, 0),
-            SundayTo = new (19, 0)
+            SundayOpeningTime = new (7, 0),
+            SundayClosingTime = new (19, 0)
         },
         new(){
             SalonId = SalonsSeedingData.SecondSalonId,
 
-            MondayFrom = new (7, 0),
-            MondayTo = new (19, 0),
+            MondayOpeningTime = new (7, 0),
+            MondayClosingTime = new (19, 0),
 
-            TuesdayFrom = new (7, 0),
-            TuesdayTo = new (19, 0),
+            TuesdayOpeningTime = new (7, 0),
+            TuesdayClosingTime = new (19, 0),
 
-            WednesdayFrom = new (7, 0),
-            WednesdayTo = new (19, 0),
+            WednesdayOpeningTime = new (7, 0),
+            WednesdayClosingTime = new (19, 0),
 
-            ThursdayFrom = new (7, 0),
-            ThursdayTo = new (19, 0),
+            ThursdayOpeningTime = new (7, 0),
+            ThursdayClosingTime = new (19, 0),
 
-            FridayFrom = new (7, 0),
-            FridayTo = new (19, 0),
+            FridayOpeningTime = new (7, 0),
+            FridayClosingTime = new (19, 0),
 
-            SaturdayFrom = new (7, 0),
-            SaturdayTo = new (19, 0),
+            SaturdayOpeningTime = new (7, 0),
+            SaturdayClosingTime = new (19, 0),
 
-            SundayFrom = new (7, 0),
-            SundayTo = new (19, 0)
+            SundayOpeningTime = new (7, 0),
+            SundayClosingTime = new (19, 0)
         }
     ];
 }

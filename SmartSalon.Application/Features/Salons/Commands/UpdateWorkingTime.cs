@@ -10,14 +10,14 @@ public class UpdateWorkingTimeCommand : ICommand
 {
     public required Id WorkingTimeId { get; set; }
     public required DayOfWeek DayOfWeek { get; set; }
-    public required TimeOnly From { get; set; }
-    public required TimeOnly To { get; set; }
+    public required TimeOnly StartTime { get; set; }
+    public required TimeOnly EndTime { get; set; }
 }
 
 internal class UpdateWorkingTimeCommandHandler(IEfRepository<WorkingTime> _workingTimes, IUnitOfWork _unitOfWork)
     : ICommandHandler<UpdateWorkingTimeCommand>
 {
-    public async Task<Result> Handle(UpdateWorkingTimeCommand command, CancellationToken cancellationToken)
+    public async Task<Result> Handle(UpdateWorkingTimeCommand command, CancellationToken cancellationClosingTimeken)
     {
         var workingTime = await _workingTimes.GetByIdAsync(command.WorkingTimeId);
 
@@ -26,45 +26,45 @@ internal class UpdateWorkingTimeCommandHandler(IEfRepository<WorkingTime> _worki
             return Error.NotFound;
         }
 
-        UpdateWorkingTimeForDayOfWeek(workingTime, command.DayOfWeek, command.From, command.To);
+        UpdateWorkingTimeForDayOfWeek(workingTime, command.DayOfWeek, command.StartTime, command.EndTime);
         _workingTimes.Update(workingTime);
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationClosingTimeken);
 
         return Result.Success();
     }
 
-    private void UpdateWorkingTimeForDayOfWeek(WorkingTime workingTime, DayOfWeek dayOfWeek, TimeOnly newStartTime, TimeOnly newEndTime)
+    private void UpdateWorkingTimeForDayOfWeek(WorkingTime workingTime, DayOfWeek dayOfWeek, TimeOnly newOpeningTime, TimeOnly newClosingTime)
     {
         switch (dayOfWeek)
         {
             case DayOfWeek.Monday:
-                workingTime.MondayFrom = newStartTime;
-                workingTime.MondayTo = newEndTime;
+                workingTime.MondayOpeningTime = newOpeningTime;
+                workingTime.MondayClosingTime = newClosingTime;
                 break;
             case DayOfWeek.Tuesday:
-                workingTime.TuesdayFrom = newStartTime;
-                workingTime.TuesdayTo = newEndTime;
+                workingTime.TuesdayOpeningTime = newOpeningTime;
+                workingTime.TuesdayClosingTime = newClosingTime;
                 break;
             case DayOfWeek.Wednesday:
-                workingTime.WednesdayFrom = newStartTime;
-                workingTime.WednesdayTo = newEndTime;
+                workingTime.WednesdayOpeningTime = newOpeningTime;
+                workingTime.WednesdayClosingTime = newClosingTime;
                 break;
             case DayOfWeek.Thursday:
-                workingTime.ThursdayFrom = newStartTime;
-                workingTime.ThursdayTo = newEndTime;
+                workingTime.ThursdayOpeningTime = newOpeningTime;
+                workingTime.ThursdayClosingTime = newClosingTime;
                 break;
             case DayOfWeek.Friday:
-                workingTime.FridayFrom = newStartTime;
-                workingTime.FridayTo = newEndTime;
+                workingTime.FridayOpeningTime = newOpeningTime;
+                workingTime.FridayClosingTime = newClosingTime;
                 break;
             case DayOfWeek.Saturday:
-                workingTime.SaturdayFrom = newStartTime;
-                workingTime.SaturdayTo = newEndTime;
+                workingTime.SaturdayOpeningTime = newOpeningTime;
+                workingTime.SaturdayClosingTime = newClosingTime;
                 break;
             case DayOfWeek.Sunday:
-                workingTime.SundayFrom = newStartTime;
-                workingTime.SundayTo = newEndTime;
+                workingTime.SundayOpeningTime = newOpeningTime;
+                workingTime.SundayClosingTime = newClosingTime;
                 break;
         }
     }

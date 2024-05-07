@@ -10,8 +10,8 @@ internal class CreateBookingCommandValidator : AbstractValidator<CreateBookingCo
     public CreateBookingCommandValidator()
     {
         RuleFor(command => command.Date).NotEmpty();
-        RuleFor(command => command.From).NotEmpty();
-        RuleFor(command => command.To).NotEmpty();
+        RuleFor(command => command.StartTime).NotEmpty();
+        RuleFor(command => command.EndTime).NotEmpty();
         RuleFor(command => command.ServiceId).MustBeValidGuid();
         RuleFor(command => command.CustomerId).MustBeValidGuid();
         RuleFor(command => command.SalonId).MustBeValidGuid();
