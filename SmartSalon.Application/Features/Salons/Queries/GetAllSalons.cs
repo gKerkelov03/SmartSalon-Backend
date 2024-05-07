@@ -19,9 +19,7 @@ internal class GetAllSalons(IEfRepository<Salon> _salons)
             .Include(salon => salon.Workers)
             .Include(salon => salon.Owners)
             .Include(salon => salon.AcceptedCurrencies)
-            .Include(salon => salon.Categories)
             .Include(salon => salon.Sections)
-            .Include(salon => salon.Services)
             .Include(salon => salon.Images)
             .Include(salon => salon.Specialties)
             .Select(salon => new GetSalonByIdQueryResponse
@@ -43,8 +41,6 @@ internal class GetAllSalons(IEfRepository<Salon> _salons)
                 Workers = salon.Workers!.Select(workers => workers.Id),
                 Specialties = salon.Specialties!.Select(specialty => specialty.Id),
                 Sections = salon.Sections!.Select(section => section.Id),
-                Categories = salon.Categories!.Select(category => category.Id),
-                Services = salon.Services!.Select(service => service.Id),
                 Images = salon.Images!.Select(image => image.Id),
                 JobTitles = salon.JobTitles!.Select(jobTitle => jobTitle.Id)
             }).ToListAsync();

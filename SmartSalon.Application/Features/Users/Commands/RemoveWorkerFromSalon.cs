@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.MediatR;
-using SmartSalon.Application.Domain.Salons;
 using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Errors;
 using SmartSalon.Application.ResultObject;
@@ -20,7 +19,7 @@ internal class RemoveWorkerFromSalonCommandHandler(IEfRepository<Worker> _worker
     {
         var worker = await _workers.All
             .Include(worker => worker.JobTitles)
-            .Include(worker => worker.Salon)
+            .Include(worker => worker.Salons)
             .Where(worker => worker.Id == command.WorkerId)
             .FirstOrDefaultAsync();
 
@@ -30,7 +29,7 @@ internal class RemoveWorkerFromSalonCommandHandler(IEfRepository<Worker> _worker
         }
 
         worker.JobTitles = null;
-        worker.SalonId = null;
+        worker.Salons = null;
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 

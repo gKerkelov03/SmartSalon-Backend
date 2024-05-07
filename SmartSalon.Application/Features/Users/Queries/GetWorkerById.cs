@@ -1,8 +1,6 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.Mapping;
-using SmartSalon.Application.Domain.Salons;
 using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Errors;
 using SmartSalon.Application.ResultObject;
@@ -26,6 +24,7 @@ public class GetWorkerByIdQueryResponse : IMapFrom<Worker>
     public required string FirstName { get; set; }
     public Id? SalonId { get; set; }
     public required IEnumerable<Id> JobTitles { get; set; }
+    public required IEnumerable<Id> Salons { get; set; }
 }
 
 internal class GetWorkerByIdQueryHandler(IEfRepository<Worker> _workers)
@@ -35,6 +34,7 @@ internal class GetWorkerByIdQueryHandler(IEfRepository<Worker> _workers)
     {
         var queryResponse = await _workers.All
             .Include(worker => worker.JobTitles)
+            .Include(worker => worker.Salons)
             .Where(worker => worker.Id == query.WorkerId)
             .Select(worker => new GetWorkerByIdQueryResponse
             {
@@ -46,7 +46,7 @@ internal class GetWorkerByIdQueryHandler(IEfRepository<Worker> _workers)
                 EmailConfirmed = worker.EmailConfirmed,
                 Nickname = worker.Nickname,
                 FirstName = worker.FirstName,
-                SalonId = worker.SalonId,
+                Salons = worker.Salons!.Select(salon => salon.Id),
                 JobTitles = worker.JobTitles!.Select(jobTitle => jobTitle.Id)
             })
             .FirstOrDefaultAsync();

@@ -62,7 +62,7 @@ public class WorkersController(ISender _mediator, IMapper _mapper) : V1ApiContro
     [HttpPatch($"UpdateNickname/{IdRoute}")]
     [SuccessResponse(Status200OK)]
     [FailureResponse(Status409Conflict)]
-    [Authorize(Policy = IsOwnerOfTheSalonOfTheWorkerOrIsAdminPolicy)]
+    [Authorize(Policy = IsTheSameUserOrIsAdminPolicy)]
     public async Task<IActionResult> UpdateWorkerNickname(UpdateWorkerNicknameRequest request)
     {
         var command = _mapper.Map<UpdateWorkerNicknameCommand>(request);
@@ -74,8 +74,8 @@ public class WorkersController(ISender _mediator, IMapper _mapper) : V1ApiContro
     [HttpPatch($"UpdateJobTitles/{IdRoute}")]
     [SuccessResponse(Status200OK)]
     [FailureResponse(Status409Conflict)]
-    [Authorize(Policy = IsTheSameUserOrIsAdminPolicy)]
-    public async Task<IActionResult> UpdateNickname(UpdateWorkerJobTitlesRequest request)
+    [Authorize(Policy = IsOwnerOfTheSalonOfTheWorkerOrIsAdminPolicy)]
+    public async Task<IActionResult> UpdateWorkerJobTitles(UpdateWorkerJobTitlesRequest request)
     {
         var command = _mapper.Map<UpdateWorkerNicknameCommand>(request);
         var result = await _mediator.Send(command);
@@ -85,6 +85,7 @@ public class WorkersController(ISender _mediator, IMapper _mapper) : V1ApiContro
 
     [HttpPatch($"RemoveFromSalon/{IdRoute}")]
     [SuccessResponse(Status204NoContent)]
+    //TODO: add new policy so the user can leave if he wants
     [Authorize(Policy = IsOwnerOfTheSalonOfTheWorkerOrIsAdminPolicy)]
     public async Task<IActionResult> RemoveWorkerFromSalon(Id workerId)
     {

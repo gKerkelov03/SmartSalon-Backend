@@ -21,7 +21,6 @@ internal class IsOwnerOfTheSalonOfTheWorkerOrIsAdminHandler(
     {
         try
         {
-
             var requirement = GetRequirement<IsOwnerOfTheSalonOfTheWorkerOrIsAdminRequirement>(context);
 
             if (requirement is null)
@@ -44,17 +43,8 @@ internal class IsOwnerOfTheSalonOfTheWorkerOrIsAdminHandler(
                 return;
             }
 
-            var salon = await _workers.All
-                .Include(worker => worker.Salon)
-                .Where(worker => worker.Id == workerId)
-                .FirstOrDefaultAsync();
-
-            if (salon is null)
-            {
-                return;
-            }
-
-            var salonId = salon.Id;
+            //TODO: correct this
+            var salonId = Guid.NewGuid();
             var isOwnerOfTheSalon = _salons
                 .All
                 .Include(salon => salon.Owners)

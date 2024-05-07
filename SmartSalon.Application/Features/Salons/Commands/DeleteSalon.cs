@@ -18,15 +18,20 @@ internal class DeleteSalonCommandHandler(IEfRepository<Salon> _salons, IUnitOfWo
 {
     public async Task<Result> Handle(DeleteSalonCommand command, CancellationToken cancellationToken)
     {
-        //TODO: check why the commented code produces errors and remove the job titles of a worker when you delete the salon
         var salon = await _salons.All
             .Include(salon => salon.Owners)
             .Include(salon => salon.Workers)
-            // !.ThenInclude(worker => worker.JobTitles)
+                !.ThenInclude(worker => worker.JobTitles)
+            .Include(salon => salon.JobTitles)
             .Where(salon => salon.Id == command.SalonId)
             .FirstOrDefaultAsync();
 
-        // salon!.Workers!.ForEach(worker => worker.JobTitles = null);
+        salon!.Workers!.ForEach(worker =>
+            salon.JobTitles!.ForEach(jobTitle =>
+                worker.JobTitles!.Remove(jobTitle)
+            )
+        );
+
         salon!.Workers = null;
         salon!.Owners = null;
 

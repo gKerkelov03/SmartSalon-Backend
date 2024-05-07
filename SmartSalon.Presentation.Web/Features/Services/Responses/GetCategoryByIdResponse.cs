@@ -10,4 +10,5 @@ public class GetCategoryByIdResponse : IMapFrom<GetCategoryByIdQueryResponse>
     public Id SectionId { get; set; }
     public required string Name { get; set; }
     public required int Order { get; set; }
+    public required IEnumerable<Id> ServicesIds { get; set; }
 }

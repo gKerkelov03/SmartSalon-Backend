@@ -4,7 +4,6 @@ using SmartSalon.Application.Abstractions.MediatR;
 using SmartSalon.Application.Domain.Salons;
 using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Errors;
-using SmartSalon.Application.Extensions;
 using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Salons.Commands;
@@ -12,6 +11,7 @@ namespace SmartSalon.Application.Features.Salons.Commands;
 public class UpdateJobTitlesOfWorkerCommand : ICommand
 {
     public required Id WorkerId { get; set; }
+    public required Id SalonId { get; set; }
     public required IEnumerable<Id> JobTitlesIds { get; set; }
 }
 
@@ -40,7 +40,7 @@ internal class UpdateJobTitlesOfWorkerCommandHandler(
         }
 
         worker.JobTitles = _jobTitles.All
-            .Where(jobTitle => jobTitle.SalonId == worker.SalonId && command.JobTitlesIds.Contains(jobTitle.Id))
+            .Where(jobTitle => jobTitle.SalonId == command.SalonId && command.JobTitlesIds.Contains(jobTitle.Id))
             .ToList();
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);

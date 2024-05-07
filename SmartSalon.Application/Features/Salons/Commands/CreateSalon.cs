@@ -74,8 +74,9 @@ internal class CreateSalonCommandHandler(
 
     public async Task<Result<CreateSalonCommandResponse>> Handle(CreateSalonCommand command, CancellationToken cancellationToken)
     {
-        //TODO: this default currency can be cached
-        var defaultCurrency = await _currencies.FirstOrDefaultAsync(currency => currency.Code == "BGN");
+        //TODO: this default currency can be cached but I don't know how would be the best to do it because the handler is transient
+        var defaultCurrency = _currencies.FirstOrDefault(currency => currency.Code == "BGN");
+
         var newSalon = _mapper.Map<Salon>(command);
         newSalon.MapAgainst(_defaultSalonSettings);
         newSalon.MainCurrency = defaultCurrency;

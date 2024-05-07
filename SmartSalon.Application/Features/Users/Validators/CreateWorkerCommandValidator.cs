@@ -2,7 +2,6 @@ using FluentValidation;
 using SmartSalon.Application.Extensions;
 using SmartSalon.Application.Features.Users.Commands;
 using static SmartSalon.Application.ApplicationConstants.Validation.User;
-using static SmartSalon.Application.ApplicationConstants.Validation.Worker;
 
 namespace SmartSalon.Application.Features.Users.Validators;
 
@@ -30,9 +29,5 @@ internal class CreateWorkerCommandValidator : AbstractValidator<CreateWorkerComm
         RuleFor(command => command.PhoneNumber)
             .NotEmpty()
             .MaximumLength(MaxPhoneNumberLength);
-
-        RuleFor(command => command.Nickname)
-            .NotEmpty()
-            .MaximumLength(MaxNicknameLength);
     }
 }

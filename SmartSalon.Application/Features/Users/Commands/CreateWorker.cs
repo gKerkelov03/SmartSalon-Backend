@@ -65,11 +65,9 @@ internal class CreateWorkerCommandHandler(
             }
         };
 
-        //TODO: remember you set EmailConfirmed to true, you might want to change that in the future
         var newWorker = _mapper.Map<Worker>(command);
         newWorker.UserName = command.Email;
         newWorker.JobTitles = jobTitlesFound;
-        newWorker.EmailConfirmed = true;
         newWorker.Nickname = $"{newWorker.FirstName} {newWorker.LastName}";
 
         var identityResultForCreation = await _users.CreateAsync(newWorker, command.Password);
