@@ -85,8 +85,7 @@ public class WorkersController(ISender _mediator, IMapper _mapper) : V1ApiContro
 
     [HttpPatch($"RemoveFromSalon/{IdRoute}")]
     [SuccessResponse(Status204NoContent)]
-    //TODO: add new policy so the user can leave if he wants
-    [Authorize(Policy = IsOwnerOfTheSalonOfTheWorkerOrIsAdminPolicy)]
+    [Authorize(Policy = IsOwnerOfTheSalonOfTheWorkerOrIsTheWorkerOrIsAdminPolicy)]
     public async Task<IActionResult> RemoveWorkerFromSalon(Id workerId)
     {
         var command = new RemoveWorkerFromSalonCommand(workerId);

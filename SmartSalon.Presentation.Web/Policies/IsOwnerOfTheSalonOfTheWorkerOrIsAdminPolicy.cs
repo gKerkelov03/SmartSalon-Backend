@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.Lifetime;
 using SmartSalon.Application.Domain.Salons;
-using SmartSalon.Application.Domain.Users;
 
 namespace SmartSalon.Presentation.Web.Policies;
 
@@ -13,7 +12,6 @@ internal class IsOwnerOfTheSalonOfTheWorkerOrIsAdminRequirement : IAuthorization
 internal class IsOwnerOfTheSalonOfTheWorkerOrIsAdminHandler(
     IHttpContextAccessor _httpContextAccessor,
     ICurrentUserAccessor _currentUser,
-    IEfRepository<Worker> _workers,
     IEfRepository<Salon> _salons
 ) : AuthorizationHandlerThatNeedsTheRequestBody, IAuthorizationHandler, IScopedLifetime
 {
@@ -43,16 +41,21 @@ internal class IsOwnerOfTheSalonOfTheWorkerOrIsAdminHandler(
                 return;
             }
 
-            //TODO: correct this
-            var salonId = Guid.NewGuid();
-            var isOwnerOfTheSalon = _salons
-                .All
+            if (_currentUser.IsAdmin)
+            {
+                context.Succeed(requirement);
+                return;
+            }
+
+            var isOwnerOfTheSalon = _salons.All
                 .Include(salon => salon.Owners)
                 .Include(salon => salon.Workers)
-                .Where(salon => salon.Id == salonId)
-                .Any(salon => salon.Owners!.Any(owner => owner.Id == _currentUser.Id));
+                .Any(salon =>
+                    salon.Owners!.Any(owner => owner.Id == _currentUser.Id) &&
+                    salon.Workers!.Any(worker => worker.Id.ToString() == requestedWorkerId)
+                );
 
-            if (_currentUser.IsAdmin || isOwnerOfTheSalon)
+            if (isOwnerOfTheSalon)
             {
                 context.Succeed(requirement);
             }
