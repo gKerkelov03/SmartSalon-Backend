@@ -14,6 +14,6 @@ public class GetWorkerByIdResponse : IMapFrom<GetWorkerByIdQueryResponse>
     public bool EmailConfirmed { get; set; }
     public required string ProfilePictureUrl { get; set; }
     public required string PhoneNumber { get; set; }
-    public string? SalonId { get; set; }
     public required IEnumerable<Id> JobTitles { get; set; }
+    public required IEnumerable<Id> Salons { get; set; }
 }

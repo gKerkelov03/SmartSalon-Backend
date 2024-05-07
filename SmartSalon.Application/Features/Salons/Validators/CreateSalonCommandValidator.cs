@@ -10,9 +10,6 @@ internal class CreateSalonCommandValidator : AbstractValidator<CreateSalonComman
     public CreateSalonCommandValidator()
     {
         RuleFor(command => command.Name).MaximumLength(MaxNameLength);
-        RuleFor(command => command.Description).MaximumLength(MaxDescriptionLength);
         RuleFor(command => command.Location).MaximumLength(MaxLocationLength);
-        RuleFor(command => command.ProfilePictureUrl).NotEmpty();
-        RuleFor(command => command.ProfilePictureUrl).NotEmpty();
     }
 }

@@ -23,8 +23,6 @@ public class GetSalonByIdResponse : IMapFrom<GetSalonByIdQueryResponse>
     public required IEnumerable<Id> Workers { get; set; }
     public required IEnumerable<Id> Specialties { get; set; }
     public required IEnumerable<Id> Sections { get; set; }
-    public required IEnumerable<Id> Categories { get; set; }
-    public required IEnumerable<Id> Services { get; set; }
     public required IEnumerable<Id> Images { get; set; }
     public required IEnumerable<Id> JobTitles { get; set; }
 }

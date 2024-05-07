@@ -41,7 +41,7 @@ public class ImagesController(ISender _mediator, IMapper _mapper) : V1ApiControl
         );
     }
 
-    [HttpDelete]
+    [HttpDelete(IdRoute)]
     [SuccessResponse(Status200OK)]
     [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]
     public async Task<IActionResult> DeleteImage(DeleteImageRequest request)

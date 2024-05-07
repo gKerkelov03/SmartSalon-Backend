@@ -6,9 +6,9 @@ using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Salons.Commands;
 
-public class DeleteJobTitleCommand(Id specialtyId) : ICommand
+public class DeleteJobTitleCommand() : ICommand
 {
-    public Id JobTitleId => specialtyId;
+    public Id JobTitleId { get; set; }
 }
 
 internal class DeleteJobTitleCommandHandler(IEfRepository<JobTitle> _jobTitles, IUnitOfWork _unitOfWork)

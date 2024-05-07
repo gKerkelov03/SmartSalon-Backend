@@ -14,7 +14,7 @@ public class GetJobTitleByIdQuery(Id id) : IQuery<GetJobTitleByIdQueryResponse>
 
 public class GetJobTitleByIdQueryResponse : IMapFrom<JobTitle>
 {
-    public required string Text { get; set; }
+    public required string Name { get; set; }
     public Id SalonId { get; set; }
 }
 

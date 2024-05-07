@@ -12,9 +12,7 @@ namespace SmartSalon.Application.Features.Salons.Commands;
 public class CreateSalonCommand : ICommand<CreateSalonCommandResponse>, IMapTo<Salon>
 {
     public required string Name { get; set; }
-    public required string Description { get; set; }
     public required string Location { get; set; }
-    public string? ProfilePictureUrl { get; set; }
 }
 
 public class CreateSalonCommandResponse(Id id)
@@ -38,6 +36,8 @@ internal class CreateSalonCommandHandler(
         SectionsEnabled = true,
         WorkersCanMoveBookings = true,
         WorkersCanSetNonWorkingPeriods = true,
+        WorkersCanDeleteBookings = true,
+        Description = ""
     };
 
     private static WorkingTime CreateDefaultWorkingTime()

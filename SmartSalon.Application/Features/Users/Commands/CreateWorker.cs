@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.Mapping;
 using SmartSalon.Application.Abstractions.MediatR;
 using SmartSalon.Application.Domain.Salons;
@@ -30,6 +31,7 @@ internal class CreateWorkerCommandHandler(
     UsersManager _users,
     IEfRepository<Salon> _salons,
     IEfRepository<JobTitle> _jobTitles,
+    IUnitOfWork _unitOfWork,
     IMapper _mapper
 )
     : ICommandHandler<CreateWorkerCommand, CreateWorkerCommandResponse>
@@ -66,9 +68,11 @@ internal class CreateWorkerCommandHandler(
         };
 
         var newWorker = _mapper.Map<Worker>(command);
+
         newWorker.UserName = command.Email;
         newWorker.JobTitles = jobTitlesFound;
         newWorker.Nickname = $"{newWorker.FirstName} {newWorker.LastName}";
+        newWorker.Salons = [salon];
 
         var identityResultForCreation = await _users.CreateAsync(newWorker, command.Password);
         var identityResultForAddingToRole = await _users.AddToRoleAsync(newWorker, WorkerRoleName);

@@ -21,24 +21,20 @@ internal class DeleteSalonCommandHandler(IEfRepository<Salon> _salons, IUnitOfWo
         var salon = await _salons.All
             .Include(salon => salon.Owners)
             .Include(salon => salon.Workers)
-                !.ThenInclude(worker => worker.JobTitles)
             .Include(salon => salon.JobTitles)
+            !.ThenInclude(JobTitle => JobTitle.Workers)
             .Where(salon => salon.Id == command.SalonId)
             .FirstOrDefaultAsync();
 
-        salon!.Workers!.ForEach(worker =>
-            salon.JobTitles!.ForEach(jobTitle =>
-                worker.JobTitles!.Remove(jobTitle)
-            )
-        );
-
-        salon!.Workers = null;
-        salon!.Owners = null;
-
+        //TODO: if the salon has job titles and workers connected to them it throws exceptions
         if (salon is null)
         {
             return Error.NotFound;
         }
+
+        salon.JobTitles!.ForEach(jobTitle => jobTitle.Workers = []);
+        salon!.Workers = null;
+        salon!.Owners = null;
 
         await _salons.RemoveByIdAsync(salon.Id);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
