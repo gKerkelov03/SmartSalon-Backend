@@ -31,7 +31,6 @@ internal class CreateWorkerCommandHandler(
     UsersManager _users,
     IEfRepository<Salon> _salons,
     IEfRepository<JobTitle> _jobTitles,
-    IUnitOfWork _unitOfWork,
     IMapper _mapper
 )
     : ICommandHandler<CreateWorkerCommand, CreateWorkerCommandResponse>
@@ -51,7 +50,6 @@ internal class CreateWorkerCommandHandler(
         {
             return Error.NotFound;
         }
-
 
         var jobTitlesFound = _jobTitles.All
             .Where(jobTitle => jobTitle.SalonId == command.SalonId && command.JobTitlesIds.Contains(jobTitle.Id))

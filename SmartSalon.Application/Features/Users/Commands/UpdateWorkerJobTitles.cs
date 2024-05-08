@@ -33,6 +33,7 @@ internal class UpdateWorkerJobTitlesCommandHandler(
             return Error.NotFound;
         }
 
+        //TODO: This code repeats in the CreateWorker, CreateService and UpdateService as well, think about reusing it
         var jobTitlesFound = _jobTitles.All
             .Where(jobTitle => jobTitle.SalonId == command.SalonId && command.JobTitlesIds.Contains(jobTitle.Id))
             .ToList();

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.Mapping;
 using SmartSalon.Application.Abstractions.MediatR;
+using SmartSalon.Application.Domain.Salons;
 using SmartSalon.Application.Domain.Services;
 using SmartSalon.Application.Errors;
 using SmartSalon.Application.ResultObject;
@@ -16,6 +17,8 @@ public class CreateServiceCommand : ICommand<CreateServiceCommandResponse>, IMap
     public required double Price { get; set; }
     public required int DurationInMinutes { get; set; }
     public Id CategoryId { get; set; }
+    public Id SalonId { get; set; }
+    public required IEnumerable<Id> JobTitlesIds { get; set; }
 }
 
 public class CreateServiceCommandResponse(Id id)
@@ -27,6 +30,7 @@ internal class CreateServiceCommandHandler(
     IIncreasingNumbersProvider _increasingNumbersProvider,
     IEfRepository<Category> _categories,
     IEfRepository<Service> _services,
+    IEfRepository<JobTitle> _jobTitles,
     IUnitOfWork _unitOfWork,
     IMapper _mapper
 ) : ICommandHandler<CreateServiceCommand, CreateServiceCommandResponse>
@@ -52,7 +56,22 @@ internal class CreateServiceCommandHandler(
             return Error.Conflict;
         }
 
+        var jobTitlesFound = _jobTitles.All
+            .Where(jobTitle => jobTitle.SalonId == command.SalonId && command.JobTitlesIds.Contains(jobTitle.Id))
+            .ToList();
+
+        foreach (var jobTitleId in command.JobTitlesIds)
+        {
+            var jobTitleNotFound = !jobTitlesFound.Any(jobTitle => jobTitle.Id == jobTitleId);
+
+            if (jobTitleNotFound)
+            {
+                return Error.NotFound;
+            }
+        };
+
         newService.Order = _increasingNumbersProvider.Next;
+        newService.JobTitles = jobTitlesFound;
 
         //TODO: debug why this throws error, expected one row to be added but 0 were added
         //category.Services!.Add(newService);
