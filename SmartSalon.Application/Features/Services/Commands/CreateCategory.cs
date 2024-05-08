@@ -23,7 +23,6 @@ public class CreateCategoryCommandResponse(Id id)
 
 internal class CreateCategoryCommandHandler(
     IEfRepository<Category> _categories,
-    IIncreasingNumbersProvider _increasingNumbersProvider,
     IEfRepository<Section> _sections,
     IEfRepository<Salon> _salons,
     IUnitOfWork _unitOfWork,
@@ -37,8 +36,7 @@ internal class CreateCategoryCommandHandler(
 
         var section = await _sections.All
             .Include(section => section.Categories)
-            .Where(section => section.Id == command.SectionId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(section => section.Id == command.SectionId);
 
         if (section is null)
         {
@@ -59,7 +57,8 @@ internal class CreateCategoryCommandHandler(
             return Error.Conflict;
         }
 
-        newCategory.Order = _increasingNumbersProvider.Next;
+
+        newCategory.Order = _sections.All.Max(section => section.Order) + 1;
 
         //TODO: debug why this throws error, expected one row to be added but 0 were added
         //salon.Categories!.Add(newCategory);

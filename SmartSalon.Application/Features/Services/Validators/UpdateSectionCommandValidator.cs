@@ -13,5 +13,6 @@ internal class UpdateSectionCommandValidator : AbstractValidator<UpdateSectionCo
         RuleFor(command => command.Name).MaximumLength(MaxNameLength);
         RuleFor(command => command.PictureUrl).NotEmpty();
         RuleFor(command => command.SectionId).MustBeValidGuid();
+        RuleFor(command => command.Order).NotEmpty();
     }
 }

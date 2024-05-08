@@ -9,4 +9,5 @@ public class UpdateSectionRequest : IMapTo<UpdateSectionCommand>
     public Id SectionId { get; set; }
     public required string Name { get; set; }
     public required string PictureUrl { get; set; }
+    public int Order { get; set; }
 }

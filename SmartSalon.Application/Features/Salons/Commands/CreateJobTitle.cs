@@ -34,8 +34,7 @@ internal class CreateJobTitleCommandHandler(
 
         var salon = await _salons.All
             .Include(salon => salon.JobTitles)
-            .Where(salon => salon.Id == command.SalonId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(salon => salon.Id == command.SalonId);
 
         if (salon is null)
         {

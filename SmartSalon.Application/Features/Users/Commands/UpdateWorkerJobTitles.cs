@@ -25,8 +25,7 @@ internal class UpdateWorkerJobTitlesCommandHandler(
     {
         var worker = await _workers.All
             .Include(worker => worker.JobTitles)
-            .Where(worker => worker.Id == command.WorkerId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(worker => worker.Id == command.WorkerId);
 
         if (worker is null)
         {

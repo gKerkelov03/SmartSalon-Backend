@@ -23,8 +23,7 @@ internal class DeleteSalonCommandHandler(IEfRepository<Salon> _salons, IUnitOfWo
             .Include(salon => salon.Workers)
             .Include(salon => salon.JobTitles)
             !.ThenInclude(JobTitle => JobTitle.Workers)
-            .Where(salon => salon.Id == command.SalonId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(salon => salon.Id == command.SalonId);
 
         //TODO: if the salon has job titles and workers connected to them it throws exceptions
         if (salon is null)

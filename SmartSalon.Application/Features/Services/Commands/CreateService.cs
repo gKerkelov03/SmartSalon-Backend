@@ -27,7 +27,6 @@ public class CreateServiceCommandResponse(Id id)
 }
 
 internal class CreateServiceCommandHandler(
-    IIncreasingNumbersProvider _increasingNumbersProvider,
     IEfRepository<Category> _categories,
     IEfRepository<Service> _services,
     IEfRepository<JobTitle> _jobTitles,
@@ -41,8 +40,7 @@ internal class CreateServiceCommandHandler(
 
         var category = await _categories.All
             .Include(category => category.Services)
-            .Where(category => category.Id == command.CategoryId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(category => category.Id == command.CategoryId);
 
         if (category is null)
         {
@@ -70,7 +68,7 @@ internal class CreateServiceCommandHandler(
             }
         };
 
-        newService.Order = _increasingNumbersProvider.Next;
+        newService.Order = _services.All.Max(section => section.Order) + 1;
         newService.JobTitles = jobTitlesFound;
 
         //TODO: debug why this throws error, expected one row to be added but 0 were added

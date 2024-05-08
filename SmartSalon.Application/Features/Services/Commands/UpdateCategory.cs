@@ -12,6 +12,7 @@ public class UpdateCategoryCommand : ICommand
 {
     public Id CategoryId { get; set; }
     public required string Name { get; set; }
+    public int Order { get; set; }
 }
 
 internal class UpdateCategoryCommandHandler(IEfRepository<Category> _categories, IUnitOfWork _unitOfWork)

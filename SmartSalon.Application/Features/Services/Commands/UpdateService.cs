@@ -18,6 +18,7 @@ public class UpdateServiceCommand : ICommand
     public required double Price { get; set; }
     public required int DurationInMinutes { get; set; }
     public required IEnumerable<Id> JobTitlesIds { get; set; }
+    public int Order { get; set; }
 }
 
 internal class UpdateServiceCommandHandler(

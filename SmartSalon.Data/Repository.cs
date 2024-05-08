@@ -14,7 +14,6 @@ public class Repository<TEntity>(SmartSalonDbContext _dbContext) : IEfRepository
     public IQueryable<TEntity> All => _dbSet;
 
     public async Task<TEntity?> GetByIdAsync(Id id) => await _dbSet.FindAsync(id);
-    public TEntity? GetById(Id id) => _dbSet.Find(id);
 
     public async Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
         => await _dbSet.FirstOrDefaultAsync(predicate);

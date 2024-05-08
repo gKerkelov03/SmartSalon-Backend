@@ -28,8 +28,7 @@ internal class CreateImageCommandHandler(
     {
         var salon = await _salons.All
             .Include(salon => salon.Images)
-            .Where(salon => salon.Id == command.SalonId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(salon => salon.Id == command.SalonId);
 
         var newImage = new Image { SalonId = command.SalonId, Url = command.Url };
 

@@ -32,8 +32,7 @@ internal class RemoveCurrencyCommandHandler(
 
         var salon = await _salons.All
             .Include(salon => salon.AcceptedCurrencies)
-            .Where(salon => salon.Id == command.SalonId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(salon => salon.Id == command.SalonId);
 
         if (salon is null)
         {

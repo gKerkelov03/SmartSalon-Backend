@@ -37,9 +37,8 @@ internal class AddOwnerToSalonCommandHandler(
 
         var owner = await _owners.GetByIdAsync(decryptedToken.OwnerId);
         var salon = await _salons.All
-            .Where(salon => salon.Id == decryptedToken.SalonId)
             .Include(salon => salon.Owners)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(salon => salon.Id == decryptedToken.SalonId);
 
         if (owner is null || salon is null)
         {

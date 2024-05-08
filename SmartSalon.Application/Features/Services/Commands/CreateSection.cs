@@ -23,7 +23,6 @@ public class CreateSectionCommandResponse(Id id)
 }
 
 internal class CreateSectionCommandHandler(
-    IIncreasingNumbersProvider _increasingNumbersProvider,
     IEfRepository<Section> _sections,
     IEfRepository<Salon> _salons,
     IUnitOfWork _unitOfWork,
@@ -36,8 +35,7 @@ internal class CreateSectionCommandHandler(
 
         var salon = await _salons.All
             .Include(salon => salon.Sections)
-            .Where(salon => salon.Id == command.SalonId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(salon => salon.Id == command.SalonId);
 
         if (salon is null)
         {
@@ -51,7 +49,7 @@ internal class CreateSectionCommandHandler(
             return Error.Conflict;
         }
 
-        newSection.Order = _increasingNumbersProvider.Next;
+        newSection.Order = _sections.All.Max(section => section.Order) + 1;
 
         //TODO: debug why this throws error, expected one row to be added but 0 were added
         //salon.Sectionss!.Add(newSection);

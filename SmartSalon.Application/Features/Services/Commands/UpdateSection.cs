@@ -13,6 +13,7 @@ public class UpdateSectionCommand : ICommand
     public required Id SectionId { get; set; }
     public required string Name { get; set; }
     public required string PictureUrl { get; set; }
+    public int Order { get; set; }
 }
 
 internal class UpdateSectionCommandHandler(IEfRepository<Section> _sections, IUnitOfWork _unitOfWork)

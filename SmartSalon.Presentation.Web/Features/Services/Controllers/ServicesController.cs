@@ -51,18 +51,6 @@ public class ServicesController(ISender _mediator, IMapper _mapper) : V1ApiContr
         return ProblemDetailsOr<OkResult>(result);
     }
 
-    [HttpPatch($"Move/{IdRoute}")]
-    [SuccessResponse(Status200OK)]
-    [FailureResponse(Status404NotFound)]
-    [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]
-    public async Task<IActionResult> MoveService(MoveServiceRequest request)
-    {
-        var command = _mapper.Map<MoveServiceCommand>(request);
-        var result = await _mediator.Send(command);
-
-        return ProblemDetailsOr<OkResult>(result);
-    }
-
     [HttpDelete]
     [SuccessResponse(Status200OK)]
     [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]

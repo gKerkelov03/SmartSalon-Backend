@@ -20,8 +20,7 @@ internal class RemoveWorkerFromSalonCommandHandler(IEfRepository<Worker> _worker
         var worker = await _workers.All
             .Include(worker => worker.JobTitles)
             .Include(worker => worker.Salons)
-            .Where(worker => worker.Id == command.WorkerId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(worker => worker.Id == command.WorkerId);
 
         if (worker is null)
         {

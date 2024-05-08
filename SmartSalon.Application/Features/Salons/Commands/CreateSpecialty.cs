@@ -34,8 +34,7 @@ internal class CreateSpecialtyCommandHandler(
 
         var salon = await _salons.All
             .Include(salon => salon.Specialties)
-            .Where(salon => salon.Id == command.SalonId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(salon => salon.Id == command.SalonId);
 
         if (salon is null)
         {

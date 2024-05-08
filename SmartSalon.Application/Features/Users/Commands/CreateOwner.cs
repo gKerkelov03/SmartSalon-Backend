@@ -44,9 +44,8 @@ internal class CreateOwnerCommandHandler(
         }
 
         var salon = await _salons.All
-            .Where(salon => salon.Id == command.SalonId)
             .Include(salon => salon.Owners)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(salon => salon.Id == command.SalonId);
 
         if (salon is null)
         {

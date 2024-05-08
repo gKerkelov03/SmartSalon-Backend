@@ -28,8 +28,7 @@ internal class AddCurrencyCommandHandler(IEfRepository<Currency> _currencies, IE
 
         var salon = await _salons.All
             .Include(salon => salon.AcceptedCurrencies)
-            .Where(salon => salon.Id == command.SalonId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(salon => salon.Id == command.SalonId);
 
         if (salon is null)
         {

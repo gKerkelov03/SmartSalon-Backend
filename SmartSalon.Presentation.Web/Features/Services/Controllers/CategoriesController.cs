@@ -54,18 +54,6 @@ public class CategoriesController(ISender _mediator, IMapper _mapper) : V1ApiCon
         return ProblemDetailsOr<OkResult>(result);
     }
 
-    [HttpPatch($"Move/{IdRoute}")]
-    [SuccessResponse(Status200OK)]
-    [FailureResponse(Status404NotFound)]
-    [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]
-    public async Task<IActionResult> MoveCategory(MoveCategoryRequest request)
-    {
-        var command = _mapper.Map<MoveCategoryCommand>(request);
-        var result = await _mediator.Send(command);
-
-        return ProblemDetailsOr<OkResult>(result);
-    }
-
     [HttpDelete]
     [SuccessResponse(Status200OK)]
     [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]
