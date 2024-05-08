@@ -6,6 +6,7 @@ using SmartSalon.Application.Abstractions.MediatR;
 using SmartSalon.Application.Domain.Salons;
 using SmartSalon.Application.Domain.Services;
 using SmartSalon.Application.Errors;
+using SmartSalon.Application.Extensions;
 using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Services.Commands;
@@ -49,7 +50,11 @@ internal class CreateSectionCommandHandler(
             return Error.Conflict;
         }
 
-        newSection.Order = _sections.All.Max(section => section.Order) + 1;
+        var orderAtTheEndOfTheList = await _sections.All.FirstOrDefaultAsync() is not null
+            ? _sections.All.Max(section => section.Order) + 1
+            : 1;
+
+        newSection.Order = orderAtTheEndOfTheList;
 
         //TODO: debug why this throws error, expected one row to be added but 0 were added
         //salon.Sectionss!.Add(newSection);

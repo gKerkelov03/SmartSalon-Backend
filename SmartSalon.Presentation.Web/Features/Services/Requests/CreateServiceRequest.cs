@@ -11,5 +11,6 @@ public class CreateServiceRequest : IMapTo<CreateServiceCommand>
     public required int DurationInMinutes { get; set; }
     public Id SalonId { get; set; }
     public Id CategoryId { get; set; }
+    public required IEnumerable<Id> JobTitlesIds { get; set; }
 }
 

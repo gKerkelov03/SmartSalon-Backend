@@ -9,7 +9,7 @@ namespace SmartSalon.Data.Repositories;
 public class Repository<TEntity>(SmartSalonDbContext _dbContext) : IEfRepository<TEntity>
     where TEntity : class, IBaseEntity
 {
-    private readonly DbSet<TEntity> _dbSet = _dbContext.Set<TEntity>();
+    protected readonly DbSet<TEntity> _dbSet = _dbContext.Set<TEntity>();
 
     public IQueryable<TEntity> All => _dbSet;
 

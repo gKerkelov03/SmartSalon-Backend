@@ -41,16 +41,17 @@ internal class CreateBookingCommandHandler(
 {
     public async Task<Result<CreateBookingCommandResponse>> Handle(CreateBookingCommand command, CancellationToken cancellationToken)
     {
-        var customer = await _customers.GetByIdAsync(command.ServiceId);
+        //TODO: do it like this on all appropriate places trought the app
+        var customerDoesntExist = await _customers.GetByIdAsync(command.ServiceId) is null;
 
-        if (customer is null)
+        if (customerDoesntExist)
         {
             return Error.NotFound;
         }
 
-        var salon = await _salons.GetByIdAsync(command.ServiceId);
+        var salonDoesntExist = await _salons.GetByIdAsync(command.ServiceId) is null;
 
-        if (salon is null)
+        if (salonDoesntExist)
         {
             return Error.NotFound;
         }

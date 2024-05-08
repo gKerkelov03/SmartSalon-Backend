@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.Mapping;
 using SmartSalon.Application.Abstractions.MediatR;
 using SmartSalon.Application.Domain.Salons;
@@ -30,10 +29,9 @@ public class CreateWorkerCommandResponse(Id createdWorkerId)
 internal class CreateWorkerCommandHandler(
     UsersManager _users,
     IEfRepository<Salon> _salons,
-    IEfRepository<JobTitle> _jobTitles,
+    IJobTitlesRepository _jobTitles,
     IMapper _mapper
-)
-    : ICommandHandler<CreateWorkerCommand, CreateWorkerCommandResponse>
+) : ICommandHandler<CreateWorkerCommand, CreateWorkerCommandResponse>
 {
     public async Task<Result<CreateWorkerCommandResponse>> Handle(CreateWorkerCommand command, CancellationToken cancellationToken)
     {
@@ -51,24 +49,17 @@ internal class CreateWorkerCommandHandler(
             return Error.NotFound;
         }
 
-        var jobTitlesFound = _jobTitles.All
-            .Where(jobTitle => jobTitle.SalonId == command.SalonId && command.JobTitlesIds.Contains(jobTitle.Id))
-            .ToList();
+        var jobTitlesResult = _jobTitles.GetJobTitlesInSalon(command.SalonId, command.JobTitlesIds);
 
-        foreach (var jobTitleId in command.JobTitlesIds)
+        if (jobTitlesResult.IsFailure)
         {
-            var jobTitleNotFound = !jobTitlesFound.Any(jobTitle => jobTitle.Id == jobTitleId);
-
-            if (jobTitleNotFound)
-            {
-                return Error.NotFound;
-            }
-        };
+            return jobTitlesResult.Errors!.First();
+        }
 
         var newWorker = _mapper.Map<Worker>(command);
 
         newWorker.UserName = command.Email;
-        newWorker.JobTitles = jobTitlesFound;
+        newWorker.JobTitles = jobTitlesResult.Value.ToList();
         newWorker.Nickname = $"{newWorker.FirstName} {newWorker.LastName}";
         newWorker.Salons = [salon];
 

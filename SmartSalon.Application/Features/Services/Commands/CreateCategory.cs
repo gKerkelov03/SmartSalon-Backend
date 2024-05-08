@@ -14,6 +14,7 @@ public class CreateCategoryCommand : ICommand<CreateCategoryCommandResponse>, IM
 {
     public required string Name { get; set; }
     public Id SectionId { get; set; }
+    public Id SalonId { get; set; }
 }
 
 public class CreateCategoryCommandResponse(Id id)
@@ -32,20 +33,19 @@ internal class CreateCategoryCommandHandler(
 {
     public async Task<Result<CreateCategoryCommandResponse>> Handle(CreateCategoryCommand command, CancellationToken cancellationToken)
     {
-        var newCategory = _mapper.Map<Category>(command);
+        var salonDoesntExist = await _salons.GetByIdAsync(command.SalonId) is null;
 
+        if (salonDoesntExist)
+        {
+            return Error.NotFound;
+        }
+
+        var newCategory = _mapper.Map<Category>(command);
         var section = await _sections.All
             .Include(section => section.Categories)
             .FirstOrDefaultAsync(section => section.Id == command.SectionId);
 
         if (section is null)
-        {
-            return Error.NotFound;
-        }
-
-        var salon = await _salons.GetByIdAsync(section.SalonId);
-
-        if (salon is null)
         {
             return Error.NotFound;
         }
@@ -57,8 +57,11 @@ internal class CreateCategoryCommandHandler(
             return Error.Conflict;
         }
 
+        var orderAtTheEndOfTheList = await _categories.All.FirstOrDefaultAsync() is not null
+            ? _categories.All.Max(category => category.Order) + 1
+            : 1;
 
-        newCategory.Order = _sections.All.Max(section => section.Order) + 1;
+        newCategory.Order = orderAtTheEndOfTheList;
 
         //TODO: debug why this throws error, expected one row to be added but 0 were added
         //salon.Categories!.Add(newCategory);

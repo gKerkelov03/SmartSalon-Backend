@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.EntityFrameworkCore;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.MediatR;
 using SmartSalon.Application.Domain.Salons;
@@ -23,35 +24,38 @@ public class UpdateServiceCommand : ICommand
 
 internal class UpdateServiceCommandHandler(
     IEfRepository<Service> _services,
-    IEfRepository<JobTitle> _jobTitles,
+    IJobTitlesRepository _jobTitles,
     IUnitOfWork _unitOfWork
 ) : ICommandHandler<UpdateServiceCommand>
 {
     public async Task<Result> Handle(UpdateServiceCommand command, CancellationToken cancellationToken)
     {
-        var service = await _services.GetByIdAsync(command.ServiceId);
+        var service = await _services.All
+            .Include(service => service.Category)
+            .ThenInclude(category => category!.Services)
+            .FirstOrDefaultAsync(service => service.Id == command.ServiceId);
 
         if (service is null)
         {
             return Error.NotFound;
         }
 
-        var jobTitlesFound = _jobTitles.All
-            .Where(jobTitle => jobTitle.SalonId == command.SalonId && command.JobTitlesIds.Contains(jobTitle.Id))
-            .ToList();
+        var categoryAlreadyContainsService = service.Category!.Services!.Any(service => service.Name == command.Name);
 
-        foreach (var jobTitleId in command.JobTitlesIds)
+        if (categoryAlreadyContainsService)
         {
-            var jobTitleNotFound = !jobTitlesFound.Any(jobTitle => jobTitle.Id == jobTitleId);
+            return Error.Conflict;
+        }
 
-            if (jobTitleNotFound)
-            {
-                return Error.NotFound;
-            }
-        };
+        var jobTitlesResult = _jobTitles.GetJobTitlesInSalon(command.SalonId, command.JobTitlesIds);
+
+        if (jobTitlesResult.IsFailure)
+        {
+            return jobTitlesResult.Errors!.First();
+        }
 
         service.MapAgainst(command);
-        service.JobTitles = jobTitlesFound;
+        service.JobTitles = jobTitlesResult.Value.ToList();
 
         _services.Update(service);
 

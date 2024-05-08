@@ -10,4 +10,5 @@ public class GetSectionByIdResponse : IMapFrom<GetSectionByIdQueryResponse>
     public required string Name { get; set; }
     public required int Order { get; set; }
     public required string PictureUrl { get; set; }
+    public required IEnumerable<Id> CategoriesIds { get; set; }
 }

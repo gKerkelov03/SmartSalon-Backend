@@ -29,7 +29,7 @@ public class CreateServiceCommandResponse(Id id)
 internal class CreateServiceCommandHandler(
     IEfRepository<Category> _categories,
     IEfRepository<Service> _services,
-    IEfRepository<JobTitle> _jobTitles,
+    IJobTitlesRepository _jobTitles,
     IUnitOfWork _unitOfWork,
     IMapper _mapper
 ) : ICommandHandler<CreateServiceCommand, CreateServiceCommandResponse>
@@ -54,22 +54,19 @@ internal class CreateServiceCommandHandler(
             return Error.Conflict;
         }
 
-        var jobTitlesFound = _jobTitles.All
-            .Where(jobTitle => jobTitle.SalonId == command.SalonId && command.JobTitlesIds.Contains(jobTitle.Id))
-            .ToList();
+        var jobTitlesResult = _jobTitles.GetJobTitlesInSalon(command.SalonId, command.JobTitlesIds);
 
-        foreach (var jobTitleId in command.JobTitlesIds)
+        if (jobTitlesResult.IsFailure)
         {
-            var jobTitleNotFound = !jobTitlesFound.Any(jobTitle => jobTitle.Id == jobTitleId);
+            return jobTitlesResult.Errors!.First();
+        }
 
-            if (jobTitleNotFound)
-            {
-                return Error.NotFound;
-            }
-        };
+        var orderAtTheEndOfTheList = await _services.All.FirstOrDefaultAsync() is not null
+            ? _services.All.Max(service => service.Order) + 1
+            : 1;
 
-        newService.Order = _services.All.Max(section => section.Order) + 1;
-        newService.JobTitles = jobTitlesFound;
+        newService.Order = orderAtTheEndOfTheList;
+        newService.JobTitles = jobTitlesResult.Value.ToList();
 
         //TODO: debug why this throws error, expected one row to be added but 0 were added
         //category.Services!.Add(newService);

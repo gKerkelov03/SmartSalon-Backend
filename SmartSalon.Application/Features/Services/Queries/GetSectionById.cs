@@ -18,7 +18,6 @@ public class GetSectionByIdQueryResponse
     public required string Name { get; set; }
     public int Order { get; set; }
     public Id SalonId { get; set; }
-
     public required IEnumerable<Id> CategoriesIds { get; set; }
 }
 
