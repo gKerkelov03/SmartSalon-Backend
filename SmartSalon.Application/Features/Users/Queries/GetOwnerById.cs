@@ -30,7 +30,6 @@ internal class GetOwnerByIdQueryHandler(IEfRepository<Owner> _owners)
     public async Task<Result<GetOwnerByIdQueryResponse>> Handle(GetOwnerByIdQuery query, CancellationToken cancellationToken)
     {
         var queryResponse = await _owners.All
-            .Where(owner => owner.Id == query.OwnerId)
             .Include(owner => owner.Salons)
             .Select(owner => new GetOwnerByIdQueryResponse
             {
@@ -43,7 +42,7 @@ internal class GetOwnerByIdQueryHandler(IEfRepository<Owner> _owners)
                 ProfilePictureUrl = owner.ProfilePictureUrl,
                 SalonsOwned = owner.Salons!.Select(salon => salon.Id)
             })
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(owner => owner.Id == query.OwnerId);
 
         if (queryResponse is null)
         {

@@ -34,7 +34,6 @@ internal class GetServiceByIdQueryHandler(IEfRepository<Service> _services)
     {
         var queryResponse = await _services.All
             .Include(service => service.JobTitles)
-            .Where(service => service.Id == query.ServiceId)
             .Select(service => new GetServiceByIdQueryResponse
             {
                 Id = service.Id,
@@ -48,7 +47,7 @@ internal class GetServiceByIdQueryHandler(IEfRepository<Service> _services)
                 //TODO: think about passing the whole JobTitles instead of just the ids and not only here
                 JobTitles = service.JobTitles!.Select(jobTitle => jobTitle.Id),
             })
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(service => service.Id == query.ServiceId);
 
         if (queryResponse is null)
         {

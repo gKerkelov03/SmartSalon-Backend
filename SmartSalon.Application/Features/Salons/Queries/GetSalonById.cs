@@ -49,7 +49,6 @@ internal class GetSalonByIdQueryHandler(IEfRepository<Salon> _salons)
             .Include(salon => salon.Images)
             .Include(salon => salon.Specialties)
             .Include(salon => salon.JobTitles)
-            .Where(salon => salon.Id == query.SalonId)
             .Select(salon => new GetSalonByIdQueryResponse
             {
                 Id = salon.Id,
@@ -72,7 +71,7 @@ internal class GetSalonByIdQueryHandler(IEfRepository<Salon> _salons)
                 Images = salon.Images!.Select(image => image.Id),
                 JobTitles = salon.JobTitles!.Select(jobTitle => jobTitle.Id)
             })
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(salon => salon.Id == query.SalonId);
 
         if (queryResponse is null)
         {

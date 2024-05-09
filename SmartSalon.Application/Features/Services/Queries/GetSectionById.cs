@@ -28,7 +28,6 @@ internal class GetSectionByIdQueryHandler(IEfRepository<Section> _sections)
     {
         var queryResponse = await _sections.All
             .Include(section => section.Categories)
-            .Where(section => section.Id == query.SectionId)
             .Select(section => new GetSectionByIdQueryResponse
             {
                 Id = section.Id,
@@ -38,7 +37,7 @@ internal class GetSectionByIdQueryHandler(IEfRepository<Section> _sections)
                 PictureUrl = section.PictureUrl,
                 CategoriesIds = section.Categories!.Select(service => service.Id)
             })
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(section => section.Id == query.SectionId);
 
         if (queryResponse is null)
         {

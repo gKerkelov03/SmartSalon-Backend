@@ -30,7 +30,6 @@ internal class GetCategoryByIdQueryHandler(IEfRepository<Category> _categories)
     {
         var queryResponse = await _categories.All
             .Include(category => category.Services)
-            .Where(category => category.Id == query.CategoryId)
             .Select(category => new GetCategoryByIdQueryResponse
             {
                 Id = category.Id,
@@ -40,7 +39,7 @@ internal class GetCategoryByIdQueryHandler(IEfRepository<Category> _categories)
                 SectionId = category.SectionId,
                 ServicesIds = category.Services!.Select(service => service.Id)
             })
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(category => category.Id == query.CategoryId);
 
         if (queryResponse is null)
         {
