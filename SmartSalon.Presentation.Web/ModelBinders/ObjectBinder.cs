@@ -98,6 +98,10 @@ public class ObjectBinder : BaseBinder, IModelBinder, IModelBinderProvider
         {
             convertedValue = ConvertToTimeOnly(bindingContext, propertyName, propertyValue);
         }
+        else if (targetType == typeof(DateOnly))
+        {
+            convertedValue = ConvertToTimeOnly(bindingContext, propertyName, propertyValue);
+        }
         else if (targetType == typeof(IEnumerable<Id>))
         {
             convertedValue = ConvertToListOfIds(bindingContext, propertyName, propertyValue);
@@ -129,6 +133,19 @@ public class ObjectBinder : BaseBinder, IModelBinder, IModelBinderProvider
         var isNotValidTime = !TimeOnly.TryParse(propertyValueAsString, out var timeOnly);
 
         if (isNotValidTime)
+        {
+            bindingContext.ModelState.TryAddModelError(propertyName, "Invalid format");
+        }
+
+        return timeOnly;
+    }
+
+    private static DateOnly ConvertToDateOnly(ModelBindingContext bindingContext, string propertyName, object propertyValue)
+    {
+        var propertyValueAsString = propertyValue.CastTo<string>();
+        var isNotValidDate = !DateOnly.TryParse(propertyValueAsString, out var timeOnly);
+
+        if (isNotValidDate)
         {
             bindingContext.ModelState.TryAddModelError(propertyName, "Invalid format");
         }
