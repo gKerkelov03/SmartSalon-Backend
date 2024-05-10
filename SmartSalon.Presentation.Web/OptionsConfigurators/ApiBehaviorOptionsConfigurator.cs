@@ -21,9 +21,9 @@ public class ApiBehaviorOptionsConfigurator : IConfigureOptions<ApiBehaviorOptio
                 PropertyName = kvp.Key,
                 Errors = kvp.Value!.Errors.Select(error => error.ErrorMessage)
             })
-            .SelectMany(validationViolations =>
-                validationViolations.Errors.Select(error =>
-                    Error.Validation(validationViolations.PropertyName, error)
+            .SelectMany(validationViolation =>
+                validationViolation.Errors.Select(error =>
+                    Error.Validation(validationViolation.PropertyName, error)
                 )
             )
             .Where(validationError => validationError.PropertyName != "request");

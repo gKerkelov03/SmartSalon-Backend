@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Domain.Users;
@@ -13,7 +14,7 @@ public class SearchForUnemployedWorkerQuery(string searchTerm) : IQuery<IEnumera
     public string SearchTerm => searchTerm;
 }
 
-internal class SearchForUnemployedWorkerQueryHandler(IEfRepository<Worker> _workers)
+internal class SearchForUnemployedWorkerQueryHandler(IEfRepository<Worker> _workers, IMapper _mapper)
     : IQueryHandler<SearchForUnemployedWorkerQuery, IEnumerable<GetWorkerByIdQueryResponse>>
 {
     public async Task<Result<IEnumerable<GetWorkerByIdQueryResponse>>> Handle(
@@ -29,20 +30,8 @@ internal class SearchForUnemployedWorkerQueryHandler(IEfRepository<Worker> _work
                 worker.PhoneNumber!.Contains(query.SearchTerm) ||
                 (worker.FirstName.ToUpper() + " " + worker.LastName.ToUpper()).Contains(query.SearchTerm.ToUpper()))
             )
-            .Select(worker => new GetWorkerByIdQueryResponse
-            {
-                //TODO: we repeat this code tiwce (here and in the GetWorkerById) can we reuse it somehow
-                Id = worker.Id,
-                PhoneNumber = worker.PhoneNumber,
-                ProfilePictureUrl = worker.ProfilePictureUrl,
-                LastName = worker.LastName,
-                Email = worker.Email,
-                EmailConfirmed = worker.EmailConfirmed,
-                Nickname = worker.Nickname,
-                FirstName = worker.FirstName,
-                Salons = worker.Salons!.Select(salon => salon.Id),
-                JobTitles = worker.JobTitles!.Select(jobTitle => jobTitle.Id)
-            }).ToListAsync();
+            .ProjectTo<GetWorkerByIdQueryResponse>(_mapper.ConfigurationProvider)
+            .ToListAsync();
 
         if (queryResponse.IsEmpty())
         {

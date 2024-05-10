@@ -12,5 +12,5 @@ public class GetOwnerByIdResponse : IMapFrom<GetOwnerByIdQueryResponse>
     public bool EmailConfirmed { get; set; }
     public required string ProfilePictureUrl { get; set; }
     public required string PhoneNumber { get; set; }
-    public required IEnumerable<Id> SalonsOwned { get; set; }
+    public required IEnumerable<Id> Salons { get; set; }
 }

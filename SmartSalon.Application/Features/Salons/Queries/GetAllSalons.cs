@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Domain.Salons;
 using SmartSalon.Application.Errors;
@@ -10,7 +12,8 @@ public class GetAllSalonsQuery : IQuery<IEnumerable<GetSalonByIdQueryResponse>>
 {
 }
 
-internal class GetAllSalons(IEfRepository<Salon> _salons)
+//TODO make pagable by city and country 
+internal class GetAllSalons(IEfRepository<Salon> _salons, IMapper _mapper)
     : IQueryHandler<GetAllSalonsQuery, IEnumerable<GetSalonByIdQueryResponse>>
 {
     public async Task<Result<IEnumerable<GetSalonByIdQueryResponse>>> Handle(GetAllSalonsQuery query, CancellationToken cancellationToken)
@@ -22,28 +25,8 @@ internal class GetAllSalons(IEfRepository<Salon> _salons)
             .Include(salon => salon.Sections)
             .Include(salon => salon.Images)
             .Include(salon => salon.Specialties)
-            .Select(salon => new GetSalonByIdQueryResponse
-            {
-                Id = salon.Id,
-                Name = salon.Name,
-                Description = salon.Description,
-                Location = salon.Location,
-                ProfilePictureUrl = salon.ProfilePictureUrl,
-                TimePenalty = salon.TimePenalty,
-                BookingsInAdvance = salon.BookingsInAdvance,
-                SubscriptionsEnabled = salon.SubscriptionsEnabled,
-                WorkersCanMoveBookings = salon.WorkersCanMoveBookings,
-                WorkersCanSetNonWorkingPeriods = salon.WorkersCanSetNonWorkingPeriods,
-                WorkingTimeId = salon.WorkingTimeId,
-                MainCurrencyId = salon.MainCurrencyId,
-                AcceptedCurrencies = salon.AcceptedCurrencies!.Select(currency => currency.Id),
-                Owners = salon.Owners!.Select(owners => owners.Id),
-                Workers = salon.Workers!.Select(workers => workers.Id),
-                Specialties = salon.Specialties!.Select(specialty => specialty.Id),
-                Sections = salon.Sections!.Select(section => section.Id),
-                Images = salon.Images!.Select(image => image.Id),
-                JobTitles = salon.JobTitles!.Select(jobTitle => jobTitle.Id)
-            }).ToListAsync();
+            .ProjectTo<GetSalonByIdQueryResponse>(_mapper.ConfigurationProvider)
+            .ToListAsync();
 
         if (queryResponse is null)
         {

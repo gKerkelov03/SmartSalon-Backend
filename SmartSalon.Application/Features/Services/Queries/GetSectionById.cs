@@ -47,18 +47,18 @@ internal class GetSectionByIdQueryHandler(IEfRepository<Section> _sections, IMap
 {
     public async Task<Result<GetSectionByIdQueryResponse>> Handle(GetSectionByIdQuery query, CancellationToken cancellationToken)
     {
-        var section = await _sections.All
+        var queryResponse = await _sections.All
             .Include(section => section.Categories)
             !.ThenInclude(category => category.Services)
             !.ThenInclude(service => service.JobTitles)
             .ProjectTo<GetSectionByIdQueryResponse>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(section => section.Id == query.SectionId);
 
-        if (section is null)
+        if (queryResponse is null)
         {
             return Error.NotFound;
         }
 
-        return section;
+        return queryResponse;
     }
 }

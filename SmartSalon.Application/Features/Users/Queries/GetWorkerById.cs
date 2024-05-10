@@ -1,6 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.Mapping;
+using SmartSalon.Application.Domain.Salons;
 using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Errors;
 using SmartSalon.Application.ResultObject;
@@ -12,7 +15,7 @@ public class GetWorkerByIdQuery(Id workerId) : IQuery<GetWorkerByIdQueryResponse
     public Id WorkerId => workerId;
 }
 
-public class GetWorkerByIdQueryResponse : IMapFrom<Worker>
+public class GetWorkerByIdQueryResponse : IHaveCustomMapping
 {
     public Id Id { get; set; }
     public required string PhoneNumber { get; set; }
@@ -25,9 +28,21 @@ public class GetWorkerByIdQueryResponse : IMapFrom<Worker>
     public Id? SalonId { get; set; }
     public required IEnumerable<Id> JobTitles { get; set; }
     public required IEnumerable<Id> Salons { get; set; }
+
+    public void CreateMapping(IProfileExpression config)
+        => config
+            .CreateMap<Worker, GetWorkerByIdQueryResponse>()
+            .ForMember(
+                destination => destination.Salons,
+                options => options.MapFrom(source => source.Salons!.Select(salon => salon.Id))
+            )
+            .ForMember(
+                destination => destination.JobTitles,
+                options => options.MapFrom(source => source.JobTitles!.Select(jobTitle => jobTitle.Id))
+            );
 }
 
-internal class GetWorkerByIdQueryHandler(IEfRepository<Worker> _workers)
+internal class GetWorkerByIdQueryHandler(IEfRepository<Worker> _workers, IMapper _mapper)
     : IQueryHandler<GetWorkerByIdQuery, GetWorkerByIdQueryResponse>
 {
     public async Task<Result<GetWorkerByIdQueryResponse>> Handle(GetWorkerByIdQuery query, CancellationToken cancellationToken)
@@ -35,21 +50,8 @@ internal class GetWorkerByIdQueryHandler(IEfRepository<Worker> _workers)
         var queryResponse = await _workers.All
             .Include(worker => worker.JobTitles)
             .Include(worker => worker.Salons)
-            .Where(worker => worker.Id == query.WorkerId)
-            .Select(worker => new GetWorkerByIdQueryResponse
-            {
-                Id = worker.Id,
-                PhoneNumber = worker.PhoneNumber,
-                ProfilePictureUrl = worker.ProfilePictureUrl,
-                LastName = worker.LastName,
-                Email = worker.Email,
-                EmailConfirmed = worker.EmailConfirmed,
-                Nickname = worker.Nickname,
-                FirstName = worker.FirstName,
-                Salons = worker.Salons!.Select(salon => salon.Id),
-                JobTitles = worker.JobTitles!.Select(jobTitle => jobTitle.Id)
-            })
-            .FirstOrDefaultAsync();
+            .ProjectTo<GetWorkerByIdQueryResponse>(_mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync(worker => worker.Id == query.WorkerId);
 
         if (queryResponse is null)
         {

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.Mapping;
@@ -33,7 +34,6 @@ public class GetBookingByIdQueryResponse : IMapFrom<Booking>
     public Id WorkerId { get; set; }
     public Id CustomerId { get; set; }
 }
-//TODO: rewrite the select statements with project to
 internal class GetBookingByIdQueryHandler(IEfRepository<Booking> _bookings, IMapper _mapper)
     : IQueryHandler<GetBookingByIdQuery, GetBookingByIdQueryResponse>
 {
@@ -44,26 +44,7 @@ internal class GetBookingByIdQueryHandler(IEfRepository<Booking> _bookings, IMap
             .Include(booking => booking.Salon)
             .Include(booking => booking.Worker)
             .Include(booking => booking.Customer)
-            .Select(booking => new GetBookingByIdQueryResponse
-            {
-                Id = booking.Id,
-                Done = booking.Done,
-                Note = booking.Note,
-                Date = booking.Date,
-                StartTime = booking.StartTime,
-                EndTime = booking.EndTime,
-
-                ServiceName = booking.Service!.Name,
-                CustomerName = booking.Customer!.FirstName,
-                WorkerNickname = booking.Worker!.Nickname,
-                SalonName = booking.Salon!.Name,
-                SalonProfilePictureUrl = booking.Salon!.ProfilePictureUrl,
-
-                ServiceId = booking.ServiceId,
-                SalonId = booking.SalonId,
-                WorkerId = booking.WorkerId,
-                CustomerId = booking.WorkerId,
-            })
+            .ProjectTo<GetBookingByIdQueryResponse>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(booking => booking.Id == query.BookingId);
 
         if (queryResponse is null)

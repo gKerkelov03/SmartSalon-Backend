@@ -66,7 +66,7 @@ public static partial class ServiceCollectionExtensions
                         .ForEach(map => options.CreateMap(map.Source, map.Destination));
 
                     GetCustomMappingsFrom(allTypesFromTheAssemblies)
-                        .ForEach(map => map.CreateMappings(options));
+                        .ForEach(map => map.CreateMapping(options));
                 }
             );
 
@@ -98,13 +98,13 @@ public static partial class ServiceCollectionExtensions
                         Destination: pair.Interface.GetTypeInfo().GetGenericArguments()[0])
                     );
 
-            static IEnumerable<IHaveCustomMappings> GetCustomMappingsFrom(IEnumerable<Type> types)
+            static IEnumerable<IHaveCustomMapping> GetCustomMappingsFrom(IEnumerable<Type> types)
                 => GetPairs(types)
                     .Where(pair =>
-                        typeof(IHaveCustomMappings).IsAssignableFrom(pair.Type) &&
+                        typeof(IHaveCustomMapping).IsAssignableFrom(pair.Type) &&
                         pair.Type.IsNotAbsctractOrInterface()
                     )
-                    .Select(typeAndInterfacePair => Activator.CreateInstance(typeAndInterfacePair.Type)!.CastTo<IHaveCustomMappings>());
+                    .Select(typeAndInterfacePair => Activator.CreateInstance(typeAndInterfacePair.Type)!.CastTo<IHaveCustomMapping>());
         });
 
     public static IServiceCollection RegisterDbContext(this IServiceCollection services, IConfiguration configuration)

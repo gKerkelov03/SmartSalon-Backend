@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using SmartSalon.Application.Abstractions;
+using SmartSalon.Application.Abstractions.Mapping;
 using SmartSalon.Application.Domain.Salons;
 using SmartSalon.Application.Errors;
 using SmartSalon.Application.ResultObject;
@@ -12,7 +14,7 @@ public class GetSalonByIdQuery(Id id) : IQuery<GetSalonByIdQueryResponse>
     public Id SalonId => id;
 }
 
-public class GetSalonByIdQueryResponse
+public class GetSalonByIdQueryResponse : IHaveCustomMapping
 {
     public Id Id { get; set; }
     public required string Name { get; set; }
@@ -34,9 +36,41 @@ public class GetSalonByIdQueryResponse
     public required IEnumerable<Id> Sections { get; set; }
     public required IEnumerable<Id> Images { get; set; }
     public required IEnumerable<Id> JobTitles { get; set; }
+
+    public void CreateMapping(IProfileExpression config)
+        => config
+            .CreateMap<Salon, GetSalonByIdQueryResponse>()
+            .ForMember(
+                destination => destination.AcceptedCurrencies,
+                options => options.MapFrom(source => source.AcceptedCurrencies!.Select(currency => currency.Id))
+            )
+            .ForMember(
+                destination => destination.Owners,
+                options => options.MapFrom(source => source.Owners!.Select(owners => owners.Id))
+            )
+            .ForMember(
+                destination => destination.Workers,
+                options => options.MapFrom(source => source.Workers!.Select(workers => workers.Id))
+            )
+            .ForMember(
+                destination => destination.Specialties,
+                options => options.MapFrom(source => source.Specialties!.Select(specialty => specialty.Id))
+            )
+            .ForMember(
+                destination => destination.Sections,
+                options => options.MapFrom(source => source.Sections!.Select(section => section.Id))
+            )
+            .ForMember(
+                destination => destination.Images,
+                options => options.MapFrom(source => source.Images!.Select(image => image.Id))
+            )
+            .ForMember(
+                destination => destination.JobTitles,
+                options => options.MapFrom(source => source.JobTitles!.Select(jobTitle => jobTitle.Id))
+            );
 }
 
-internal class GetSalonByIdQueryHandler(IEfRepository<Salon> _salons)
+internal class GetSalonByIdQueryHandler(IEfRepository<Salon> _salons, IMapper _mapper)
     : IQueryHandler<GetSalonByIdQuery, GetSalonByIdQueryResponse>
 {
     public async Task<Result<GetSalonByIdQueryResponse>> Handle(GetSalonByIdQuery query, CancellationToken cancellationToken)
@@ -49,28 +83,7 @@ internal class GetSalonByIdQueryHandler(IEfRepository<Salon> _salons)
             .Include(salon => salon.Images)
             .Include(salon => salon.Specialties)
             .Include(salon => salon.JobTitles)
-            .Select(salon => new GetSalonByIdQueryResponse
-            {
-                Id = salon.Id,
-                Name = salon.Name,
-                Description = salon.Description,
-                Location = salon.Location,
-                ProfilePictureUrl = salon.ProfilePictureUrl,
-                TimePenalty = salon.TimePenalty,
-                BookingsInAdvance = salon.BookingsInAdvance,
-                SubscriptionsEnabled = salon.SubscriptionsEnabled,
-                WorkersCanMoveBookings = salon.WorkersCanMoveBookings,
-                WorkersCanSetNonWorkingPeriods = salon.WorkersCanSetNonWorkingPeriods,
-                WorkingTimeId = salon.WorkingTimeId,
-                MainCurrencyId = salon.MainCurrencyId,
-                AcceptedCurrencies = salon.AcceptedCurrencies!.Select(currency => currency.Id),
-                Owners = salon.Owners!.Select(owners => owners.Id),
-                Workers = salon.Workers!.Select(workers => workers.Id),
-                Specialties = salon.Specialties!.Select(specialty => specialty.Id),
-                Sections = salon.Sections!.Select(section => section.Id),
-                Images = salon.Images!.Select(image => image.Id),
-                JobTitles = salon.JobTitles!.Select(jobTitle => jobTitle.Id)
-            })
+            .ProjectTo<GetSalonByIdQueryResponse>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(salon => salon.Id == query.SalonId);
 
         if (queryResponse is null)
