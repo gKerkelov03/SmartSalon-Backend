@@ -22,21 +22,7 @@ public class ServicesController(ISender _mediator, IMapper _mapper) : V1ApiContr
         var command = _mapper.Map<CreateServiceCommand>(request);
         var result = await _mediator.Send(command);
 
-        return ProblemDetailsOr(result => CreatedAndLocatedAt(
-            nameof(GetServiceById), result.Value.CreatedServiceId),
-            result
-        );
-    }
-
-    [HttpGet(IdRoute)]
-    [SuccessResponse(Status200OK)]
-    [FailureResponse(Status404NotFound)]
-    public async Task<IActionResult> GetServiceById(Id currencyId)
-    {
-        var command = new GetServiceByIdQuery(currencyId);
-        var result = await _mediator.Send(command);
-
-        return ProblemDetailsOr(result => Ok(result.Value), result);
+        return ProblemDetailsOr(result => Created(result.Value.CreatedServiceId), result);
     }
 
     [HttpPatch(IdRoute)]

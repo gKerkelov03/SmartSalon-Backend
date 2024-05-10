@@ -4,11 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartCategory.Application.Features.Services.Commands;
 using SmartSalon.Application.Features.Services.Commands;
-using SmartSalon.Application.Features.Services.Queries;
 using SmartSalon.Presentation.Web.Attributes;
 using SmartSalon.Presentation.Web.Controllers;
 using SmartSalon.Presentation.Web.Features.Services.Requests;
-using SmartSalon.Presentation.Web.Features.Services.Responses;
 
 namespace SmartSalon.Presentation.Web.Features.Services.Controllers;
 
@@ -23,21 +21,7 @@ public class CategoriesController(ISender _mediator, IMapper _mapper) : V1ApiCon
         var result = await _mediator.Send(command);
 
         return ProblemDetailsOr(result =>
-            CreatedAndLocatedAt(nameof(GetCategoryById), result.Value.CreatedCategoryId),
-            result
-        );
-    }
-
-    [HttpGet(IdRoute)]
-    [SuccessResponse(Status200OK)]
-    [FailureResponse(Status404NotFound)]
-    public async Task<IActionResult> GetCategoryById(Id categoryId)
-    {
-        var command = new GetCategoryByIdQuery(categoryId);
-        var result = await _mediator.Send(command);
-
-        return ProblemDetailsOr(result =>
-            Ok(_mapper.Map<GetCategoryByIdResponse>(result.Value)),
+            Created(result.Value.CreatedCategoryId),
             result
         );
     }

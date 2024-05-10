@@ -33,7 +33,7 @@ public class GetBookingByIdQueryResponse : IMapFrom<Booking>
     public Id WorkerId { get; set; }
     public Id CustomerId { get; set; }
 }
-
+//TODO: rewrite the select statements with project to
 internal class GetBookingByIdQueryHandler(IEfRepository<Booking> _bookings, IMapper _mapper)
     : IQueryHandler<GetBookingByIdQuery, GetBookingByIdQueryResponse>
 {
