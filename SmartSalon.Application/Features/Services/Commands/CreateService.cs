@@ -61,15 +61,12 @@ internal class CreateServiceCommandHandler(
             return jobTitlesResult.Errors!.First();
         }
 
-        var orderAtTheEndOfTheList = await _services.All.FirstOrDefaultAsync() is not null
-            ? _services.All.Max(service => service.Order) + 1
+        var orderAtTheEndOfTheList = category.Services!.Any()
+            ? category.Services!.Max(service => service.Order) + 1
             : 1;
 
         newService.Order = orderAtTheEndOfTheList;
         newService.JobTitles = jobTitlesResult.Value.ToList();
-
-        //TODO: debug why this throws error, expected one row to be added but 0 were added
-        //category.Services!.Add(newService);
 
         await _services.AddAsync(newService);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

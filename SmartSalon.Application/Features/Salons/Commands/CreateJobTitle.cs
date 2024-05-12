@@ -48,9 +48,6 @@ internal class CreateJobTitleCommandHandler(
             return Error.Conflict;
         }
 
-        //TODO: debug why this throws error, expected one row to be added but 0 were added
-        // salon.JobTitles!.Add(newJobTitle);
-
         await _jobTitles.AddAsync(newJobTitle);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 

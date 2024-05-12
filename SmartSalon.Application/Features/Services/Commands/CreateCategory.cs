@@ -57,14 +57,11 @@ internal class CreateCategoryCommandHandler(
             return Error.Conflict;
         }
 
-        var orderAtTheEndOfTheList = await _categories.All.FirstOrDefaultAsync() is not null
-            ? _categories.All.Max(category => category.Order) + 1
+        var orderAtTheEndOfTheList = section.Categories!.Any()
+            ? section.Categories!.Max(category => category.Order) + 1
             : 1;
 
         newCategory.Order = orderAtTheEndOfTheList;
-
-        //TODO: debug why this throws error, expected one row to be added but 0 were added
-        //salon.Categories!.Add(newCategory);
 
         await _categories.AddAsync(newCategory);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

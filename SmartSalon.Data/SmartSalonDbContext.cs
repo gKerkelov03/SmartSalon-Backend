@@ -20,7 +20,8 @@ public class SmartSalonDbContext : IdentityDbContext<User, Role, Id>
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer("Server=.,1433;Database=SmartSalon;TrustServerCertificate=True;User Id=sa;Password=P@ssw0rd123");
+        base.OnConfiguring(optionsBuilder);
+        optionsBuilder.UseSqlServer("Server=.;Database=SmartSalon;TrustServerCertificate=True;Trusted_Connection=True;Integrated Security=True;");
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -40,16 +41,16 @@ public class SmartSalonDbContext : IdentityDbContext<User, Role, Id>
     }
 
     private static void SetDeleteBehaviorToRestrict(IEnumerable<IMutableEntityType> entityTypes)
-        => entityTypes.SelectMany(entity =>
-                entity.GetForeignKeys().Where(foreignKey => foreignKey.DeleteBehavior is not DeleteBehavior.Restrict)
-            )
+        => entityTypes
+            .SelectMany(entity => entity.GetForeignKeys())
             .ForEach(foreignKey => foreignKey.DeleteBehavior = DeleteBehavior.Restrict);
-
+   
     private static void DontShowIfDeleted<TEntity>(ModelBuilder builder) where TEntity : class, IDeletableEntity
         => builder.Entity<TEntity>().HasQueryFilter(entity => !entity.IsDeleted);
 
     private static void SetupDeletedQueryFilter(ModelBuilder builder, IEnumerable<IMutableEntityType> entities)
     {
+
         var dontShowIfDeleted = typeof(SmartSalonDbContext).GetMethod(
             nameof(DontShowIfDeleted),
             BindingFlags.NonPublic | BindingFlags.Static
@@ -62,8 +63,7 @@ public class SmartSalonDbContext : IdentityDbContext<User, Role, Id>
                 entity.ClrType.BaseType != typeof(User)
             )
             .ForEach(deletableEntityType =>
-                //TODO: debug why dontShowIfDeleted is null sometimes
-                dontShowIfDeleted?.MakeGenericMethod(deletableEntityType.ClrType).Invoke(null, [builder])
+                dontShowIfDeleted!.MakeGenericMethod(deletableEntityType.ClrType).Invoke(null, [builder])
             );
     }
 

@@ -50,14 +50,11 @@ internal class CreateSectionCommandHandler(
             return Error.Conflict;
         }
 
-        var orderAtTheEndOfTheList = await _sections.All.FirstOrDefaultAsync() is not null
-            ? _sections.All.Max(section => section.Order) + 1
+        var orderAtTheEndOfTheList = salon.Sections!.Any()
+            ? salon.Sections!.Max(section => section.Order) + 1
             : 1;
 
         newSection.Order = orderAtTheEndOfTheList;
-
-        //TODO: debug why this throws error, expected one row to be added but 0 were added
-        //salon.Sectionss!.Add(newSection);
 
         await _sections.AddAsync(newSection);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

@@ -22,17 +22,17 @@ public class GetSectionByIdQueryResponse : IMapFrom<Section>
     public required string Name { get; set; }
     public int Order { get; set; }
     public Id SalonId { get; set; }
-    public required IEnumerable<CategoryResponse> Categories { get; set; }
+    public required IEnumerable<CategoryQueryResponse> Categories { get; set; }
 }
 
-public class CategoryResponse : IMapFrom<Category>
+public class CategoryQueryResponse : IMapFrom<Category>
 {
     public required string Name { get; set; }
     public required int Order { get; set; }
-    public required IEnumerable<ServiceResponse> Services { get; set; }
+    public required IEnumerable<ServiceQueryResponse> Services { get; set; }
 }
 
-public class ServiceResponse : IMapFrom<Service>
+public class ServiceQueryResponse : IMapFrom<Service>
 {
     public required string Name { get; set; }
     public required string Description { get; set; }

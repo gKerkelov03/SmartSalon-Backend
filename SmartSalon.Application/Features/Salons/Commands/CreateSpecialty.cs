@@ -48,9 +48,6 @@ internal class CreateSpecialtyCommandHandler(
             return Error.Conflict;
         }
 
-        //TODO: debug why this throws error, expected one row to be added but 0 were added
-        //salon.Specialties!.Create(newSpecialty);
-
         await _specialties.AddAsync(newSpecialty);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
