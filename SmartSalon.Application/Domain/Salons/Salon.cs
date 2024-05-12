@@ -8,7 +8,8 @@ public class Salon : DeletableEntity
 {
     public required string Name { get; set; }
     public required string Description { get; set; }
-    public required string Location { get; set; }
+    public required string GoogleMapsLocation { get; set; }
+    public required string Country { get; set; }
     public string? ProfilePictureUrl { get; set; }
     public int TimePenalty { get; set; }
     public int BookingsInAdvance { get; set; }

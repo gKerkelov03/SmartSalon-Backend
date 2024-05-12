@@ -10,6 +10,6 @@ internal class CreateSalonCommandValidator : AbstractValidator<CreateSalonComman
     public CreateSalonCommandValidator()
     {
         RuleFor(command => command.Name).MaximumLength(MaxNameLength);
-        RuleFor(command => command.Location).MaximumLength(MaxLocationLength);
+        RuleFor(command => command.Location).MaximumLength(MaxGoogleMapsLocationLength);
     }
 }

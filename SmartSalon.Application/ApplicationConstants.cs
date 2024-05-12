@@ -49,7 +49,7 @@ public static class ApplicationConstants
         {
             public const int MaxNameLength = 50;
             public const int MaxDescriptionLength = 50;
-            public const int MaxLocationLength = 50;
+            public const int MaxGoogleMapsLocationLength = 50;
             public const int MaxTimePenalty = 20;
             public const int MaxBookingsInAdvance = 20;
         }

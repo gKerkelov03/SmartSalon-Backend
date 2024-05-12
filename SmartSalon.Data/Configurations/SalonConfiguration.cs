@@ -35,8 +35,8 @@ public class SalonConfiguration : IEntityTypeConfiguration<Salon>
             .HasMaxLength(MaxDescriptionLength);
 
         builder
-            .Property(salon => salon.Location)
-            .HasMaxLength(MaxLocationLength);
+            .Property(salon => salon.GoogleMapsLocation)
+            .HasMaxLength(MaxGoogleMapsLocationLength);
 
         builder
             .Property(salon => salon.TimePenalty)

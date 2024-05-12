@@ -37,7 +37,8 @@ internal class CreateSalonCommandHandler(
         WorkersCanMoveBookings = true,
         WorkersCanSetNonWorkingPeriods = true,
         WorkersCanDeleteBookings = true,
-        Description = ""
+        Description = "",
+        Country = "BULGARIA"
     };
 
     private static WorkingTime CreateDefaultWorkingTime()

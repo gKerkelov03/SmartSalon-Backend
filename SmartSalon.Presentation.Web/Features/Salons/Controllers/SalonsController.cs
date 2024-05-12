@@ -47,13 +47,13 @@ public class SalonsController(ISender _mediator, IMapper _mapper) : V1ApiControl
     [HttpGet]
     [SuccessResponse<GetSalonByIdResponse>(Status200OK)]
     [FailureResponse(Status404NotFound)]
-    public async Task<IActionResult> GetAllSalons()
+    public async Task<IActionResult> GetAllSalonsInCountry(string country)
     {
-        var query = new GetAllSalonsQuery();
+        var query = new GetAllSalonsInCountryQuery(country);
         var result = await _mediator.Send(query);
 
         return ProblemDetailsOr((result) =>
-            Ok((result.Value.ToListOf<GetSalonByIdResponse>(_mapper))),
+            Ok(result.Value.ToListOf<GetSalonByIdResponse>(_mapper)),
             result
         );
     }
