@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SmartSalon.Application.Options;
 
-namespace SmartSalon.Application.Extensions;
+namespace SmartSalon.Integrations.Extensions;
 
 public static class ServiceCollectionExtensions
 {

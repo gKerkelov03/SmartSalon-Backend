@@ -1,15 +1,19 @@
 using SmartSalon.Presentation.Web;
 using SmartSalon.Data;
+using SmartSalon.Data.Extensions;
+using SmartSalon.Integrations.Extensions;
 using SmartSalon.Presentation.Web.Extensions;
 using SmartSalon.Application.Extensions;
 using Serilog;
-using SmartSalon.Application.ResultObject;
 using SmartSalon.Integrations.Emails;
+using System.Reflection;
+using SmartSalon.Application;
 
 var dataLayer = typeof(SmartSalonDbContext).Assembly;
-var applicationLayer = typeof(IResult).Assembly;
+var applicationLayer = typeof(ApplicationConstants).Assembly;
 var presentationLayer = typeof(WebConstants).Assembly;
 var integrationsLayer = typeof(EmailsManager).Assembly;
+var layers = new Assembly[] { dataLayer, applicationLayer, integrationsLayer, presentationLayer };
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,16 +23,13 @@ builder
 
 builder
     .Services
-    .AddApplication(builder.Configuration)
+    .AddApplication(builder.Configuration, layers)
+    .AddData(builder.Configuration)
     .AddIntegrations(builder.Configuration)
-    .ConfigureAllOptionsClasses(builder.Configuration, applicationLayer)
-    .CallAddControllers()
+    .ConfigureAllOptionsClasses(builder.Configuration, layers)
 
-    .RegisterConventionalServices(presentationLayer, applicationLayer, dataLayer, integrationsLayer)
-    .RegisterUnconventionalServices()
+    .RegisterServices(layers)
     .RegisterDbContext(builder.Configuration)
-    .RegisterIdentityServices()
-    .RegisterMapper(applicationLayer, dataLayer, presentationLayer)
 
     .AddExceptionHandler<GlobalExceptionHandler>()
     .AddAuth(builder.Configuration)
@@ -36,8 +37,8 @@ builder
     .AddHttpClient()
     .AddCors()
     .AddSwaggerGen()
-    .AddApiVersioning()
-    .AddApiExplorer();
+    .AddVersioning()
+    .AddControllers();
 
 var app = builder.Build();
 

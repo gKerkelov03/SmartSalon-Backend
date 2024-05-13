@@ -2,9 +2,9 @@
 using Microsoft.Extensions.Options;
 using SmartSalon.Application.Abstractions.Lifetime;
 
-namespace SmartSalon.Presentation.Web.Options;
+namespace SmartSalon.Presentation.Web.OptionsConfigurators;
 
-public class MvcOptionsConfigurator : IConfigureOptions<MvcOptions>, ITransientLifetime
+public class ModelBindersConfigurator : IConfigureOptions<MvcOptions>, ITransientLifetime
 {
     public void Configure(MvcOptions options)
     {

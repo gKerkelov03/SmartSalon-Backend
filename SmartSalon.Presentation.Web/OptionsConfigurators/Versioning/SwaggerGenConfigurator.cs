@@ -5,13 +5,13 @@ using SmartSalon.Application.Abstractions.Lifetime;
 using SmartSalon.Application.Extensions;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace SmartSalon.Presentation.Web.Options.Versioning;
+namespace SmartSalon.Presentation.Web.OptionsConfigurators.Versioning;
 
-public class SwaggerGenOptionsConfigurator : IConfigureOptions<SwaggerGenOptions>, ITransientLifetime
+public class SwaggerGenConfigurator : IConfigureOptions<SwaggerGenOptions>, ITransientLifetime
 {
     private readonly IApiVersionDescriptionProvider _apiVersionsInfo;
 
-    public SwaggerGenOptionsConfigurator(IApiVersionDescriptionProvider provider)
+    public SwaggerGenConfigurator(IApiVersionDescriptionProvider provider)
         => _apiVersionsInfo = provider;
 
     public void Configure(SwaggerGenOptions options)

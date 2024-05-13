@@ -1,14 +1,7 @@
-using TypeAndInterfacePair = (System.Type Type, System.Type Interface);
-using SourceAndDestinationPair = (System.Type Source, System.Type Destination);
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using SmartSalon.Application.Abstractions.Lifetime;
-using SmartSalon.Application.Abstractions.Mapping;
-using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Extensions;
-using SmartSalon.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using SmartSalon.Application.Options;
@@ -50,78 +43,6 @@ public static partial class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection RegisterMapper(this IServiceCollection services, params Assembly[] assemblies)
-        => services.AddAutoMapper(expression =>
-        {
-            var allTypesFromTheAssemblies = assemblies.SelectMany(assembly => assembly.GetExportedTypes());
-
-            expression.CreateProfile(
-                "ReflectionProfile",
-                options =>
-                {
-                    GetFromMapsFrom(allTypesFromTheAssemblies)
-                        .ForEach(map => options.CreateMap(map.Source, map.Destination));
-
-                    GetToMapsFrom(allTypesFromTheAssemblies)
-                        .ForEach(map => options.CreateMap(map.Source, map.Destination));
-
-                    GetCustomMappingsFrom(allTypesFromTheAssemblies)
-                        .ForEach(map => map.CreateMapping(options));
-                }
-            );
-
-            static IEnumerable<TypeAndInterfacePair> GetPairs(IEnumerable<Type> types)
-                => types.SelectMany(
-                    type => type.GetTypeInfo().GetInterfaces(),
-                    (type, @interface) => (Type: type, Interface: @interface)
-                );
-
-            static IEnumerable<TypeAndInterfacePair> GetMaps(IEnumerable<Type> types, Func<TypeAndInterfacePair, bool> predicate)
-                => GetPairs(types)
-                    .Where(pair =>
-                        pair.Interface.GetTypeInfo().IsGenericType &&
-                        pair.Type.IsNotAbsctractOrInterface() &&
-                        predicate(pair)
-                    );
-
-            static IEnumerable<SourceAndDestinationPair> GetFromMapsFrom(IEnumerable<Type> types)
-                => GetMaps(types, pair => pair.Interface.GetGenericTypeDefinition() == typeof(IMapFrom<>))
-                    .Select(pair => (
-                        Source: pair.Interface.GetTypeInfo().GetGenericArguments()[0],
-                        Destination: pair.Type
-                    ));
-
-            static IEnumerable<SourceAndDestinationPair> GetToMapsFrom(IEnumerable<Type> types)
-                => GetMaps(types, pair => pair.Interface.GetGenericTypeDefinition() == typeof(IMapTo<>))
-                    .Select(pair => (
-                        Source: pair.Type,
-                        Destination: pair.Interface.GetTypeInfo().GetGenericArguments()[0])
-                    );
-
-            static IEnumerable<IHaveCustomMapping> GetCustomMappingsFrom(IEnumerable<Type> types)
-                => GetPairs(types)
-                    .Where(pair =>
-                        typeof(IHaveCustomMapping).IsAssignableFrom(pair.Type) &&
-                        pair.Type.IsNotAbsctractOrInterface()
-                    )
-                    .Select(typeAndInterfacePair => Activator.CreateInstance(typeAndInterfacePair.Type)!.CastTo<IHaveCustomMapping>());
-        });
-
-    public static IServiceCollection RegisterDbContext(this IServiceCollection services, IConfiguration configuration)
-        => services.AddDbContext<SmartSalonDbContext>(
-            options => options.UseSqlServer(configuration.GetConnectionString("Sql")));
-
-    public static IServiceCollection RegisterIdentityServices(this IServiceCollection services)
-    {
-        services
-            .AddIdentityCore<User>()
-            .AddRoles<Role>()
-            .AddEntityFrameworkStores<SmartSalonDbContext>()
-            .AddDefaultTokenProviders();
-
-        return services;
-    }
-
     public static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration config)
     {
         services
@@ -147,14 +68,18 @@ public static partial class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection CallAddControllers(this IServiceCollection services)
+    public static IServiceCollection AddVersioning(this IServiceCollection services)
     {
-        services.AddControllers();
+        services
+            .AddApiVersioning()
+            .AddApiExplorer();
+
         return services;
     }
 
-    public static IServiceCollection RegisterConventionalServices(this IServiceCollection services, params Assembly[] assemblies)
-        => services.Scan(types =>
+    public static IServiceCollection RegisterServices(this IServiceCollection services, params Assembly[] assemblies)
+    {
+        services.Scan(types =>
         {
             var allTypes = types.FromAssemblies(assemblies);
 
@@ -174,6 +99,6 @@ public static partial class ServiceCollectionExtensions
                 .WithTransientLifetime();
         });
 
-    public static IServiceCollection RegisterUnconventionalServices(this IServiceCollection services)
-        => services.AddSingleton<JwtSecurityTokenHandler>();
+        return services.AddSingleton<JwtSecurityTokenHandler>();
+    }
 }

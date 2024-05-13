@@ -21,7 +21,7 @@ public class SmartSalonDbContext : IdentityDbContext<User, Role, Id>
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(optionsBuilder);
-        optionsBuilder.UseSqlServer("Server=.;Database=SmartSalon;TrustServerCertificate=True;Trusted_Connection=True;Integrated Security=True;");
+        optionsBuilder.UseSqlServer("Server=.,1433;Database=SmartSalon;TrustServerCertificate=True;User Id=sa;Password=P@ssw0rd123");
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -44,7 +44,7 @@ public class SmartSalonDbContext : IdentityDbContext<User, Role, Id>
         => entityTypes
             .SelectMany(entity => entity.GetForeignKeys())
             .ForEach(foreignKey => foreignKey.DeleteBehavior = DeleteBehavior.Restrict);
-   
+
     private static void DontShowIfDeleted<TEntity>(ModelBuilder builder) where TEntity : class, IDeletableEntity
         => builder.Entity<TEntity>().HasQueryFilter(entity => !entity.IsDeleted);
 

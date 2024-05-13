@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Options;
 using SmartSalon.Application.Abstractions.Lifetime;
 
-namespace SmartSalon.Presentation.Web.Options;
+namespace SmartSalon.Presentation.Web.OptionsConfigurators;
 
 public class CorsOptionsConfigurator : IConfigureOptions<CorsOptions>, ITransientLifetime
 {

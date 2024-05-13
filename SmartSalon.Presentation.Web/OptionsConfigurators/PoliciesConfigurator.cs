@@ -4,9 +4,9 @@ using SmartSalon.Application.Abstractions.Lifetime;
 using SmartSalon.Application.Extensions;
 using SmartSalon.Presentation.Web.Controllers;
 
-namespace SmartSalon.Presentation.Web.Options.Auth;
+namespace SmartSalon.Presentation.Web.OptionsConfigurators;
 
-public class AuthorizationOptionsConfigurator : IConfigureOptions<AuthorizationOptions>, ITransientLifetime
+public class PoliciesConfigurator : IConfigureOptions<AuthorizationOptions>, ITransientLifetime
 {
     public void Configure(AuthorizationOptions options)
         => typeof(ApiController)
