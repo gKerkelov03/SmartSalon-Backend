@@ -22,7 +22,7 @@ public class UpdateJobTitlesOfWorkerCommandResponse : ICommand
 }
 
 internal class UpdateJobTitlesOfWorkerCommandHandler(
-    IEfRepository<JobTitle> _jobTitles,
+    IJobTitlesRepository _jobTitles,
     IEfRepository<Worker> _workers,
     IUnitOfWork _unitOfWork
 ) : ICommandHandler<UpdateJobTitlesOfWorkerCommand>
@@ -38,10 +38,14 @@ internal class UpdateJobTitlesOfWorkerCommandHandler(
             return Error.NotFound;
         }
 
-        worker.JobTitles = _jobTitles.All
-            .Where(jobTitle => jobTitle.SalonId == command.SalonId && command.JobTitlesIds.Contains(jobTitle.Id))
-            .ToList();
+        var jobTitlesResult = _jobTitles.GetJobTitlesInSalon(command.SalonId, command.JobTitlesIds);
 
+        if (jobTitlesResult.IsFailure)
+        {
+            return jobTitlesResult.Errors!.First();
+        }
+
+        worker.JobTitles = jobTitlesResult.Value.ToList();
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

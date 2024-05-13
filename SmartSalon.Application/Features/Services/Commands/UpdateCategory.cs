@@ -30,7 +30,6 @@ internal class UpdateCategoryCommandHandler(IEfRepository<Category> _categories,
             return Error.NotFound;
         }
 
-        //TODO: check all update handlers if they check for the conflict case
         var sectionAlreadyContainsCategory = category.Section!.Categories!.Any(category => category.Name == command.Name);
 
         if (sectionAlreadyContainsCategory)

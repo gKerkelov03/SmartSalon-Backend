@@ -1,4 +1,5 @@
-﻿using SmartSalon.Application.Abstractions;
+﻿using Microsoft.EntityFrameworkCore;
+using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.MediatR;
 using SmartSalon.Application.Domain.Salons;
 using SmartSalon.Application.Errors;
@@ -11,16 +12,14 @@ public class UpdateJobTitleCommand : ICommand
 {
     public required Id JobTitleId { get; set; }
     public required string Name { get; set; }
-}
-
-public class UpdateJobTitleCommandResponse : ICommand
-{
     public required Id SalonId { get; set; }
-    public required string Text { get; set; }
 }
 
-internal class UpdateJobTitleCommandHandler(IEfRepository<JobTitle> _jobTitles, IUnitOfWork _unitOfWork)
-    : ICommandHandler<UpdateJobTitleCommand>
+internal class UpdateJobTitleCommandHandler(
+    IEfRepository<JobTitle> _jobTitles,
+    IEfRepository<Salon> _salons,
+    IUnitOfWork _unitOfWork
+) : ICommandHandler<UpdateJobTitleCommand>
 {
     public async Task<Result> Handle(UpdateJobTitleCommand command, CancellationToken cancellationToken)
     {
@@ -29,6 +28,22 @@ internal class UpdateJobTitleCommandHandler(IEfRepository<JobTitle> _jobTitles, 
         if (jobTitle is null)
         {
             return Error.NotFound;
+        }
+
+        var salon = await _salons.All
+            .Include(salon => salon.JobTitles)
+            .FirstOrDefaultAsync(salon => salon.Id == command.SalonId);
+
+        if (salon is null)
+        {
+            return Error.NotFound;
+        }
+
+        var salonAlreadyContainsJobTitle = salon.JobTitles!.Any(existingJobTitle => existingJobTitle.Name == existingJobTitle.Name);
+
+        if (salonAlreadyContainsJobTitle)
+        {
+            return Error.Conflict;
         }
 
         jobTitle.MapAgainst(command);
