@@ -1,17 +1,17 @@
 using System.Reflection;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using SmartSalon.Application.Extensions;
-using SmartSalon.Presentation.Web.Attributes;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace SmartSalon.Presentation.Web.SwaggerFilters;
 
-public class HideParametersWithIdRouteAttributeFilter : ISchemaFilter
+public class HideParametersWithFromRouteAttributeFilter : ISchemaFilter
 {
     public void Apply(OpenApiSchema schema, SchemaFilterContext context)
     {
         var excludedProperties = context.Type.GetProperties()
-            .Where(property => property.GetCustomAttribute<IdRouteParameterAttribute>() != null)
+            .Where(property => property.GetCustomAttribute<FromRouteAttribute>() != null)
             .Select(property => property.Name);
 
         foreach (var propertyName in excludedProperties)

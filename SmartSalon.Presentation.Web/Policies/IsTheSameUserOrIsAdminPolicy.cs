@@ -15,8 +15,7 @@ internal class IsTheSameUserOrIsAdminHandler(IHttpContextAccessor _httpContextAc
     {
         try
         {
-            var idRouteParameterName = IdRoute.Remove(['{', '}']);
-            var requestedUserId = _httpContextAccessor.HttpContext?.Request.RouteValues[idRouteParameterName]?.ToString();
+            var requestedUserId = _httpContextAccessor.HttpContext?.Request.RouteValues[IdRouteParameterName]?.ToString();
 
             if (_currentUser.IsAdmin || requestedUserId == _currentUser.Id.ToString())
             {

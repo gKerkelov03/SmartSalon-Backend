@@ -1,12 +1,12 @@
-﻿using SmartSalon.Application.Abstractions.Mapping;
-using SmartSalon.Presentation.Web.Attributes;
+﻿using Microsoft.AspNetCore.Mvc;
+using SmartSalon.Application.Abstractions.Mapping;
 using SmartWorkingTime.Application.Features.Salons.Commands;
 
 namespace SmartSalon.Presentation.Web.Features.Salons.Requests;
 
 public class UpdateWorkingTimeRequest : IMapTo<UpdateWorkingTimeCommand>
 {
-    [IdRouteParameter]
+    [FromRoute(Name = IdRouteParameterName)]
     public Id WorkingTimeId { get; set; }
     public Id SalonId { get; set; }
     public required DayOfWeek DayOfWeek { get; set; }

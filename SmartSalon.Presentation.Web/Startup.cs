@@ -27,18 +27,16 @@ builder
     .AddData(builder.Configuration)
     .AddIntegrations(builder.Configuration)
     .ConfigureAllOptionsClasses(builder.Configuration, layers)
-
+    .CallAddControllers()
     .RegisterServices(layers)
-    .RegisterDbContext(builder.Configuration)
 
-    .AddExceptionHandler<GlobalExceptionHandler>()
     .AddAuth(builder.Configuration)
     .AddHttpContextAccessor()
     .AddHttpClient()
     .AddCors()
     .AddSwaggerGen()
     .AddVersioning()
-    .AddControllers();
+    .AddExceptionHandler<GlobalExceptionHandler>();
 
 var app = builder.Build();
 

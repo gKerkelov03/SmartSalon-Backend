@@ -8,7 +8,9 @@ public class ModelBindersConfigurator : IConfigureOptions<MvcOptions>, ITransien
 {
     public void Configure(MvcOptions options)
     {
-        options.ModelBinderProviders.Insert(0, new ObjectBinder());
-        options.ModelBinderProviders.Insert(1, new IdBinder());
+        //TODO: try to inject this
+        var idConverter = new IdConverter(typeof(Id));
+        options.ModelBinderProviders.Insert(0, new ObjectBinder(idConverter));
+        options.ModelBinderProviders.Insert(1, new IdBinder(idConverter));
     }
 }

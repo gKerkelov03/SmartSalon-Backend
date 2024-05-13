@@ -68,6 +68,13 @@ public static partial class ServiceCollectionExtensions
         return services;
     }
 
+    public static IServiceCollection CallAddControllers(this IServiceCollection services)
+    {
+        services.AddControllers();
+
+        return services;
+    }
+
     public static IServiceCollection AddVersioning(this IServiceCollection services)
     {
         services

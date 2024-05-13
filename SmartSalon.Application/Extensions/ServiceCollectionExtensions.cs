@@ -13,11 +13,11 @@ namespace SmartSalon.Application.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration config, IEnumerable<Assembly> assemblies)
+    public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration config, params Assembly[] assemblies)
         => services
             .RegisterMediatR()
             .RegisterValidators()
-            .RegisterMapper()
+            .RegisterMapper(assemblies)
             .RegisterRedis(config);
 
     internal static IServiceCollection RegisterMediatR(this IServiceCollection services)
