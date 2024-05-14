@@ -27,21 +27,14 @@ internal static class CurrenciesSeedingData
             Name = "United States Dollar",
             Code = "USD",
             Country = "United States",
-            LogoUrl = "https://flagpedia.net/data/flags/w580/us.webp"
+            LogoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg/255px-Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg.png"
         },
         new()
         {
             Name = "Euro",
             Code = "EUR",
             Country = "Eurozone",
-            LogoUrl = "https://ec.europa.eu/regional_policy/images/information-sources/logo-download-center/eu_flag.jpg"
-        },
-        new()
-        {
-            Name = "Turkish Lira",
-            Code = "TRY",
-            Country = "Turkey",
-            LogoUrl = "https://flagpedia.net/data/flags/w580/tr.webp"
+            LogoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Flag_of_Europe.svg/255px-Flag_of_Europe.svg.png"
         },
         new()
         {
@@ -49,7 +42,7 @@ internal static class CurrenciesSeedingData
             Name = "Bulgarian Lev",
             Code = "BGN",
             Country = "Bulgaria",
-            LogoUrl = "https://flagpedia.net/data/flags/w580/bg.webp"
+            LogoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Flag_of_Bulgaria.svg/255px-Flag_of_Bulgaria.svg.png"
         }
     ];
 }
