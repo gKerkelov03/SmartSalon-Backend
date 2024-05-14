@@ -33,7 +33,7 @@ public class GetSalonByIdQueryResponse : IHaveCustomMapping
     public required IEnumerable<Id> Workers { get; set; }
     public required IEnumerable<Id> Sections { get; set; }
     public required GetCurrencyByIdQueryResponse MainCurrency { get; set; }
-    public required IEnumerable<GetCurrencyByIdQueryResponse> AcceptedCurrencies { get; set; }
+    public required IEnumerable<GetCurrencyByIdQueryResponse> OtherAcceptedCurrencies { get; set; }
     public required IEnumerable<GetSpecialtyByIdQueryResponse> Specialties { get; set; }
     public required IEnumerable<GetImageByIdQueryResponse> Images { get; set; }
     public required IEnumerable<GetJobTitleByIdQueryResponse> JobTitles { get; set; }
@@ -64,7 +64,7 @@ internal class GetSalonByIdQueryHandler(IEfRepository<Salon> _salons, IMapper _m
             .Include(salon => salon.Workers)
             .Include(salon => salon.MainCurrency)
             .Include(salon => salon.Owners)
-            .Include(salon => salon.AcceptedCurrencies)
+            .Include(salon => salon.OtherAcceptedCurrencies)
             .Include(salon => salon.Sections)
             .Include(salon => salon.Images)
             .Include(salon => salon.Specialties)

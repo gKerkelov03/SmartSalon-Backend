@@ -152,15 +152,15 @@ namespace SmartSalon.Data.Migrations
                 name: "CurrencySalon",
                 columns: table => new
                 {
-                    AcceptedCurrenciesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OtherAcceptedCurrenciesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     SalonsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CurrencySalon", x => new { x.AcceptedCurrenciesId, x.SalonsId });
+                    table.PrimaryKey("PK_CurrencySalon", x => new { x.OtherAcceptedCurrenciesId, x.SalonsId });
                     table.ForeignKey(
-                        name: "FK_CurrencySalon_Currencies_AcceptedCurrenciesId",
-                        column: x => x.AcceptedCurrenciesId,
+                        name: "FK_CurrencySalon_Currencies_OtherAcceptedCurrenciesId",
+                        column: x => x.OtherAcceptedCurrenciesId,
                         principalTable: "Currencies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -587,39 +587,39 @@ namespace SmartSalon.Data.Migrations
                 columns: new[] { "Id", "Code", "Country", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("11612daf-ab0e-4947-8b09-b3ec7d0b60e5"), "SAR", "Saudi Arabia", "Saudi Riyal" },
-                    { new Guid("154204de-5d35-4a2a-97f4-178db44e81c2"), "USD", "United States", "United States Dollar" },
-                    { new Guid("2012f3b4-157c-44d2-87e1-53f443737d62"), "CHF", "Switzerland", "Swiss Franc" },
-                    { new Guid("2d4ec577-423d-471a-8223-a3221adf6b89"), "HKD", "Hong Kong", "Hong Kong Dollar" },
-                    { new Guid("34a76289-f5cb-41c8-bd90-e2292dcfa716"), "ILS", "Israel", "Israeli New Shekel" },
-                    { new Guid("35ca5615-4897-48f4-9c93-18c042e44289"), "RUB", "Russia", "Russian Ruble" },
-                    { new Guid("3d143a89-5192-4b62-af00-01da7f10f3a4"), "ZAR", "South Africa", "South African Rand" },
-                    { new Guid("400fc833-e38b-4fe3-b193-c0c1fb7b009d"), "GBP", "United Kingdom", "British Pound Sterling" },
-                    { new Guid("436dca7d-1c2d-488c-b978-937980a4765e"), "BGN", "Bulgaria", "Bulgarian Lev" },
-                    { new Guid("46aa5aee-0453-422c-aab4-eb560a42eaaf"), "MXN", "Mexico", "Mexican Peso" },
-                    { new Guid("4ac544c0-96d2-430b-9017-1d270b7cf7fd"), "DKK", "Denmark", "Danish Krone" },
-                    { new Guid("5a9084f3-c566-4357-937d-f347440b80d7"), "PHP", "Philippines", "Philippine Peso" },
-                    { new Guid("5aac227c-6209-476f-bbaf-e43c68656bf9"), "NOK", "Norway", "Norwegian Krone" },
-                    { new Guid("5b4d656b-85da-42b4-8794-5522437548ee"), "EUR", "Eurozone", "Euro" },
-                    { new Guid("5e32a03d-e42b-490e-9dab-e279fd641795"), "JPY", "Japan", "Japanese Yen" },
-                    { new Guid("62e8e7ed-9981-49cc-bbd4-2bb46c4db4f4"), "CAD", "Canada", "Canadian Dollar" },
-                    { new Guid("6e72a20c-4beb-40bc-a6c5-a42441887eec"), "NZD", "New Zealand", "New Zealand Dollar" },
-                    { new Guid("74c3d30f-3340-4a6a-bc0b-4b964e575440"), "SGD", "Singapore", "Singapore Dollar" },
-                    { new Guid("750a253b-64dd-4991-a347-f390aca9b7e9"), "BTC", null, "Bitcoin" },
-                    { new Guid("7ac4b26b-9e8a-45d9-beda-089049f2528a"), "THB", "Thailand", "Thai Baht" },
-                    { new Guid("7d7d070b-5f9a-4e0b-856e-25b1c077f708"), "AED", "United Arab Emirates", "UAE Dirham" },
-                    { new Guid("91fda4ee-48c5-45cd-abaa-5be8ee256fd0"), "IDR", "Indonesia", "Indonesian Rupiah" },
-                    { new Guid("a3385497-ae68-4367-9d91-b9aa4b88a120"), "ARS", "Argentina", "Argentine Peso" },
-                    { new Guid("c690a42b-e3eb-47ee-82b5-d0edb0fcdcca"), "BRL", "Brazil", "Brazilian Real" },
-                    { new Guid("ca93dc15-5059-4216-ad43-2b8858b2adea"), "TRY", "Turkey", "Turkish Lira" },
-                    { new Guid("d1a85d03-92d9-4e3b-8cec-d9245f82fd24"), "KRW", "South Korea", "South Korean Won" },
-                    { new Guid("d2e5103f-0820-4bf0-8d07-a0231e5fa18b"), "PLN", "Poland", "Polish Zloty" },
-                    { new Guid("da206e5c-532a-46e1-b4eb-7f73ab97e1c6"), "AUD", "Australia", "Australian Dollar" },
-                    { new Guid("da80bbf6-fa2e-43e7-bffa-96d1a83ef466"), "MYR", "Malaysia", "Malaysian Ringgit" },
-                    { new Guid("e126ecb1-e9fa-4495-a836-c960a19f72ad"), "SEK", "Sweden", "Swedish Krona" },
-                    { new Guid("eb27e4b4-cec5-4c1a-91d8-d7f5441ef3a0"), "CNY", "China", "Chinese Yuan" },
-                    { new Guid("eb5fca3e-9f54-4eba-8798-f99c2c4f81af"), "INR", "India", "Indian Rupee" },
-                    { new Guid("ef7566a8-b355-4267-af89-35c70764bb1e"), "ETH", null, "Ethereum" }
+                    { new Guid("04c7ee41-f05e-4073-beaf-68f1140d5b30"), "ETH", null, "Ethereum" },
+                    { new Guid("053c1430-7979-460b-b489-1d2b66bdfc7c"), "TRY", "Turkey", "Turkish Lira" },
+                    { new Guid("0754f560-6441-4025-88f1-f4d68d7df347"), "JPY", "Japan", "Japanese Yen" },
+                    { new Guid("122ddc48-a7ac-48e5-af3b-28ff0212b5f5"), "EUR", "Eurozone", "Euro" },
+                    { new Guid("13dbe4fb-3156-486e-9ab9-2941ff477ff2"), "CHF", "Switzerland", "Swiss Franc" },
+                    { new Guid("1656e2ce-24b0-4480-8e50-d6db2d47bd87"), "KRW", "South Korea", "South Korean Won" },
+                    { new Guid("1c3dd339-5410-4889-9992-a484a3c9d392"), "BRL", "Brazil", "Brazilian Real" },
+                    { new Guid("232554e4-7cbd-407e-bead-f86821b06c64"), "INR", "India", "Indian Rupee" },
+                    { new Guid("2763de11-e026-40a4-8f65-83342781bd3c"), "ZAR", "South Africa", "South African Rand" },
+                    { new Guid("34cf5feb-e412-47ac-abcf-3a8777b5bf21"), "GBP", "United Kingdom", "British Pound Sterling" },
+                    { new Guid("3e4b0eee-2b51-4631-9d33-076c562be6e0"), "IDR", "Indonesia", "Indonesian Rupiah" },
+                    { new Guid("3f770189-8b3e-4483-acb9-48d2ff3ec897"), "CNY", "China", "Chinese Yuan" },
+                    { new Guid("3fada5f1-e169-48c5-b962-ff58c396d36c"), "PLN", "Poland", "Polish Zloty" },
+                    { new Guid("44b7aa1f-feee-45b4-a411-5aa634207983"), "RUB", "Russia", "Russian Ruble" },
+                    { new Guid("613c9a85-b167-4edd-889f-083fc5461316"), "DKK", "Denmark", "Danish Krone" },
+                    { new Guid("6b5ff2a5-8d0b-412a-818f-dfb2ab52fb0c"), "BGN", "Bulgaria", "Bulgarian Lev" },
+                    { new Guid("70da7641-3e7c-4dec-82e7-e0c36b17439f"), "CAD", "Canada", "Canadian Dollar" },
+                    { new Guid("85e3df1a-b54e-47dd-80aa-0205c5811a18"), "HKD", "Hong Kong", "Hong Kong Dollar" },
+                    { new Guid("8e22e1ff-33b8-4043-aa50-844e7b803f2f"), "NOK", "Norway", "Norwegian Krone" },
+                    { new Guid("8f458edd-bc52-4988-90ac-8dbc70767e61"), "AUD", "Australia", "Australian Dollar" },
+                    { new Guid("96b82c68-5d24-445e-a994-e435266f0468"), "SAR", "Saudi Arabia", "Saudi Riyal" },
+                    { new Guid("99aca600-2252-4a4c-a78c-1252cfd4c67a"), "USD", "United States", "United States Dollar" },
+                    { new Guid("a0c6b031-5bf9-4f05-b4fb-11af1d162e36"), "PHP", "Philippines", "Philippine Peso" },
+                    { new Guid("a69973f5-cf99-4401-ad12-df52ed923a02"), "ILS", "Israel", "Israeli New Shekel" },
+                    { new Guid("b0237e42-bff6-43b1-bbd0-3e998d8e09ce"), "BTC", null, "Bitcoin" },
+                    { new Guid("b32eed60-41a9-4d64-bea3-853b4320fd1e"), "MYR", "Malaysia", "Malaysian Ringgit" },
+                    { new Guid("bbad2f99-2229-4723-8fe6-2f351ad8658d"), "SEK", "Sweden", "Swedish Krona" },
+                    { new Guid("bfb581b8-3561-4227-955a-8f7b17d76641"), "ARS", "Argentina", "Argentine Peso" },
+                    { new Guid("d7e3d383-22b0-45de-bb2e-627c7ef0c8ba"), "NZD", "New Zealand", "New Zealand Dollar" },
+                    { new Guid("e4271716-003e-451f-bbc1-1d54837319c3"), "SGD", "Singapore", "Singapore Dollar" },
+                    { new Guid("e63d2d9a-87c7-4141-9890-10c7a2f13270"), "THB", "Thailand", "Thai Baht" },
+                    { new Guid("eb5cc20e-0a9d-4369-9b24-9162b43ba39c"), "AED", "United Arab Emirates", "UAE Dirham" },
+                    { new Guid("fe420b60-bd7e-4bf5-93ac-a1cd2eb2443b"), "MXN", "Mexico", "Mexican Peso" }
                 });
 
             migrationBuilder.InsertData(
@@ -627,10 +627,10 @@ namespace SmartSalon.Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { new Guid("00eb9242-4227-430c-8571-bdebe012a4d5"), "3a4c44ce-6785-45e3-b427-9381768ea8c4", "Owner", "OWNER" },
-                    { new Guid("54e75d9c-0fee-424b-8315-3043743d9ef9"), "bc16fd5a-7879-4844-925e-63f7994844ec", "Worker", "WORKER" },
-                    { new Guid("595c1794-760c-48d9-8e08-3454530158ae"), "fba2ed8e-6ef8-484b-abdc-0c1ea020fa74", "Customer", "CUSTOMER" },
-                    { new Guid("bd88ea77-fdd5-4d40-b7b9-9e8b33f95e7f"), "6070e2ec-4953-4a2b-9cf6-945f5ced2bc9", "Admin", "ADMIN" }
+                    { new Guid("733d6b21-86b8-4085-b831-62bb71c1f5d5"), "dbb1dcaf-d875-47fc-84a9-73cce6e185aa", "Customer", "CUSTOMER" },
+                    { new Guid("8219f5f6-5498-4473-b2d6-71fdf79801cc"), "ee95dac5-2945-4fc0-8735-03832e3f4ed7", "Owner", "OWNER" },
+                    { new Guid("a563c6d8-659f-42bc-b6d5-bbd313e596c3"), "a75bb3e2-2d05-4568-ab39-896ebf8c36c9", "Worker", "WORKER" },
+                    { new Guid("f2007c8d-acc8-49e0-8285-86d39ab9be56"), "6d549458-f3da-4447-9efb-8c39e54e8a03", "Admin", "ADMIN" }
                 });
 
             migrationBuilder.InsertData(
@@ -638,8 +638,8 @@ namespace SmartSalon.Data.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "ProfilePictureUrl", "SecurityStamp", "TwoFactorEnabled", "UserName", "UserType" },
                 values: new object[,]
                 {
-                    { new Guid("51aaba70-6af0-48e6-8d02-452249c18e9c"), 0, "5d1169bc-9380-4560-88c6-4e27d0f4cb07", "gkerkelov03@abv.bg", true, "Georgi", "Kerkelov", false, null, "GKERKELOV03@ABV.BG", "GKERKELOV03@ABV.BG", "AQAAAAIAAYagAAAAENNNNCC3quNtQDgNBQK9/CZEQkrYO8rLQb5ciKkze0rnVs92p35G3K1H8V3jhF8DSg==", "0895105609", false, "https://res.cloudinary.com/donhvedgr/image/upload/v1662969813/blank-profile-picture_cqowyq.webp", "840e476b-d8c8-459c-aab1-6ae41a27a512", false, "gkerkelov03@abv.bg", "Admin" },
-                    { new Guid("cf44d19a-dc91-47ce-bdd7-c9e4fc2f922c"), 0, "d5d8332b-2fc4-4f74-9060-52bf998cb28f", "pivanov03@abv.bg", true, "Petar", "Ivanov", false, null, "PIVANOV03@ABV.BG", "PIVANOV03@ABV.BG", "AQAAAAIAAYagAAAAEAcqmEErp1KPdUYCy7EuDqySuIIdqpzwRezJaORi/GmkYGtQtHP69ruFzHffv6YL2g==", "0899829897", false, "https://res.cloudinary.com/donhvedgr/image/upload/v1662969813/blank-profile-picture_cqowyq.webp", "47a94729-3dd5-40bc-9841-0752228417ce", false, "pivanov03@abv.bg", "Admin" }
+                    { new Guid("9834d1c5-f6ad-4192-a944-bef3648f8875"), 0, "65f95317-2fbe-4806-8a50-534c49bac8cb", "gkerkelov03@abv.bg", true, "Georgi", "Kerkelov", false, null, "GKERKELOV03@ABV.BG", "GKERKELOV03@ABV.BG", "AQAAAAIAAYagAAAAEL/7IBkytce4SJ8MPRJVgSwPGt5Rqza4VIx70MutEanbfmGFxer+95LfGjEGy9nfIA==", "0895105609", false, "https://res.cloudinary.com/donhvedgr/image/upload/v1662969813/blank-profile-picture_cqowyq.webp", "2e1659aa-121b-4ae5-b511-b181d140207c", false, "gkerkelov03@abv.bg", "Admin" },
+                    { new Guid("eff2dcb6-bfdf-4c3b-8038-0d599a5b2c1a"), 0, "aa03072a-7ec2-4950-b24f-33bb5df1b656", "pivanov03@abv.bg", true, "Petar", "Ivanov", false, null, "PIVANOV03@ABV.BG", "PIVANOV03@ABV.BG", "AQAAAAIAAYagAAAAEBjVS4PIQYUs5Jz9wGFQ6neqrHUtguhcHhci1HFOQ9Dp6pcASf3LMykNi7VhM/X0YQ==", "0899829897", false, "https://res.cloudinary.com/donhvedgr/image/upload/v1662969813/blank-profile-picture_cqowyq.webp", "c2a3b49c-3dec-4fdc-958a-f8e0d2aa626d", false, "pivanov03@abv.bg", "Admin" }
                 });
 
             migrationBuilder.InsertData(
@@ -647,8 +647,8 @@ namespace SmartSalon.Data.Migrations
                 columns: new[] { "Id", "BookingsInAdvance", "Country", "DeletedBy", "DeletedOn", "Description", "GoogleMapsLocation", "IsDeleted", "MainCurrencyId", "Name", "ProfilePictureUrl", "SubscriptionsEnabled", "TimePenalty", "WorkersCanDeleteBookings", "WorkersCanMoveBookings", "WorkersCanSetNonWorkingPeriods", "WorkingTimeId" },
                 values: new object[,]
                 {
-                    { new Guid("416d46c4-a3b2-46aa-b248-fb434f6953c0"), 5, "BULGARIA", null, null, "Description", "Location", false, new Guid("436dca7d-1c2d-488c-b978-937980a4765e"), "Cosa Nostra", null, true, 5, false, true, true, new Guid("e01cfde9-7c2b-4bef-a25b-83f22f359159") },
-                    { new Guid("87ade6a9-909b-4a80-97f4-19b8ac8d17fb"), 5, "BULGARIA", null, null, "Description", "Location", false, new Guid("436dca7d-1c2d-488c-b978-937980a4765e"), "Gosho shop", null, true, 5, false, true, true, new Guid("a9ea4624-05fb-423e-acce-6b9b974e9852") }
+                    { new Guid("96f113fd-f658-4182-b6c1-9fe3d2f43b1f"), 5, "BULGARIA", null, null, "Description", "Location", false, new Guid("6b5ff2a5-8d0b-412a-818f-dfb2ab52fb0c"), "Gosho shop", null, true, 5, false, true, true, new Guid("e3740b64-6532-447f-b090-e117266fcbf6") },
+                    { new Guid("a5e606ad-ea04-4c92-8a58-aa4302845ff5"), 5, "BULGARIA", null, null, "Description", "Location", false, new Guid("6b5ff2a5-8d0b-412a-818f-dfb2ab52fb0c"), "Cosa Nostra", null, true, 5, false, true, true, new Guid("f7c0a0b3-bd0d-44c9-9e60-dcfa0e0471ca") }
                 });
 
             migrationBuilder.InsertData(
@@ -656,10 +656,10 @@ namespace SmartSalon.Data.Migrations
                 columns: new[] { "RoleId", "UserId" },
                 values: new object[,]
                 {
-                    { new Guid("595c1794-760c-48d9-8e08-3454530158ae"), new Guid("51aaba70-6af0-48e6-8d02-452249c18e9c") },
-                    { new Guid("bd88ea77-fdd5-4d40-b7b9-9e8b33f95e7f"), new Guid("51aaba70-6af0-48e6-8d02-452249c18e9c") },
-                    { new Guid("595c1794-760c-48d9-8e08-3454530158ae"), new Guid("cf44d19a-dc91-47ce-bdd7-c9e4fc2f922c") },
-                    { new Guid("bd88ea77-fdd5-4d40-b7b9-9e8b33f95e7f"), new Guid("cf44d19a-dc91-47ce-bdd7-c9e4fc2f922c") }
+                    { new Guid("733d6b21-86b8-4085-b831-62bb71c1f5d5"), new Guid("9834d1c5-f6ad-4192-a944-bef3648f8875") },
+                    { new Guid("f2007c8d-acc8-49e0-8285-86d39ab9be56"), new Guid("9834d1c5-f6ad-4192-a944-bef3648f8875") },
+                    { new Guid("733d6b21-86b8-4085-b831-62bb71c1f5d5"), new Guid("eff2dcb6-bfdf-4c3b-8038-0d599a5b2c1a") },
+                    { new Guid("f2007c8d-acc8-49e0-8285-86d39ab9be56"), new Guid("eff2dcb6-bfdf-4c3b-8038-0d599a5b2c1a") }
                 });
 
             migrationBuilder.InsertData(
@@ -667,8 +667,8 @@ namespace SmartSalon.Data.Migrations
                 columns: new[] { "Id", "FridayClosingTime", "FridayOpeningTime", "MondayClosingTime", "MondayOpeningTime", "SalonId", "SaturdayClosingTime", "SaturdayOpeningTime", "SundayClosingTime", "SundayOpeningTime", "ThursdayClosingTime", "ThursdayOpeningTime", "TuesdayClosingTime", "TuesdayOpeningTime", "WednesdayClosingTime", "WednesdayOpeningTime" },
                 values: new object[,]
                 {
-                    { new Guid("a9ea4624-05fb-423e-acce-6b9b974e9852"), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new Guid("87ade6a9-909b-4a80-97f4-19b8ac8d17fb"), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0) },
-                    { new Guid("e01cfde9-7c2b-4bef-a25b-83f22f359159"), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new Guid("416d46c4-a3b2-46aa-b248-fb434f6953c0"), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0) }
+                    { new Guid("e3740b64-6532-447f-b090-e117266fcbf6"), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new Guid("96f113fd-f658-4182-b6c1-9fe3d2f43b1f"), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0) },
+                    { new Guid("f7c0a0b3-bd0d-44c9-9e60-dcfa0e0471ca"), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new Guid("a5e606ad-ea04-4c92-8a58-aa4302845ff5"), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0) }
                 });
 
             migrationBuilder.CreateIndex(

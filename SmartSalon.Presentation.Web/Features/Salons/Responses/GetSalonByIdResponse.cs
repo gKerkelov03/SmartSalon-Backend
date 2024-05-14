@@ -20,7 +20,7 @@ public class GetSalonByIdResponse : IMapFrom<GetSalonByIdQueryResponse>
     public Id WorkingTimeId { get; set; }
 
     public required GetCurrencyByIdResponse MainCurrency { get; set; }
-    public required IEnumerable<GetCurrencyByIdResponse> AcceptedCurrencies { get; set; }
+    public required IEnumerable<GetCurrencyByIdResponse> OtherAcceptedCurrencies { get; set; }
     public required IEnumerable<GetSpecialtyByIdResponse> Specialties { get; set; }
     public required IEnumerable<GetImageByIdResponse> Images { get; set; }
     public required IEnumerable<GetJobTitleByIdResponse> JobTitles { get; set; }

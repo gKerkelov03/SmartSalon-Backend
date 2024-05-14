@@ -21,7 +21,7 @@ public class SalonConfiguration : IEntityTypeConfiguration<Salon>
             .HasForeignKey(bs => bs.MainCurrencyId);
 
         builder
-            .HasMany(salon => salon.AcceptedCurrencies)
+            .HasMany(salon => salon.OtherAcceptedCurrencies)
             .WithMany(currency => currency.Salons);
 
         builder.HasData(SalonsSeedingData.Data);

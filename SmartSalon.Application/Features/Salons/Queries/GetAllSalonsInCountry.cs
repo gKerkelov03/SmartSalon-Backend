@@ -20,7 +20,7 @@ internal class GetAllSalonsInCountry(IEfRepository<Salon> _salons, IMapper _mapp
         var queryResponse = await _salons.All
             .Include(salon => salon.Workers)
             .Include(salon => salon.Owners)
-            .Include(salon => salon.AcceptedCurrencies)
+            .Include(salon => salon.OtherAcceptedCurrencies)
             .Include(salon => salon.Sections)
             .Include(salon => salon.Images)
             .Include(salon => salon.Specialties)

@@ -21,7 +21,7 @@ public class Salon : DeletableEntity
     public WorkingTime? WorkingTime { get; set; }
     public Id MainCurrencyId { get; set; }
     public Currency? MainCurrency { get; set; }
-    public ICollection<Currency>? AcceptedCurrencies { get; set; }
+    public ICollection<Currency>? OtherAcceptedCurrencies { get; set; }
     public virtual ICollection<Owner>? Owners { get; set; }
     public virtual ICollection<Worker>? Workers { get; set; }
     public virtual ICollection<Specialty>? Specialties { get; set; }
