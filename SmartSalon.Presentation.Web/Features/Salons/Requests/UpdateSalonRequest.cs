@@ -8,6 +8,7 @@ public class UpdateSalonRequest : IMapTo<UpdateSalonCommand>
 {
     [FromRoute(Name = IdRouteParameterName)]
     public Id SalonId { get; set; }
+    public Id MainCurrencyId { get; set; }
     public required string Name { get; set; }
     public required string Description { get; set; }
     public string? ProfilePictureUrl { get; set; }

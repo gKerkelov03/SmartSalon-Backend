@@ -7,6 +7,7 @@ internal static class CurrenciesSeedingData
 {
     public static Id BulgarianLevId = Id.NewGuid();
 
+    //TODO: need to add icons here
     public static Currency[] Data = [
         new()
         {

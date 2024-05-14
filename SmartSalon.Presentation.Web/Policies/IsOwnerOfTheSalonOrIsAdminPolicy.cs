@@ -20,7 +20,7 @@ internal class IsOwnerOfTheSalonOrIsAdminHandler(
         try
         {
             var requirement = GetRequirement<IsOwnerOfTheSalonOrIsAdminRequirement>(context);
-            var passedIdRouteParameter = _httpContextAccessor.HttpContext?.Request.RouteValues[IdRouteParameterName]?.ToString();
+            var requestedIdRouteParameter = _httpContextAccessor.HttpContext?.Request.RouteValues[IdRouteParameterName]?.ToString();
             var salonIdPropertyName = "salonId";
 
             if (requirement is null)
@@ -35,13 +35,13 @@ internal class IsOwnerOfTheSalonOrIsAdminHandler(
                 return;
             }
 
-            var requestedSalonId = passedIdRouteParameter;
+            var requestedSalonId = requestedIdRouteParameter;
 
             if (requestBodyMap.ContainsKey(salonIdPropertyName))
             {
                 requestedSalonId = requestBodyMap[salonIdPropertyName].ToString();
             }
-            else if (passedIdRouteParameter is null)
+            else if (requestedIdRouteParameter is null)
             {
                 return;
             }

@@ -17,7 +17,7 @@ internal class ObjectBinder(IdConverter _idConverter) : IModelBinder, IModelBind
             return;
         }
 
-        var IdRouteParameterPassed = bindingContext.ActionContext.RouteData.Values[IdRouteParameterName]?.ToString();
+        var requestedIdRouteParameter = bindingContext.ActionContext.RouteData.Values[IdRouteParameterName]?.ToString();
         var requestModel = Activator.CreateInstance(bindingContext.ModelType)!;
 
         foreach (var property in requestModel.GetType().GetProperties())
@@ -27,13 +27,13 @@ internal class ObjectBinder(IdConverter _idConverter) : IModelBinder, IModelBind
 
             if (fromRouteAttribute is not null && fromRouteAttribute.Name == IdRouteParameterName)
             {
-                if (IdRouteParameterPassed is null)
+                if (requestedIdRouteParameter is null)
                 {
                     bindingContext.ModelState.AddModelError(jsonPropertyName, $"No route value passed for parameter {jsonPropertyName}");
                     return;
                 }
 
-                var id = _idConverter.Convert(bindingContext, jsonPropertyName, IdRouteParameterPassed);
+                var id = _idConverter.Convert(bindingContext, jsonPropertyName, requestedIdRouteParameter);
                 requestModel!.GetType().GetProperty(property.Name)!.SetValue(requestModel, id);
             }
             else if (!requestBodyMap.ContainsKey(jsonPropertyName))

@@ -2,7 +2,7 @@ using System.Collections;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using SmartSalon.Application.Extensions;
 
-internal class ListOfIdsConverter(Type _targetType) : IModelConverter
+internal class CollectionOfIdsConverter(Type _targetType) : IModelConverter
 {
     public bool CanConvert() => _targetType == typeof(IEnumerable<Id>);
 

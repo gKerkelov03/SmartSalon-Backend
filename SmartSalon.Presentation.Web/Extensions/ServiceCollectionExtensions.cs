@@ -60,8 +60,7 @@ public static partial class ServiceCollectionExtensions
                     ValidAudience = jwtOptions.Audience,
                     IssuerSigningKey = new SymmetricSecurityKey(signingKey),
                 };
-            }
-            );
+            });
 
         services.AddAuthorization();
 

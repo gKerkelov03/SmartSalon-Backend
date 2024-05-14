@@ -7,6 +7,7 @@ using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Salons.Queries;
 
+//TODO: get specialty image and job tittle by id might be  unneeded
 public class GetJobTitleByIdQuery(Id id) : IQuery<GetJobTitleByIdQueryResponse>
 {
     public Id JobTitleId => id;
@@ -15,7 +16,7 @@ public class GetJobTitleByIdQuery(Id id) : IQuery<GetJobTitleByIdQueryResponse>
 public class GetJobTitleByIdQueryResponse : IMapFrom<JobTitle>
 {
     public required string Name { get; set; }
-    public Id SalonId { get; set; }
+    public Id Id { get; set; }
 }
 
 internal class GetJobTitleByIdQueryHandler(IEfRepository<JobTitle> _jobTitles, IMapper _mapper)

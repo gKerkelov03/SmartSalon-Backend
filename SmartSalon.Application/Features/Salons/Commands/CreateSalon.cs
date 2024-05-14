@@ -12,7 +12,7 @@ namespace SmartSalon.Application.Features.Salons.Commands;
 public class CreateSalonCommand : ICommand<CreateSalonCommandResponse>, IMapTo<Salon>
 {
     public required string Name { get; set; }
-    public required string Location { get; set; }
+    public required string GoogleMapsLocation { get; set; }
 }
 
 public class CreateSalonCommandResponse(Id id)

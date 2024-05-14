@@ -29,22 +29,18 @@ public class GetSalonByIdQueryResponse : IHaveCustomMapping
     public bool WorkersCanMoveBookings { get; set; }
     public bool WorkersCanSetNonWorkingPeriods { get; set; }
     public Id WorkingTimeId { get; set; }
-    public Id MainCurrencyId { get; set; }
-    public required IEnumerable<Id> AcceptedCurrencies { get; set; }
     public required IEnumerable<Id> Owners { get; set; }
     public required IEnumerable<Id> Workers { get; set; }
-    public required IEnumerable<Id> Specialties { get; set; }
     public required IEnumerable<Id> Sections { get; set; }
-    public required IEnumerable<Id> Images { get; set; }
-    public required IEnumerable<Id> JobTitles { get; set; }
+    public required GetCurrencyByIdQueryResponse MainCurrency { get; set; }
+    public required IEnumerable<GetCurrencyByIdQueryResponse> AcceptedCurrencies { get; set; }
+    public required IEnumerable<GetSpecialtyByIdQueryResponse> Specialties { get; set; }
+    public required IEnumerable<GetImageByIdQueryResponse> Images { get; set; }
+    public required IEnumerable<GetJobTitleByIdQueryResponse> JobTitles { get; set; }
 
     public void CreateMapping(IProfileExpression config)
         => config
             .CreateMap<Salon, GetSalonByIdQueryResponse>()
-            .ForMember(
-                destination => destination.AcceptedCurrencies,
-                options => options.MapFrom(source => source.AcceptedCurrencies!.Select(currency => currency.Id))
-            )
             .ForMember(
                 destination => destination.Owners,
                 options => options.MapFrom(source => source.Owners!.Select(owners => owners.Id))
@@ -54,20 +50,8 @@ public class GetSalonByIdQueryResponse : IHaveCustomMapping
                 options => options.MapFrom(source => source.Workers!.Select(workers => workers.Id))
             )
             .ForMember(
-                destination => destination.Specialties,
-                options => options.MapFrom(source => source.Specialties!.Select(specialty => specialty.Id))
-            )
-            .ForMember(
                 destination => destination.Sections,
                 options => options.MapFrom(source => source.Sections!.Select(section => section.Id))
-            )
-            .ForMember(
-                destination => destination.Images,
-                options => options.MapFrom(source => source.Images!.Select(image => image.Id))
-            )
-            .ForMember(
-                destination => destination.JobTitles,
-                options => options.MapFrom(source => source.JobTitles!.Select(jobTitle => jobTitle.Id))
             );
 }
 
@@ -78,6 +62,7 @@ internal class GetSalonByIdQueryHandler(IEfRepository<Salon> _salons, IMapper _m
     {
         var queryResponse = await _salons.All
             .Include(salon => salon.Workers)
+            .Include(salon => salon.MainCurrency)
             .Include(salon => salon.Owners)
             .Include(salon => salon.AcceptedCurrencies)
             .Include(salon => salon.Sections)

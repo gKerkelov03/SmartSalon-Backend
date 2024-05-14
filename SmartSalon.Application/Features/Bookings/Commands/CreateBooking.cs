@@ -41,7 +41,6 @@ internal class CreateBookingCommandHandler(
 {
     public async Task<Result<CreateBookingCommandResponse>> Handle(CreateBookingCommand command, CancellationToken cancellationToken)
     {
-        //TODO: do it like this on all appropriate places trought the app
         var customerDoesntExist = await _customers.GetByIdAsync(command.ServiceId) is null;
 
         if (customerDoesntExist)

@@ -10,6 +10,7 @@ namespace SmartSalon.Application.Features.Salons.Commands;
 public class UpdateSalonCommand : ICommand
 {
     public required Id SalonId { get; set; }
+    public required Id MainCurrencyId { get; set; }
     public required string Name { get; set; }
     public required string Description { get; set; }
     public string? ProfilePictureUrl { get; set; }

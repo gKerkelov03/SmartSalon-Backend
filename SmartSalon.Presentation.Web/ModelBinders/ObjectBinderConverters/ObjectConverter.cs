@@ -6,7 +6,7 @@ internal class ObjectConverter(Type _targetType) : IModelConverter
         new IdConverter(_targetType),
         new DateOnlyConverter(_targetType),
         new EnumConverter(_targetType),
-        new ListOfIdsConverter(_targetType),
+        new CollectionOfIdsConverter(_targetType),
         new TimeOnlyConverter(_targetType),
         new GeneralConverter(_targetType)
     ];

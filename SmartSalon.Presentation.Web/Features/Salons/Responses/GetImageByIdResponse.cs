@@ -8,5 +8,4 @@ public class GetImageByIdResponse : IMapFrom<GetImageByIdQueryResponse>
 {
     public Id Id { get; set; }
     public required string Url { get; set; }
-    public Id SalonId { get; set; }
 }

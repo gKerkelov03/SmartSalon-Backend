@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.MediatR;
-using SmartSalon.Application.Domain;
 using SmartSalon.Application.Domain.Salons;
 using SmartSalon.Application.Errors;
 using SmartSalon.Application.ResultObject;
@@ -33,6 +32,11 @@ internal class AddCurrencyCommandHandler(IEfRepository<Currency> _currencies, IE
         if (salon is null)
         {
             return Error.NotFound;
+        }
+
+        if (salon.MainCurrencyId == command.SalonId)
+        {
+            return Error.Conflict;
         }
 
         var salonAlreadyContainsCurrency = salon.AcceptedCurrencies!.Any(currency => currency.Id == command.CurrencyId);
