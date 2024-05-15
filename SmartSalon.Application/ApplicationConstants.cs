@@ -48,7 +48,7 @@ public static class ApplicationConstants
         public static class Salon
         {
             public const int MaxNameLength = 50;
-            public const int MaxDescriptionLength = 50;
+            public const int MaxDescriptionLength = 1000;
             public const int MaxGoogleMapsLocationLength = 50;
             public const int MaxTimePenalty = 20;
             public const int MaxBookingsInAdvance = 20;

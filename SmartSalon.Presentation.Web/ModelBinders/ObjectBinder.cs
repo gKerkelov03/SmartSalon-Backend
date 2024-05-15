@@ -1,10 +1,10 @@
 using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
 using SmartSalon.Application.Extensions;
+using SmartSalon.Presentation.Web.Attributes;
 
 internal class ObjectBinder(IdConverter _idConverter) : IModelBinder, IModelBinderProvider
 {
@@ -23,9 +23,9 @@ internal class ObjectBinder(IdConverter _idConverter) : IModelBinder, IModelBind
         foreach (var property in requestModel.GetType().GetProperties())
         {
             var jsonPropertyName = property.Name.WithFirstLetterToLower();
-            var fromRouteAttribute = property.GetCustomAttribute<FromRouteAttribute>(inherit: false);
+            var comesFromRouteAttribute = property.GetCustomAttribute<ComesFromRouteAttribute>(inherit: false);
 
-            if (fromRouteAttribute is not null && fromRouteAttribute.Name == IdRouteParameterName)
+            if (comesFromRouteAttribute is not null && comesFromRouteAttribute.Name == IdRouteParameterName)
             {
                 if (requestedIdRouteParameter is null)
                 {

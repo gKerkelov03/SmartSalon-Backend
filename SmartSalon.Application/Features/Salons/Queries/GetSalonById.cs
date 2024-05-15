@@ -55,8 +55,7 @@ public class GetSalonByIdQueryResponse : IHaveCustomMapping
             );
 }
 
-internal class GetSalonByIdQueryHandler(IEfRepository<Salon> _salons, IMapper _mapper)
-    : IQueryHandler<GetSalonByIdQuery, GetSalonByIdQueryResponse>
+internal class GetSalonByIdQueryHandler(IEfRepository<Salon> _salons, IMapper _mapper) : IQueryHandler<GetSalonByIdQuery, GetSalonByIdQueryResponse>
 {
     public async Task<Result<GetSalonByIdQueryResponse>> Handle(GetSalonByIdQuery query, CancellationToken cancellationToken)
     {

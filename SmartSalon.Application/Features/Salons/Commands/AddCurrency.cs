@@ -34,7 +34,7 @@ internal class AddCurrencyCommandHandler(IEfRepository<Currency> _currencies, IE
             return Error.NotFound;
         }
 
-        if (salon.MainCurrencyId == command.SalonId)
+        if (salon.MainCurrencyId == command.CurrencyId)
         {
             return Error.Conflict;
         }

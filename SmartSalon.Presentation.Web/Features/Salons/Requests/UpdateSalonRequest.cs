@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SmartSalon.Application.Abstractions.Mapping;
+﻿using SmartSalon.Application.Abstractions.Mapping;
 using SmartSalon.Application.Features.Salons.Commands;
+using SmartSalon.Presentation.Web.Attributes;
 
 namespace SmartSalon.Presentation.Web.Features.Salons.Requests;
 
 public class UpdateSalonRequest : IMapTo<UpdateSalonCommand>
 {
-    [FromRoute(Name = IdRouteParameterName)]
+    [ComesFromRoute(IdRouteParameterName)]
     public Id SalonId { get; set; }
     public Id MainCurrencyId { get; set; }
     public required string Name { get; set; }
