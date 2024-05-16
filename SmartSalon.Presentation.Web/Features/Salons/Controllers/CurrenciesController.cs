@@ -53,7 +53,7 @@ public class CurrenciesController(ISender _mediator, IMapper _mapper) : V1ApiCon
         );
     }
 
-    [HttpDelete]
+    [HttpDelete(IdRoute)]
     [SuccessResponse(Status200OK)]
     [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]
     public async Task<IActionResult> RemoveCurrency(RemoveCurrencyRequest request)

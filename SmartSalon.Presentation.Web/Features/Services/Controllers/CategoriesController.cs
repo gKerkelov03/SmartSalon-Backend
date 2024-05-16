@@ -38,7 +38,7 @@ public class CategoriesController(ISender _mediator, IMapper _mapper) : V1ApiCon
         return ProblemDetailsOr<OkResult>(result);
     }
 
-    [HttpDelete]
+    [HttpDelete(IdRoute)]
     [SuccessResponse(Status200OK)]
     [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]
     public async Task<IActionResult> DeleteCategory(DeleteCategoryRequest request)

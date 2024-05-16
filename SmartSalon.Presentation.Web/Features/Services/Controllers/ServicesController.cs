@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using SmartSalon.Presentation.Web.Attributes;
 using SmartSalon.Presentation.Web.Controllers;
 using SmartSalon.Presentation.Web.Features.Services.Requests;
-using SmartSalon.Application.Features.Services.Queries;
 using SmartSalon.Application.Features.Services.Commands;
 using SmartService.Application.Features.Services.Commands;
 
