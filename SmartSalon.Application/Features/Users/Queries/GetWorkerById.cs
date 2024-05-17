@@ -3,7 +3,6 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.Mapping;
-using SmartSalon.Application.Domain.Salons;
 using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Errors;
 using SmartSalon.Application.ResultObject;
@@ -20,11 +19,11 @@ public class GetWorkerByIdQueryResponse : IHaveCustomMapping
     public Id Id { get; set; }
     public required string PhoneNumber { get; set; }
     public required string ProfilePictureUrl { get; set; }
+    public required string FirstName { get; set; }
     public required string LastName { get; set; }
     public required string Email { get; set; }
     public bool EmailConfirmed { get; set; }
     public required string Nickname { get; set; }
-    public required string FirstName { get; set; }
     public Id? SalonId { get; set; }
     public required IEnumerable<Id> JobTitles { get; set; }
     public required IEnumerable<Id> Salons { get; set; }

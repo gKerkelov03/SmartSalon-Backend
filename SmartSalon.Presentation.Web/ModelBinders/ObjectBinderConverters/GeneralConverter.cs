@@ -6,13 +6,14 @@ internal class GeneralConverter(Type _targetType) : IModelConverter
 
     public object Convert(ModelBindingContext bindingContext, string propertyName, object? propertyValue)
     {
-        var result = System.Convert.ChangeType(propertyValue, _targetType);
-
-        if (result is null)
+        try
+        {
+            return System.Convert.ChangeType(propertyValue, _targetType);
+        }
+        catch
         {
             bindingContext.ModelState.TryAddModelError(propertyName, "Cannot be converted to a C# type");
+            return null;
         }
-
-        return result;
     }
 }

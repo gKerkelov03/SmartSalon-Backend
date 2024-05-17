@@ -79,7 +79,7 @@ namespace SmartSalon.Data.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
-                    GoogleMapsLocation = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    GoogleMapsLocation = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ProfilePictureUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TimePenalty = table.Column<int>(type: "int", maxLength: 20, nullable: false),
@@ -339,18 +339,25 @@ namespace SmartSalon.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     SalonId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MondayIsWorking = table.Column<bool>(type: "bit", nullable: false),
                     MondayOpeningTime = table.Column<TimeOnly>(type: "time", nullable: false),
                     MondayClosingTime = table.Column<TimeOnly>(type: "time", nullable: false),
+                    TuesdayIsWorking = table.Column<bool>(type: "bit", nullable: false),
                     TuesdayOpeningTime = table.Column<TimeOnly>(type: "time", nullable: false),
                     TuesdayClosingTime = table.Column<TimeOnly>(type: "time", nullable: false),
+                    WednesdayIsWorking = table.Column<bool>(type: "bit", nullable: false),
                     WednesdayOpeningTime = table.Column<TimeOnly>(type: "time", nullable: false),
                     WednesdayClosingTime = table.Column<TimeOnly>(type: "time", nullable: false),
+                    ThursdayIsWorking = table.Column<bool>(type: "bit", nullable: false),
                     ThursdayOpeningTime = table.Column<TimeOnly>(type: "time", nullable: false),
                     ThursdayClosingTime = table.Column<TimeOnly>(type: "time", nullable: false),
+                    FridayIsWorking = table.Column<bool>(type: "bit", nullable: false),
                     FridayOpeningTime = table.Column<TimeOnly>(type: "time", nullable: false),
                     FridayClosingTime = table.Column<TimeOnly>(type: "time", nullable: false),
+                    SaturdayIsWorking = table.Column<bool>(type: "bit", nullable: false),
                     SaturdayOpeningTime = table.Column<TimeOnly>(type: "time", nullable: false),
                     SaturdayClosingTime = table.Column<TimeOnly>(type: "time", nullable: false),
+                    SundayIsWorking = table.Column<bool>(type: "bit", nullable: false),
                     SundayOpeningTime = table.Column<TimeOnly>(type: "time", nullable: false),
                     SundayClosingTime = table.Column<TimeOnly>(type: "time", nullable: false)
                 },
@@ -588,11 +595,11 @@ namespace SmartSalon.Data.Migrations
                 columns: new[] { "Id", "Code", "Country", "LogoUrl", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("075d6f47-b41b-47c7-8a5d-187ac858ed4c"), "ETH", null, "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Ethereum_logo_2014.svg/1257px-Ethereum_logo_2014.svg.png", "Ethereum" },
-                    { new Guid("13880451-d18f-41b1-9946-814d21130b88"), "USD", "United States", "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg/255px-Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg.png", "United States Dollar" },
-                    { new Guid("26c1b986-13bc-400f-a544-b084287557f5"), "BGN", "Bulgaria", "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Flag_of_Bulgaria.svg/255px-Flag_of_Bulgaria.svg.png", "Bulgarian Lev" },
-                    { new Guid("6ae39df9-5816-4938-9c57-1ed9f0d7a51d"), "BTC", null, "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/2048px-Bitcoin.svg.png", "Bitcoin" },
-                    { new Guid("7b635565-726b-4508-8031-6b34cbecb6c2"), "EUR", "Eurozone", "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Flag_of_Europe.svg/255px-Flag_of_Europe.svg.png", "Euro" }
+                    { new Guid("0b544581-9a9d-434d-940d-b7031bb4d42b"), "BGN", "Bulgaria", "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Flag_of_Bulgaria.svg/255px-Flag_of_Bulgaria.svg.png", "Bulgarian Lev" },
+                    { new Guid("12365a93-2c3e-4e7a-a8d9-6ce94dd69e16"), "BTC", null, "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/2048px-Bitcoin.svg.png", "Bitcoin" },
+                    { new Guid("55a16109-f72b-4128-a953-85e2db7fdf56"), "ETH", null, "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Ethereum_logo_2014.svg/1257px-Ethereum_logo_2014.svg.png", "Ethereum" },
+                    { new Guid("a3b8b079-7a97-42d0-8df9-962af9fe29bb"), "EUR", "Eurozone", "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Flag_of_Europe.svg/255px-Flag_of_Europe.svg.png", "Euro" },
+                    { new Guid("b8ff1389-601e-41b1-a8ed-aa463004e1eb"), "USD", "United States", "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg/255px-Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg.png", "United States Dollar" }
                 });
 
             migrationBuilder.InsertData(
@@ -600,10 +607,10 @@ namespace SmartSalon.Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { new Guid("00fa2542-7d53-41e0-a548-4ecbc609e186"), "5b5cb6f0-c430-4e58-9b4c-43fbadf72bda", "Worker", "WORKER" },
-                    { new Guid("0811b6ca-9120-4a9a-a319-81b75c2b5384"), "c92bebda-0e26-46d9-bbd3-ea617d4e24d7", "Admin", "ADMIN" },
-                    { new Guid("11e4a613-bf6c-474c-a308-bb4fa71e1685"), "f2124649-5210-49df-a5e4-a47cdeb5a63e", "Owner", "OWNER" },
-                    { new Guid("49ae35a5-46f9-4bcd-a22a-07ca86c40215"), "17522d1a-e1b5-4b0f-9920-7a55626c1be5", "Customer", "CUSTOMER" }
+                    { new Guid("601bb307-cf48-442e-90c6-7bed09f822a4"), "5c012be8-d2c9-48c7-bff6-db13d38e5e29", "Admin", "ADMIN" },
+                    { new Guid("99f50024-1330-46e0-9d6a-7a530c7aa045"), "1f99d2cc-07ca-489c-b210-bbe7913548ff", "Worker", "WORKER" },
+                    { new Guid("9ebc5e0b-b69e-4b6f-ad12-15ea9793dce0"), "70bd59d9-b03e-40ae-9fe5-a0165802b07c", "Owner", "OWNER" },
+                    { new Guid("a51df60c-58fa-4947-b49a-e0b462115740"), "9ddb4971-d115-4b4f-b675-36340d1e56b8", "Customer", "CUSTOMER" }
                 });
 
             migrationBuilder.InsertData(
@@ -611,8 +618,8 @@ namespace SmartSalon.Data.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "ProfilePictureUrl", "SecurityStamp", "TwoFactorEnabled", "UserName", "UserType" },
                 values: new object[,]
                 {
-                    { new Guid("39823949-7e6f-4ee3-8ad5-253f857f7e3d"), 0, "a866c4a1-1ba4-461b-8dfc-7ba7e329cb30", "gkerkelov03@abv.bg", true, "Georgi", "Kerkelov", false, null, "GKERKELOV03@ABV.BG", "GKERKELOV03@ABV.BG", "AQAAAAIAAYagAAAAECOTUL90kip8xKrCS6Y1/857GpCEFXUQ4rXyMj94c+gVud38qn/kQHGT9nD6OWp+cw==", "0895105609", false, "https://res.cloudinary.com/donhvedgr/image/upload/v1662969813/blank-profile-picture_cqowyq.webp", "a277f567-e47b-49c0-9c58-8ea16b53b96b", false, "gkerkelov03@abv.bg", "Admin" },
-                    { new Guid("91f1a014-8285-40bd-86d9-24f968660d3c"), 0, "d3e99ab0-a2b9-4be4-a10d-c090514af36c", "pivanov03@abv.bg", true, "Petar", "Ivanov", false, null, "PIVANOV03@ABV.BG", "PIVANOV03@ABV.BG", "AQAAAAIAAYagAAAAEO2zs9aMkqIcfdgrLQw6kkZY7DBZsV63YApAxBnIjWwgKwPzkb/ZcG7v3SNqNqSKWQ==", "0899829897", false, "https://res.cloudinary.com/donhvedgr/image/upload/v1662969813/blank-profile-picture_cqowyq.webp", "1585a987-f6dc-472d-b6bb-066eed65728e", false, "pivanov03@abv.bg", "Admin" }
+                    { new Guid("5de2fd94-4b43-4b42-929b-a908358d706c"), 0, "a156d954-2074-493a-8dfd-c77807aa6c12", "pivanov03@abv.bg", true, "Petar", "Ivanov", false, null, "PIVANOV03@ABV.BG", "PIVANOV03@ABV.BG", "AQAAAAIAAYagAAAAEK6d3BPK/ZqSDkwvmG+evt8LIUtqbYOtQ7LmAOB+t2Tl+COqmJ0ED6do+A4xGaH9BA==", "0899829897", false, "https://res.cloudinary.com/donhvedgr/image/upload/v1662969813/blank-profile-picture_cqowyq.webp", "9e24749b-7e66-4e75-9ff5-588319906fd2", false, "pivanov03@abv.bg", "Admin" },
+                    { new Guid("7e5fa57b-0f85-48a8-b5ee-58700b7629c9"), 0, "cc7c3c08-0bc6-45e9-9522-ab294c891fd0", "gkerkelov03@abv.bg", true, "Georgi", "Kerkelov", false, null, "GKERKELOV03@ABV.BG", "GKERKELOV03@ABV.BG", "AQAAAAIAAYagAAAAEIc5DS0V9Fu2NHwtKZNuwtYguakqx/wt+RWX6oGm8IxPlGFuDg0fIz72LnaBZ6BGzg==", "0895105609", false, "https://res.cloudinary.com/donhvedgr/image/upload/v1662969813/blank-profile-picture_cqowyq.webp", "2735f3f2-3130-40ac-88b0-7c6eb276db28", false, "gkerkelov03@abv.bg", "Admin" }
                 });
 
             migrationBuilder.InsertData(
@@ -620,8 +627,8 @@ namespace SmartSalon.Data.Migrations
                 columns: new[] { "Id", "BookingsInAdvance", "Country", "DeletedBy", "DeletedOn", "Description", "GoogleMapsLocation", "IsDeleted", "MainCurrencyId", "Name", "ProfilePictureUrl", "SubscriptionsEnabled", "TimePenalty", "WorkersCanDeleteBookings", "WorkersCanMoveBookings", "WorkersCanSetNonWorkingPeriods", "WorkingTimeId" },
                 values: new object[,]
                 {
-                    { new Guid("8b0ea877-6e1d-4687-959c-8817947af379"), 5, "BULGARIA", null, null, "Description", "Location", false, new Guid("26c1b986-13bc-400f-a544-b084287557f5"), "Cosa Nostra", null, true, 5, false, true, true, new Guid("db5b5f1e-4097-42b0-b2fa-c8448e9d08c8") },
-                    { new Guid("a4ff11ff-7148-4d10-9fdb-3a02b9fd9fe1"), 5, "BULGARIA", null, null, "Description", "Location", false, new Guid("26c1b986-13bc-400f-a544-b084287557f5"), "Gosho shop", null, true, 5, false, true, true, new Guid("12303ed2-9a20-440e-9c4b-c4aaa23bf3d9") }
+                    { new Guid("0d438f43-4ad1-4792-895d-a037199ea670"), 5, "BULGARIA", null, null, "Description", "Location", false, new Guid("0b544581-9a9d-434d-940d-b7031bb4d42b"), "Cosa Nostra", null, true, 5, false, true, true, new Guid("fa31fc00-e4d3-4e27-a95d-815dabae8e5f") },
+                    { new Guid("b527b689-9af0-4348-bed0-bfc5abe47811"), 5, "BULGARIA", null, null, "Description", "Location", false, new Guid("0b544581-9a9d-434d-940d-b7031bb4d42b"), "Gosho shop", null, true, 5, false, true, true, new Guid("3f5f25e1-72e0-444a-8bd0-f4909754ac1b") }
                 });
 
             migrationBuilder.InsertData(
@@ -629,19 +636,19 @@ namespace SmartSalon.Data.Migrations
                 columns: new[] { "RoleId", "UserId" },
                 values: new object[,]
                 {
-                    { new Guid("0811b6ca-9120-4a9a-a319-81b75c2b5384"), new Guid("39823949-7e6f-4ee3-8ad5-253f857f7e3d") },
-                    { new Guid("49ae35a5-46f9-4bcd-a22a-07ca86c40215"), new Guid("39823949-7e6f-4ee3-8ad5-253f857f7e3d") },
-                    { new Guid("0811b6ca-9120-4a9a-a319-81b75c2b5384"), new Guid("91f1a014-8285-40bd-86d9-24f968660d3c") },
-                    { new Guid("49ae35a5-46f9-4bcd-a22a-07ca86c40215"), new Guid("91f1a014-8285-40bd-86d9-24f968660d3c") }
+                    { new Guid("601bb307-cf48-442e-90c6-7bed09f822a4"), new Guid("5de2fd94-4b43-4b42-929b-a908358d706c") },
+                    { new Guid("a51df60c-58fa-4947-b49a-e0b462115740"), new Guid("5de2fd94-4b43-4b42-929b-a908358d706c") },
+                    { new Guid("601bb307-cf48-442e-90c6-7bed09f822a4"), new Guid("7e5fa57b-0f85-48a8-b5ee-58700b7629c9") },
+                    { new Guid("a51df60c-58fa-4947-b49a-e0b462115740"), new Guid("7e5fa57b-0f85-48a8-b5ee-58700b7629c9") }
                 });
 
             migrationBuilder.InsertData(
                 table: "WorkingTimes",
-                columns: new[] { "Id", "FridayClosingTime", "FridayOpeningTime", "MondayClosingTime", "MondayOpeningTime", "SalonId", "SaturdayClosingTime", "SaturdayOpeningTime", "SundayClosingTime", "SundayOpeningTime", "ThursdayClosingTime", "ThursdayOpeningTime", "TuesdayClosingTime", "TuesdayOpeningTime", "WednesdayClosingTime", "WednesdayOpeningTime" },
+                columns: new[] { "Id", "FridayClosingTime", "FridayIsWorking", "FridayOpeningTime", "MondayClosingTime", "MondayIsWorking", "MondayOpeningTime", "SalonId", "SaturdayClosingTime", "SaturdayIsWorking", "SaturdayOpeningTime", "SundayClosingTime", "SundayIsWorking", "SundayOpeningTime", "ThursdayClosingTime", "ThursdayIsWorking", "ThursdayOpeningTime", "TuesdayClosingTime", "TuesdayIsWorking", "TuesdayOpeningTime", "WednesdayClosingTime", "WednesdayIsWorking", "WednesdayOpeningTime" },
                 values: new object[,]
                 {
-                    { new Guid("12303ed2-9a20-440e-9c4b-c4aaa23bf3d9"), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new Guid("a4ff11ff-7148-4d10-9fdb-3a02b9fd9fe1"), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0) },
-                    { new Guid("db5b5f1e-4097-42b0-b2fa-c8448e9d08c8"), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new Guid("8b0ea877-6e1d-4687-959c-8817947af379"), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), new TimeOnly(7, 0, 0) }
+                    { new Guid("3f5f25e1-72e0-444a-8bd0-f4909754ac1b"), new TimeOnly(19, 0, 0), false, new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), false, new TimeOnly(7, 0, 0), new Guid("b527b689-9af0-4348-bed0-bfc5abe47811"), new TimeOnly(19, 0, 0), false, new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), false, new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), false, new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), false, new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), false, new TimeOnly(7, 0, 0) },
+                    { new Guid("fa31fc00-e4d3-4e27-a95d-815dabae8e5f"), new TimeOnly(19, 0, 0), false, new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), false, new TimeOnly(7, 0, 0), new Guid("0d438f43-4ad1-4792-895d-a037199ea670"), new TimeOnly(19, 0, 0), false, new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), false, new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), false, new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), false, new TimeOnly(7, 0, 0), new TimeOnly(19, 0, 0), false, new TimeOnly(7, 0, 0) }
                 });
 
             migrationBuilder.CreateIndex(

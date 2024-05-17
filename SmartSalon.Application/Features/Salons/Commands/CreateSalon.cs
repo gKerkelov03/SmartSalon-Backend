@@ -22,6 +22,7 @@ public class CreateSalonCommandResponse(Id id)
 
 internal class CreateSalonCommandHandler(
     IEfRepository<Salon> _salons,
+    IEfRepository<WorkingTime> _workingTimes,
     IEfRepository<Currency> _currencies,
     IUnitOfWork _unitOfWork,
     IMapper _mapper
@@ -29,7 +30,6 @@ internal class CreateSalonCommandHandler(
 {
     private static object _defaultSalonSettings = new
     {
-        WorkingTimeId = CreateDefaultWorkingTime().Id,
         BookingsInAdvance = 5,
         TimePenalty = 5,
         SubscriptionsEnabled = true,
@@ -48,24 +48,31 @@ internal class CreateSalonCommandHandler(
 
         var workingTime = new WorkingTime()
         {
+            MondayIsWorking = true,
             MondayOpeningTime = startTime,
             MondayClosingTime = endTime,
 
+            TuesdayIsWorking = true,
             TuesdayOpeningTime = startTime,
             TuesdayClosingTime = endTime,
 
+            WednesdayIsWorking = true,
             WednesdayOpeningTime = startTime,
             WednesdayClosingTime = endTime,
 
+            ThursdayIsWorking = true,
             ThursdayOpeningTime = startTime,
             ThursdayClosingTime = endTime,
 
+            FridayIsWorking = true,
             FridayOpeningTime = startTime,
             FridayClosingTime = endTime,
 
+            SaturdayIsWorking = true,
             SaturdayOpeningTime = startTime,
             SaturdayClosingTime = endTime,
 
+            SundayIsWorking = true,
             SundayOpeningTime = startTime,
             SundayClosingTime = endTime
         };
@@ -79,10 +86,15 @@ internal class CreateSalonCommandHandler(
         var defaultCurrency = _currencies.FirstOrDefault(currency => currency.Code == "BGN");
 
         var newSalon = _mapper.Map<Salon>(command);
+        var workingTime = CreateDefaultWorkingTime();
+
         newSalon.MapAgainst(_defaultSalonSettings);
         newSalon.MainCurrency = defaultCurrency;
+        newSalon.WorkingTimeId = workingTime.Id;
+        workingTime.SalonId = newSalon.Id;
 
         await _salons.AddAsync(newSalon);
+        await _workingTimes.AddAsync(workingTime);
         await _unitOfWork.SaveChangesAsync(cancellationClosingTimeken);
 
         return new CreateSalonCommandResponse(newSalon.Id);

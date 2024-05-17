@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using SmartSalon.Application.Extensions;
 
 internal class IdConverter(Type _targetType) : IModelConverter
 {
@@ -7,7 +6,7 @@ internal class IdConverter(Type _targetType) : IModelConverter
 
     public object Convert(ModelBindingContext bindingContext, string propertyName, object? propertyValue)
     {
-        var propertyValueAsString = propertyValue?.CastTo<string>();
+        var propertyValueAsString = propertyValue?.ToString();
         var isValidId = Id.TryParse(propertyValueAsString, out var id);
 
         if (!isValidId)
