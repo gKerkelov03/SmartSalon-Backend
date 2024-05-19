@@ -15,6 +15,9 @@
         "Port": "587",
         "EncryptionKey": "b14ca5898a4e4133bbce2ea2315a1916"
     },
+    "ApiKeys": {
+        "GoogleMaps": "AIzaSyBVoIaCVdNIhMvL1u58fpGy6hprhJCioEM"
+    },
     "Hosting": {
         "FrontendUrl": "http://localhost:4200",
         "BackendUrl": "http://localhost:5054"

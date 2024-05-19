@@ -67,6 +67,7 @@ internal class ObjectBinder(IdConverter _idConverter) : IModelBinder, IModelBind
 
             using var requestBodyReader = new StreamReader(request.Body, Encoding.UTF8, leaveOpen: true);
             var bodyAsText = await requestBodyReader.ReadToEndAsync();
+
             request.Body.Position = 0;
 
             return JsonConvert.DeserializeObject<Dictionary<string, object>>(bodyAsText)!;

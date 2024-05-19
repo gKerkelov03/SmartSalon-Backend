@@ -10,6 +10,8 @@ public class GetSalonByIdResponse : IMapFrom<GetSalonByIdQueryResponse>
     public required string Name { get; set; }
     public required string Description { get; set; }
     public required string GoogleMapsLocation { get; set; }
+    public required string Latitude { get; set; }
+    public required string Longitude { get; set; }
     public required string Country { get; set; }
     public string? ProfilePictureUrl { get; set; }
     public required int TimePenalty { get; set; }

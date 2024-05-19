@@ -25,7 +25,8 @@ internal class CreateSalonCommandHandler(
     IEfRepository<WorkingTime> _workingTimes,
     IEfRepository<Currency> _currencies,
     IUnitOfWork _unitOfWork,
-    IMapper _mapper
+    IMapper _mapper,
+    IGeolocator _geolocator
 ) : ICommandHandler<CreateSalonCommand, CreateSalonCommandResponse>
 {
     private static object _defaultSalonSettings = new
@@ -37,8 +38,7 @@ internal class CreateSalonCommandHandler(
         WorkersCanMoveBookings = true,
         WorkersCanSetNonWorkingPeriods = true,
         WorkersCanDeleteBookings = true,
-        Description = "",
-        Country = "BULGARIA"
+        Description = ""
     };
 
     private static WorkingTime CreateDefaultWorkingTime()
@@ -82,19 +82,29 @@ internal class CreateSalonCommandHandler(
 
     public async Task<Result<CreateSalonCommandResponse>> Handle(CreateSalonCommand command, CancellationToken cancellationClosingTimeken)
     {
-        //TODO: this default currency can be cached but I don't know how would be the best to do it because the handler is transient
+        var coordinatesResult = await _geolocator.GetCoordinatesAsync(command.GoogleMapsLocation);
+
+        if (coordinatesResult.IsFailure)
+        {
+            return coordinatesResult.Errors!.First();
+        }
+
         var defaultCurrency = _currencies.FirstOrDefault(currency => currency.Code == "BGN");
+        var newWorkingTime = CreateDefaultWorkingTime();
 
         var newSalon = _mapper.Map<Salon>(command);
-        var workingTime = CreateDefaultWorkingTime();
-
         newSalon.MapAgainst(_defaultSalonSettings);
+
         newSalon.MainCurrency = defaultCurrency;
-        newSalon.WorkingTimeId = workingTime.Id;
-        workingTime.SalonId = newSalon.Id;
+        newSalon.WorkingTimeId = newWorkingTime.Id;
+        newSalon.Latitude = coordinatesResult.Value.Latitude;
+        newSalon.Longitude = coordinatesResult.Value.Longitude;
+        newSalon.Country = coordinatesResult.Value.Country;
+
+        newWorkingTime.SalonId = newSalon.Id;
 
         await _salons.AddAsync(newSalon);
-        await _workingTimes.AddAsync(workingTime);
+        await _workingTimes.AddAsync(newWorkingTime);
         await _unitOfWork.SaveChangesAsync(cancellationClosingTimeken);
 
         return new CreateSalonCommandResponse(newSalon.Id);

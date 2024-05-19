@@ -37,7 +37,14 @@ public static partial class ServiceCollectionExtensions
             }
 
             var sectionName = sectionField.GetValue(null)!.CastTo<string>();
-            configure.Invoke(null, [services, config.GetSection(sectionName)]);
+            var configSection = config.GetSection(sectionName);
+
+            if (!configSection.Exists())
+            {
+                throw new InvalidOperationException($"Section with the name of {sectionName} doesn't exist in the configuration");
+            }
+
+            configure.Invoke(null, [services, configSection]);
         }
 
         return services;
