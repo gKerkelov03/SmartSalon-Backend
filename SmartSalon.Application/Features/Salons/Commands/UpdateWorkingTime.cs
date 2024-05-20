@@ -10,8 +10,8 @@ public class UpdateWorkingTimeCommand : ICommand
 {
     public required Id WorkingTimeId { get; set; }
     public required DayOfWeek DayOfWeek { get; set; }
-    public required TimeOnly StartTime { get; set; }
-    public required TimeOnly EndTime { get; set; }
+    public required TimeOnly OpeningTime { get; set; }
+    public required TimeOnly ClosingTime { get; set; }
     public required bool IsWorking { get; set; }
 }
 
@@ -27,7 +27,8 @@ internal class UpdateWorkingTimeCommandHandler(IEfRepository<WorkingTime> _worki
             return Error.NotFound;
         }
 
-        UpdateWorkingTimeForDayOfWeek(workingTime, command.DayOfWeek, command.IsWorking, command.StartTime, command.EndTime);
+        UpdateWorkingTimeForDayOfWeek(workingTime, command.DayOfWeek, command.IsWorking, command.OpeningTime, command.ClosingTime);
+
         _workingTimes.Update(workingTime);
 
         await _unitOfWork.SaveChangesAsync(cancellationClosingTimeken);

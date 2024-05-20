@@ -99,7 +99,7 @@ internal class CreateSalonCommandHandler(
         newSalon.WorkingTimeId = newWorkingTime.Id;
         newSalon.Latitude = coordinatesResult.Value.Latitude;
         newSalon.Longitude = coordinatesResult.Value.Longitude;
-        newSalon.Country = coordinatesResult.Value.Country;
+        newSalon.Country = coordinatesResult.Value.Country.ToUpper();
 
         newWorkingTime.SalonId = newSalon.Id;
 

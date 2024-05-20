@@ -12,6 +12,6 @@ public class UpdateWorkingTimeRequest : IMapTo<UpdateWorkingTimeCommand>
     public Id SalonId { get; set; }
     public required DayOfWeek DayOfWeek { get; set; }
     public bool IsWorking { get; set; }
-    public TimeOnly StartTime { get; set; }
-    public TimeOnly EndTime { get; set; }
+    public TimeOnly OpeningTime { get; set; }
+    public TimeOnly ClosingTime { get; set; }
 }
