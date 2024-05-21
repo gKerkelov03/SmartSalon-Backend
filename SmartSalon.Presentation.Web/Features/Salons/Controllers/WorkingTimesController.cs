@@ -27,7 +27,7 @@ public class WorkingTimesController(ISender _mediator, IMapper _mapper) : V1ApiC
         );
     }
 
-    [HttpPatch(IdRoute)]
+    [HttpPatch]
     [SuccessResponse(Status200OK)]
     [FailureResponse(Status404NotFound)]
     [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]

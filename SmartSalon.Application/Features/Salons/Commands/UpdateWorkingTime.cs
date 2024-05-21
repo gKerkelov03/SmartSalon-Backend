@@ -8,19 +8,29 @@ namespace SmartWorkingTime.Application.Features.Salons.Commands;
 
 public class UpdateWorkingTimeCommand : ICommand
 {
-    public required Id WorkingTimeId { get; set; }
+    public required Id SalonId { get; set; }
     public required DayOfWeek DayOfWeek { get; set; }
     public required TimeOnly OpeningTime { get; set; }
     public required TimeOnly ClosingTime { get; set; }
     public required bool IsWorking { get; set; }
 }
 
-internal class UpdateWorkingTimeCommandHandler(IEfRepository<WorkingTime> _workingTimes, IUnitOfWork _unitOfWork)
-    : ICommandHandler<UpdateWorkingTimeCommand>
+internal class UpdateWorkingTimeCommandHandler(
+    IEfRepository<WorkingTime> _workingTimes,
+    IEfRepository<Salon> _salons,
+    IUnitOfWork _unitOfWork
+) : ICommandHandler<UpdateWorkingTimeCommand>
 {
     public async Task<Result> Handle(UpdateWorkingTimeCommand command, CancellationToken cancellationClosingTimeken)
     {
-        var workingTime = await _workingTimes.GetByIdAsync(command.WorkingTimeId);
+        var salon = await _salons.GetByIdAsync(command.SalonId);
+
+        if (salon is null)
+        {
+            return Error.NotFound;
+        }
+
+        var workingTime = await _workingTimes.GetByIdAsync(salon!.WorkingTimeId);
 
         if (workingTime is null)
         {
