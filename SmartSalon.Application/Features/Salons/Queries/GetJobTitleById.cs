@@ -7,7 +7,7 @@ using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Salons.Queries;
 
-//TODO: get specialty image and job tittle by id might be  unneeded
+//TODO: get specialty image and job title by id might be unneeded
 public class GetJobTitleByIdQuery(Id id) : IQuery<GetJobTitleByIdQueryResponse>
 {
     public Id JobTitleId => id;

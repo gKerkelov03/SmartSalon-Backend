@@ -22,15 +22,15 @@ internal class DeleteSalonCommandHandler(IEfRepository<Salon> _salons, IUnitOfWo
             .Include(salon => salon.Owners)
             .Include(salon => salon.Workers)
             .Include(salon => salon.JobTitles)
-            !.ThenInclude(JobTitle => JobTitle.Workers)
+            !.ThenInclude(jobTitle => jobTitle.Workers)
             .FirstOrDefaultAsync(salon => salon.Id == command.SalonId);
 
-        //TODO: if the salon has job titles and workers connected to them it throws exceptions
         if (salon is null)
         {
             return Error.NotFound;
         }
 
+        //TODO: if the salon has job titles and workers connected to them it throws exceptions
         salon.JobTitles!.ForEach(jobTitle => jobTitle.Workers = []);
         salon!.Workers = null;
         salon!.Owners = null;
