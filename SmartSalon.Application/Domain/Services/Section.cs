@@ -3,7 +3,7 @@ using SmartSalon.Application.Domain.Salons;
 
 namespace SmartSalon.Application.Domain.Services;
 
-public class Section : BaseEntity
+public class Section : DeletableEntity
 {
     public required string Name { get; set; }
     public required int Order { get; set; }

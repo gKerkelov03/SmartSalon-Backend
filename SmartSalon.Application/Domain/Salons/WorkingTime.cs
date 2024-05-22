@@ -2,7 +2,7 @@ using SmartSalon.Application.Domain.Base;
 
 namespace SmartSalon.Application.Domain.Salons;
 
-public class WorkingTime : BaseEntity
+public class WorkingTime : DeletableEntity
 {
     public Id SalonId { get; set; }
     public virtual Salon? Salon { get; set; }

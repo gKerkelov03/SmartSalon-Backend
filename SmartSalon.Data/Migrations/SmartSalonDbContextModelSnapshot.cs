@@ -90,13 +90,23 @@ namespace SmartSalon.Data.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = new Guid("512de605-0279-428d-9ac0-6705a9c16fd4"),
-                            RoleId = new Guid("c55ef814-a82e-40f5-9853-0ad5dc4dc3bc")
+                            UserId = new Guid("96cca6f8-4843-4e4f-9f00-eb21f4149f20"),
+                            RoleId = new Guid("e3619e02-5280-4afe-a001-4a24cecd1a28")
                         },
                         new
                         {
-                            UserId = new Guid("7534d91d-ede6-4bfb-a336-614638216dcc"),
-                            RoleId = new Guid("c55ef814-a82e-40f5-9853-0ad5dc4dc3bc")
+                            UserId = new Guid("96cca6f8-4843-4e4f-9f00-eb21f4149f20"),
+                            RoleId = new Guid("37e9b34f-0414-4f92-8160-57090530c7c1")
+                        },
+                        new
+                        {
+                            UserId = new Guid("d7101544-7489-4bcd-a224-b095a0b38602"),
+                            RoleId = new Guid("e3619e02-5280-4afe-a001-4a24cecd1a28")
+                        },
+                        new
+                        {
+                            UserId = new Guid("d7101544-7489-4bcd-a224-b095a0b38602"),
+                            RoleId = new Guid("37e9b34f-0414-4f92-8160-57090530c7c1")
                         });
                 });
 
@@ -206,8 +216,17 @@ namespace SmartSalon.Data.Migrations
                     b.Property<int>("AllowedBookingsInAdvance")
                         .HasColumnType("int");
 
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("DeletedOn")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<int>("Duration")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<Guid>("SalonId")
                         .HasColumnType("uniqueidentifier");
@@ -252,229 +271,229 @@ namespace SmartSalon.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("0c708210-2632-41e0-9534-e7f94ca9406e"),
+                            Id = new Guid("7c415417-155e-455c-bb5c-df5dcf5eb436"),
                             Code = "BTC",
                             Name = "Bitcoin"
                         },
                         new
                         {
-                            Id = new Guid("b585468a-e6b9-4698-969d-29a1584ed7f6"),
+                            Id = new Guid("1e3cfad6-266f-44f4-82d7-d6dbd61411ca"),
                             Code = "ETH",
                             Name = "Ethereum"
                         },
                         new
                         {
-                            Id = new Guid("4243ebcd-3622-49eb-b02d-cb3151fe2b7b"),
+                            Id = new Guid("ccb2d7f2-8a31-4be0-96bb-c7a90771d151"),
                             Code = "USD",
                             Country = "United States",
                             Name = "United States Dollar"
                         },
                         new
                         {
-                            Id = new Guid("d3e7440a-8bdd-4095-af09-02b37ba74b5b"),
+                            Id = new Guid("6e79d0ba-865b-46db-92ec-7082c50249ba"),
                             Code = "EUR",
                             Country = "Eurozone",
                             Name = "Euro"
                         },
                         new
                         {
-                            Id = new Guid("b6f367c1-016e-4b83-b3aa-2b42ff6ef9fb"),
+                            Id = new Guid("b849b52b-0931-4b88-a702-46ac6788fc65"),
                             Code = "GBP",
                             Country = "United Kingdom",
                             Name = "British Pound Sterling"
                         },
                         new
                         {
-                            Id = new Guid("0fc0b184-d4aa-45df-bb67-832c6a7dce39"),
+                            Id = new Guid("095abf61-c2d6-4a51-a9be-a1345d3f3cab"),
                             Code = "JPY",
                             Country = "Japan",
                             Name = "Japanese Yen"
                         },
                         new
                         {
-                            Id = new Guid("ddac5c73-6647-41c4-bdeb-215a8685dcd4"),
+                            Id = new Guid("cb9c1f7a-d2f1-42a9-9dde-c04a668bb9bf"),
                             Code = "AUD",
                             Country = "Australia",
                             Name = "Australian Dollar"
                         },
                         new
                         {
-                            Id = new Guid("017e8565-caa1-490c-973e-3c2eeaedbd21"),
+                            Id = new Guid("6ca8084b-a3ef-4fd9-853d-360025b36fad"),
                             Code = "CAD",
                             Country = "Canada",
                             Name = "Canadian Dollar"
                         },
                         new
                         {
-                            Id = new Guid("a9102466-00bf-434c-871b-8239b5057ca2"),
+                            Id = new Guid("64641587-f5d7-439e-afcd-bd5721a97f1c"),
                             Code = "CHF",
                             Country = "Switzerland",
                             Name = "Swiss Franc"
                         },
                         new
                         {
-                            Id = new Guid("2cd1ff22-5c64-4c28-88d4-7b2ea7559178"),
+                            Id = new Guid("526b71d3-1a5f-4ded-81d8-124c36a6bb79"),
                             Code = "CNY",
                             Country = "China",
                             Name = "Chinese Yuan"
                         },
                         new
                         {
-                            Id = new Guid("460ea180-b3e7-40c0-b0cc-173004e44373"),
+                            Id = new Guid("baf69a11-835f-482c-875e-8b5e1aecb3fc"),
                             Code = "INR",
                             Country = "India",
                             Name = "Indian Rupee"
                         },
                         new
                         {
-                            Id = new Guid("ff140a82-0b8a-4b0e-a7ef-5cecc6a56a42"),
+                            Id = new Guid("e7ad88a7-caa0-4b99-813a-68b62333ba5e"),
                             Code = "BRL",
                             Country = "Brazil",
                             Name = "Brazilian Real"
                         },
                         new
                         {
-                            Id = new Guid("502e9fb7-591f-4166-bd31-88c84f8c5723"),
+                            Id = new Guid("e222847b-7f96-4cf7-930e-8110d63fe3de"),
                             Code = "KRW",
                             Country = "South Korea",
                             Name = "South Korean Won"
                         },
                         new
                         {
-                            Id = new Guid("6399ef33-1e90-47f3-a632-83460c64b11f"),
+                            Id = new Guid("33c31c4b-d27d-481e-8b59-ef3a36d2142b"),
                             Code = "RUB",
                             Country = "Russia",
                             Name = "Russian Ruble"
                         },
                         new
                         {
-                            Id = new Guid("3f239ab6-fbab-4df7-b260-ede2f0a11269"),
+                            Id = new Guid("3f0dd3ae-4f93-4f9d-9a8a-4a73de5b62b3"),
                             Code = "MXN",
                             Country = "Mexico",
                             Name = "Mexican Peso"
                         },
                         new
                         {
-                            Id = new Guid("7c874773-2bc7-448f-8e4d-ad3677149478"),
+                            Id = new Guid("c6dde1c1-a980-41ac-8254-a3d2eb9493ad"),
                             Code = "ZAR",
                             Country = "South Africa",
                             Name = "South African Rand"
                         },
                         new
                         {
-                            Id = new Guid("ddd8b064-65ab-4154-9f5c-9c15538e58b1"),
+                            Id = new Guid("d8ac2dc0-5267-43fd-b373-651d9a4d557e"),
                             Code = "NZD",
                             Country = "New Zealand",
                             Name = "New Zealand Dollar"
                         },
                         new
                         {
-                            Id = new Guid("29e45ed0-cb14-4ffb-993a-ceeb071f336f"),
+                            Id = new Guid("2a19484e-4cae-4105-94b8-33e36d64957f"),
                             Code = "SGD",
                             Country = "Singapore",
                             Name = "Singapore Dollar"
                         },
                         new
                         {
-                            Id = new Guid("22fcbf6a-46cd-4c79-97e5-c8546014000f"),
+                            Id = new Guid("83cc2f52-a965-4707-b784-bc28f9ba3536"),
                             Code = "HKD",
                             Country = "Hong Kong",
                             Name = "Hong Kong Dollar"
                         },
                         new
                         {
-                            Id = new Guid("ee1c17b3-34fe-4641-8386-ab92736ca183"),
+                            Id = new Guid("bcf0e175-847d-48a9-90dd-830d2aff114a"),
                             Code = "SEK",
                             Country = "Sweden",
                             Name = "Swedish Krona"
                         },
                         new
                         {
-                            Id = new Guid("4035763c-ae47-40fd-867e-7b6cc6627b85"),
+                            Id = new Guid("33f24fb8-5d60-4b2f-8303-ab7d33d79fe8"),
                             Code = "NOK",
                             Country = "Norway",
                             Name = "Norwegian Krone"
                         },
                         new
                         {
-                            Id = new Guid("fb3836f5-7d49-40c8-82be-4f2e14989284"),
+                            Id = new Guid("97018060-be91-4443-9035-a84199295c70"),
                             Code = "TRY",
                             Country = "Turkey",
                             Name = "Turkish Lira"
                         },
                         new
                         {
-                            Id = new Guid("a5ff540c-d456-483e-94c5-e6385b0c9457"),
+                            Id = new Guid("e99084ba-36e0-46d0-a9a4-0d3ab674116b"),
                             Code = "ARS",
                             Country = "Argentina",
                             Name = "Argentine Peso"
                         },
                         new
                         {
-                            Id = new Guid("3537efd8-0d9c-4730-bbed-8fa2312f3aa6"),
+                            Id = new Guid("7c4890aa-110a-491d-82b8-ce3b863c2a6a"),
                             Code = "DKK",
                             Country = "Denmark",
                             Name = "Danish Krone"
                         },
                         new
                         {
-                            Id = new Guid("896c811e-97c7-4cdb-bd3f-d64852fe44fa"),
+                            Id = new Guid("c67defa5-54bd-42a5-a96f-07e65a6b0d5f"),
                             Code = "PLN",
                             Country = "Poland",
                             Name = "Polish Zloty"
                         },
                         new
                         {
-                            Id = new Guid("1b862927-54c2-4a13-b12c-9b57b07cfca5"),
+                            Id = new Guid("3fdb4580-2612-4bde-a9cc-3085eda6adcc"),
                             Code = "ILS",
                             Country = "Israel",
                             Name = "Israeli New Shekel"
                         },
                         new
                         {
-                            Id = new Guid("37779be7-4b6c-446f-8756-554268ab1c1f"),
+                            Id = new Guid("d52c0689-c3bb-4d29-8350-18d87ecdd174"),
                             Code = "SAR",
                             Country = "Saudi Arabia",
                             Name = "Saudi Riyal"
                         },
                         new
                         {
-                            Id = new Guid("979edebf-58f3-4375-a761-632c0c87dd18"),
+                            Id = new Guid("31ebc342-7398-4d9f-8be8-d3a99c53609d"),
                             Code = "AED",
                             Country = "United Arab Emirates",
                             Name = "UAE Dirham"
                         },
                         new
                         {
-                            Id = new Guid("b2837164-a9c3-475a-905d-4d375369b4e8"),
+                            Id = new Guid("af591b49-fe1b-4483-b679-fdf1f8482053"),
                             Code = "THB",
                             Country = "Thailand",
                             Name = "Thai Baht"
                         },
                         new
                         {
-                            Id = new Guid("74bd162d-b8d4-4bd4-8559-a381a7baccb6"),
+                            Id = new Guid("ffc2c991-ac2e-4336-9f2c-9f6231a9c9ea"),
                             Code = "MYR",
                             Country = "Malaysia",
                             Name = "Malaysian Ringgit"
                         },
                         new
                         {
-                            Id = new Guid("f72c9299-b680-4f39-8528-7de4ddc05c31"),
+                            Id = new Guid("fe59ecd4-ba65-44cc-bd71-ad3974880d64"),
                             Code = "IDR",
                             Country = "Indonesia",
                             Name = "Indonesian Rupiah"
                         },
                         new
                         {
-                            Id = new Guid("be9381f2-fa9c-47c0-b141-e3fd7985bbaa"),
+                            Id = new Guid("a68fffe0-1036-4670-8130-8d9335a5be36"),
                             Code = "PHP",
                             Country = "Philippines",
                             Name = "Philippine Peso"
                         },
                         new
                         {
-                            Id = new Guid("28018e08-733e-4353-aa81-a942ce3e3c57"),
+                            Id = new Guid("d6e71077-785d-4de2-9b75-9457a8e91166"),
                             Code = "BGN",
                             Country = "Bulgaria",
                             Name = "Bulgarian Lev"
@@ -554,9 +573,6 @@ namespace SmartSalon.Data.Migrations
                     b.Property<string>("ProfilePictureUrl")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("SectionsEnabled")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("SubscriptionsEnabled")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -584,35 +600,33 @@ namespace SmartSalon.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("74520f72-e205-4f53-8ba2-6b2b3601a02c"),
+                            Id = new Guid("d7eca557-23d0-42f3-8f26-7c563cc2a451"),
                             DefaultBookingsInAdvance = 5,
                             DefaultTimePenalty = 5,
                             Description = "Description",
                             IsDeleted = false,
                             Location = "Location",
-                            MainCurrencyId = new Guid("28018e08-733e-4353-aa81-a942ce3e3c57"),
+                            MainCurrencyId = new Guid("d6e71077-785d-4de2-9b75-9457a8e91166"),
                             Name = "Cosa Nostra",
-                            SectionsEnabled = false,
                             SubscriptionsEnabled = true,
                             WorkersCanMoveBookings = true,
                             WorkersCanSetNonWorkingPeriods = true,
-                            WorkingTimeId = new Guid("3f4dba21-d8c9-4087-9a95-fc49880436c8")
+                            WorkingTimeId = new Guid("643fdab3-0a35-4bfc-a366-ae3635af2594")
                         },
                         new
                         {
-                            Id = new Guid("61e8a1ad-bd98-4780-8b26-c90571f0a9e4"),
+                            Id = new Guid("834d0e4d-126f-40bc-8fb0-415e7974dfe3"),
                             DefaultBookingsInAdvance = 5,
                             DefaultTimePenalty = 5,
                             Description = "Description",
                             IsDeleted = false,
                             Location = "Location",
-                            MainCurrencyId = new Guid("28018e08-733e-4353-aa81-a942ce3e3c57"),
+                            MainCurrencyId = new Guid("d6e71077-785d-4de2-9b75-9457a8e91166"),
                             Name = "Gosho shop",
-                            SectionsEnabled = false,
                             SubscriptionsEnabled = true,
                             WorkersCanMoveBookings = true,
                             WorkersCanSetNonWorkingPeriods = true,
-                            WorkingTimeId = new Guid("aa90ec23-fd25-4737-8f28-9cc2ef9240c0")
+                            WorkingTimeId = new Guid("540dd98e-78ac-4fc3-b5b9-3535349f801b")
                         });
                 });
 
@@ -652,11 +666,20 @@ namespace SmartSalon.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("DeletedOn")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<TimeOnly>("FridayFrom")
                         .HasColumnType("time");
 
                     b.Property<TimeOnly>("FridayTo")
                         .HasColumnType("time");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<TimeOnly>("MondayFrom")
                         .HasColumnType("time");
@@ -707,12 +730,13 @@ namespace SmartSalon.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("3f4dba21-d8c9-4087-9a95-fc49880436c8"),
+                            Id = new Guid("643fdab3-0a35-4bfc-a366-ae3635af2594"),
                             FridayFrom = new TimeOnly(7, 0, 0),
                             FridayTo = new TimeOnly(19, 0, 0),
+                            IsDeleted = false,
                             MondayFrom = new TimeOnly(7, 0, 0),
                             MondayTo = new TimeOnly(19, 0, 0),
-                            SalonId = new Guid("74520f72-e205-4f53-8ba2-6b2b3601a02c"),
+                            SalonId = new Guid("d7eca557-23d0-42f3-8f26-7c563cc2a451"),
                             SaturdayFrom = new TimeOnly(7, 0, 0),
                             SaturdayTo = new TimeOnly(19, 0, 0),
                             SundayFrom = new TimeOnly(7, 0, 0),
@@ -726,12 +750,13 @@ namespace SmartSalon.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("aa90ec23-fd25-4737-8f28-9cc2ef9240c0"),
+                            Id = new Guid("540dd98e-78ac-4fc3-b5b9-3535349f801b"),
                             FridayFrom = new TimeOnly(7, 0, 0),
                             FridayTo = new TimeOnly(19, 0, 0),
+                            IsDeleted = false,
                             MondayFrom = new TimeOnly(7, 0, 0),
                             MondayTo = new TimeOnly(19, 0, 0),
-                            SalonId = new Guid("61e8a1ad-bd98-4780-8b26-c90571f0a9e4"),
+                            SalonId = new Guid("834d0e4d-126f-40bc-8fb0-415e7974dfe3"),
                             SaturdayFrom = new TimeOnly(7, 0, 0),
                             SaturdayTo = new TimeOnly(19, 0, 0),
                             SundayFrom = new TimeOnly(7, 0, 0),
@@ -750,6 +775,15 @@ namespace SmartSalon.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("DeletedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -778,6 +812,15 @@ namespace SmartSalon.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("DeletedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -809,6 +852,12 @@ namespace SmartSalon.Data.Migrations
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("DeletedOn")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -816,6 +865,9 @@ namespace SmartSalon.Data.Migrations
 
                     b.Property<int>("DurationInMinutes")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -876,29 +928,29 @@ namespace SmartSalon.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("c915f493-90ff-452b-af96-d1f8d3e9f4b3"),
-                            ConcurrencyStamp = "c00557ae-7f60-431d-a969-a21aa4bbcb7f",
+                            Id = new Guid("37e9b34f-0414-4f92-8160-57090530c7c1"),
+                            ConcurrencyStamp = "6f7590c5-eee4-497a-872f-d2150fca1cb0",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = new Guid("5d5b4fed-68a8-4f20-b2b5-761fc39bd718"),
-                            ConcurrencyStamp = "caf111a2-324f-44b1-b776-f45382de887e",
+                            Id = new Guid("acbb3241-ca4d-4c62-b8ed-3aca4a6a0f9e"),
+                            ConcurrencyStamp = "7882d6c0-4136-4d73-b69e-e39971b21bc9",
                             Name = "Owner",
                             NormalizedName = "OWNER"
                         },
                         new
                         {
-                            Id = new Guid("cc421a3f-a270-48a6-8c70-ddbfe68469f0"),
-                            ConcurrencyStamp = "fcb70fc4-dbd8-4c75-ad65-c3ff29089a29",
+                            Id = new Guid("1cd28f95-6f2e-4471-a32c-9673eb29f124"),
+                            ConcurrencyStamp = "bc4d5c8f-c295-492d-876e-ad7f667c5bcb",
                             Name = "Worker",
                             NormalizedName = "WORKER"
                         },
                         new
                         {
-                            Id = new Guid("c55ef814-a82e-40f5-9853-0ad5dc4dc3bc"),
-                            ConcurrencyStamp = "078d7316-777c-4c8e-93ff-d747f4cf8923",
+                            Id = new Guid("e3619e02-5280-4afe-a001-4a24cecd1a28"),
+                            ConcurrencyStamp = "02289ad3-7126-47ae-a5df-4057452dfde1",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -1011,41 +1063,41 @@ namespace SmartSalon.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("512de605-0279-428d-9ac0-6705a9c16fd4"),
+                            Id = new Guid("96cca6f8-4843-4e4f-9f00-eb21f4149f20"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a77ac2b8-cef9-47df-bf48-2e51b9594651",
+                            ConcurrencyStamp = "6edef7d8-1ce3-43d4-9d7f-e32e9f0c0ab8",
                             Email = "gkerkelov03@abv.bg",
-                            EmailConfirmed = false,
+                            EmailConfirmed = true,
                             FirstName = "Georgi",
                             IsDeleted = false,
                             LastName = "Kerkelov",
                             LockoutEnabled = false,
                             NormalizedEmail = "GKERKELOV03@ABV.BG",
                             NormalizedUserName = "GKERKELOV03@ABV.BG",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBnHoUyeeWrN3QnyiUoBBACMJlztuJwQvOYZrSNLM692Eo5DwWnvcjqmljPdjho04Q==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPKf9dCfFLNYBkgAFVpZQis2rDwn99cDBqqmiaup56ANDZhxUWeQyGBuDo+to1wAeg==",
                             PhoneNumber = "0895105609",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b275a2f9-4cea-43a9-9607-0f5cb8ee11fe",
+                            SecurityStamp = "764b632f-a4d8-4dcc-938e-cc7072359c41",
                             TwoFactorEnabled = false,
                             UserName = "gkerkelov03@abv.bg"
                         },
                         new
                         {
-                            Id = new Guid("7534d91d-ede6-4bfb-a336-614638216dcc"),
+                            Id = new Guid("d7101544-7489-4bcd-a224-b095a0b38602"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e11e458d-bdb0-4c8f-9540-c3cc76a47f2c",
+                            ConcurrencyStamp = "2fb6382a-73d5-4c90-b5a0-ba1d91fdff89",
                             Email = "pivanov03@abv.bg",
-                            EmailConfirmed = false,
+                            EmailConfirmed = true,
                             FirstName = "Petar",
                             IsDeleted = false,
                             LastName = "Ivanov",
                             LockoutEnabled = false,
                             NormalizedEmail = "PIVANOV03@ABV.BG",
                             NormalizedUserName = "PIVANOV03@ABV.BG",
-                            PasswordHash = "AQAAAAIAAYagAAAAEIWWy0r2Y6wmcNEX9CDwI+YJ/WOSh/szhcSJUq3e2YDVnbFQ+CJZyYtQCEX5pq3IhQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDjEonhfAx3rKUonIyYgrKTLg7xqBr0K6u2TfVPHLggf61zkMGn4wvAH9Joqf0RxeQ==",
                             PhoneNumber = "0899829897",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "292e87b6-019c-4773-935e-a98b0c953f42",
+                            SecurityStamp = "b0170138-fa08-4365-991b-af63e685c0ff",
                             TwoFactorEnabled = false,
                             UserName = "pivanov03@abv.bg"
                         });

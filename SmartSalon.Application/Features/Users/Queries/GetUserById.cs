@@ -21,20 +21,24 @@ public class GetUserByIdQueryResponse : IMapFrom<User>
     public required string Email { get; set; }
     public bool EmailConfirmed { get; set; }
     public required string ProfilePictureUrl { get; set; }
+    public required IEnumerable<string> Roles { get; set; }
 }
 
-internal class GetUserByIdQueryHandler(IEfRepository<User> _users, IMapper _mapper)
+internal class GetUserByIdQueryHandler(UsersManager _users, IMapper _mapper)
     : IQueryHandler<GetUserByIdQuery, GetUserByIdQueryResponse>
 {
     public async Task<Result<GetUserByIdQueryResponse>> Handle(GetUserByIdQuery query, CancellationToken cancellationToken)
     {
-        var user = await _users.GetByIdAsync(query.UserId);
+        var user = await _users.FindByIdAsync(query.UserId.ToString());
 
         if (user is null)
         {
             return Error.NotFound;
         }
 
-        return _mapper.Map<GetUserByIdQueryResponse>(user);
+        var queryResponse = _mapper.Map<GetUserByIdQueryResponse>(user);
+        queryResponse.Roles = await _users.GetRolesAsync(user);
+
+        return queryResponse;
     }
 }

@@ -5,7 +5,7 @@ using SmartSalon.Application.Domain.Users;
 
 namespace SmartSalon.Application.Domain.Bookings;
 
-public class Subscription : BaseEntity
+public class Subscription : DeletableEntity
 {
     public int TimePenaltyInDays { get; set; }
     public int AllowedBookingsInAdvance { get; set; }
