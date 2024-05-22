@@ -4,12 +4,12 @@ using SmartSalon.Presentation.Web.Extensions;
 using SmartSalon.Application.Extensions;
 using Serilog;
 using SmartSalon.Application.ResultObject;
-using SmartSalon.Integrations;
+using SmartSalon.Integrations.Emails;
 
 var dataLayer = typeof(SmartSalonDbContext).Assembly;
 var applicationLayer = typeof(IResult).Assembly;
 var presentationLayer = typeof(WebConstants).Assembly;
-var integrationsLayer = typeof(IIntegrationsAssemblyMarker).Assembly;
+var integrationsLayer = typeof(EmailsManager).Assembly;
 
 var builder = WebApplication.CreateBuilder(args);
 

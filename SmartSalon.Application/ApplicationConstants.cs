@@ -60,12 +60,12 @@ public static class ApplicationConstants
             public const int MaxDefaultBookingsInAdvance = 20;
         }
 
-        public static class SalonSpecialty
+        public static class Specialty
         {
             public const int MaxTextLength = 200;
         }
 
-        public static class SalonCurrency
+        public static class Currency
         {
             public const int MaxCodeLength = 3;
             public const int MaxNameLength = 50;
