@@ -14,4 +14,5 @@ public class Service : DeletableEntity
     public virtual Salon? Salon { get; set; }
     public Id CategoryId { get; set; }
     public virtual Category? Category { get; set; }
+    public required ICollection<JobTitle>? JobTitles { get; set; }
 }

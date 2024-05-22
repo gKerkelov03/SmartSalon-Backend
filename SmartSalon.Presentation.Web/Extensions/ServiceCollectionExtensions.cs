@@ -1,18 +1,11 @@
-using TypeAndInterfacePair = (System.Type Type, System.Type Interface);
-using SourceAndDestinationPair = (System.Type Source, System.Type Destination);
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using SmartSalon.Application.Abstractions.Lifetime;
-using SmartSalon.Application.Abstractions.Mapping;
-using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Extensions;
-using SmartSalon.Data;
-using SmartSalon.Application.Options;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Text;
+using SmartSalon.Application.Options;
+using Microsoft.IdentityModel.Tokens;
 
 namespace SmartSalon.Presentation.Web.Extensions;
 
@@ -44,119 +37,62 @@ public static partial class ServiceCollectionExtensions
             }
 
             var sectionName = sectionField.GetValue(null)!.CastTo<string>();
-            configure.Invoke(null, [services, config.GetSection(sectionName)]);
+            var configSection = config.GetSection(sectionName);
+
+            if (!configSection.Exists())
+            {
+                throw new InvalidOperationException($"Section with the name of {sectionName} doesn't exist in the configuration");
+            }
+
+            configure.Invoke(null, [services, configSection]);
         }
-
-        return services;
-    }
-
-    public static IServiceCollection AddVersioning(this IServiceCollection services)
-    {
-        services.AddApiVersioning().AddApiExplorer();
-        return services;
-    }
-
-    public static IServiceCollection RegisterMapper(this IServiceCollection services, params Assembly[] assemblies)
-        => services.AddAutoMapper(expression =>
-        {
-            var allTypesFromTheAssemblies = assemblies.SelectMany(assembly => assembly.GetExportedTypes());
-
-            expression.CreateProfile(
-                "ReflectionProfile",
-                options =>
-                {
-                    GetFromMapsFrom(allTypesFromTheAssemblies)
-                        .ForEach(map => options.CreateMap(map.Source, map.Destination));
-
-                    GetToMapsFrom(allTypesFromTheAssemblies)
-                        .ForEach(map => options.CreateMap(map.Source, map.Destination));
-
-                    GetCustomMappingsFrom(allTypesFromTheAssemblies)
-                        .ForEach(map => map.CreateMappings(options));
-                }
-            );
-
-            static IEnumerable<TypeAndInterfacePair> GetPairs(IEnumerable<Type> types)
-                => types.SelectMany(
-                    type => type.GetTypeInfo().GetInterfaces(),
-                    (type, @interface) => (Type: type, Interface: @interface)
-                );
-
-            static IEnumerable<TypeAndInterfacePair> GetMaps(IEnumerable<Type> types, Func<TypeAndInterfacePair, bool> predicate)
-                => GetPairs(types)
-                    .Where(pair =>
-                        pair.Interface.GetTypeInfo().IsGenericType &&
-                        pair.Type.IsNotAbsctractOrInterface() &&
-                        predicate(pair)
-                    );
-
-            static IEnumerable<SourceAndDestinationPair> GetFromMapsFrom(IEnumerable<Type> types)
-                => GetMaps(types, pair => pair.Interface.GetGenericTypeDefinition() == typeof(IMapFrom<>))
-                    .Select(pair => (
-                        Source: pair.Interface.GetTypeInfo().GetGenericArguments()[0],
-                        Destination: pair.Type
-                    ));
-
-            static IEnumerable<SourceAndDestinationPair> GetToMapsFrom(IEnumerable<Type> types)
-                => GetMaps(types, pair => pair.Interface.GetGenericTypeDefinition() == typeof(IMapTo<>))
-                    .Select(pair => (
-                        Source: pair.Type,
-                        Destination: pair.Interface.GetTypeInfo().GetGenericArguments()[0])
-                    );
-
-            static IEnumerable<IHaveCustomMappings> GetCustomMappingsFrom(IEnumerable<Type> types)
-                => GetPairs(types)
-                    .Where(pair =>
-                        typeof(IHaveCustomMappings).IsAssignableFrom(pair.Type) &&
-                        pair.Type.IsNotAbsctractOrInterface()
-                    )
-                    .Select(typeAndInterfacePair => Activator.CreateInstance(typeAndInterfacePair.Type)!.CastTo<IHaveCustomMappings>());
-        });
-
-    public static IServiceCollection RegisterDbContext(this IServiceCollection services, IConfiguration configuration)
-        => services.AddDbContext<SmartSalonDbContext>(
-            options => options.UseSqlServer(configuration.GetConnectionString("Sql")));
-
-    public static IServiceCollection RegisterIdentityServices(this IServiceCollection services)
-    {
-        services
-            .AddIdentityCore<User>()
-            .AddRoles<Role>()
-            .AddEntityFrameworkStores<SmartSalonDbContext>()
-            .AddDefaultTokenProviders();
 
         return services;
     }
 
     public static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration config)
     {
-        var jwtOptions = config.GetSection(JwtOptions.SectionName).Get<JwtOptions>()!;
-        var signingKey = Encoding.ASCII.GetBytes(jwtOptions.EncryptionKey);
-
         services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
+            {
+                //TODO: why extracting this options configuration in optionsConfigurator class doesn't get called
+                var jwtOptions = config.GetSection(JwtOptions.SectionName).Get<JwtOptions>()!;
+                var signingKey = Encoding.ASCII.GetBytes(jwtOptions.EncryptionKey);
+
                 options.TokenValidationParameters = new()
                 {
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = jwtOptions.Issuer,
                     ValidAudience = jwtOptions.Audience,
                     IssuerSigningKey = new SymmetricSecurityKey(signingKey),
-                }
-            );
+                };
+            });
 
         services.AddAuthorization();
+
         return services;
     }
 
     public static IServiceCollection CallAddControllers(this IServiceCollection services)
     {
         services.AddControllers();
+
         return services;
     }
 
-    public static IServiceCollection RegisterConventionalServices(this IServiceCollection services, params Assembly[] assemblies)
-        => services.Scan(types =>
+    public static IServiceCollection AddVersioning(this IServiceCollection services)
+    {
+        services
+            .AddApiVersioning()
+            .AddApiExplorer();
+
+        return services;
+    }
+
+    public static IServiceCollection RegisterServices(this IServiceCollection services, params Assembly[] assemblies)
+    {
+        services.Scan(types =>
         {
             var allTypes = types.FromAssemblies(assemblies);
 
@@ -176,6 +112,6 @@ public static partial class ServiceCollectionExtensions
                 .WithTransientLifetime();
         });
 
-    public static IServiceCollection RegisterUnconventionalServices(this IServiceCollection services)
-        => services.AddSingleton<JwtSecurityTokenHandler>();
+        return services.AddSingleton<JwtSecurityTokenHandler>();
+    }
 }

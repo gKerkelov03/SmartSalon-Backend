@@ -29,6 +29,8 @@ public abstract class ApiController : ControllerBase
             response ?? new { createdResourceId }
         );
 
+    protected IActionResult Created(Id createdResourceId, object? response = null) => Created("", response ?? new { createdResourceId });
+
     protected IActionResult ProblemDetailsOr<TActionResult>(Result result) where TActionResult : IActionResult
     {
         if (result.IsFailure)

@@ -13,17 +13,16 @@ public class SearchForCurrencyQuery(string searchTerm) : IQuery<IEnumerable<GetC
     public string SearchTerm => searchTerm;
 }
 
-internal class SearchForCurrencyQueryHandler(IEfRepository<Currency> _owners, IMapper _mapper)
+internal class SearchForCurrencyQueryHandler(IEfRepository<Currency> _currencies, IMapper _mapper)
     : IQueryHandler<SearchForCurrencyQuery, IEnumerable<GetCurrencyByIdQueryResponse>>
 {
     public async Task<Result<IEnumerable<GetCurrencyByIdQueryResponse>>> Handle(SearchForCurrencyQuery query, CancellationToken cancellationToken)
     {
-        var loweredSearchTerm = query.SearchTerm.ToLower();
+        var searchTerm = query.SearchTerm.ToLower();
 
-        var currenciesMatchingTheSearchTerm = await _owners.FindAllAsync(currency =>
-            currency.Name.ToLower().StartsWith(loweredSearchTerm) ||
-            currency.Code.ToLower().StartsWith(loweredSearchTerm) ||
-            currency.Country == null ? false : currency.Country.ToLower().StartsWith(loweredSearchTerm)
+        var currenciesMatchingTheSearchTerm = await _currencies.FindAllAsync(currency =>
+            currency.Name.ToLower().StartsWith(searchTerm) ||
+            currency.Code.ToLower().StartsWith(searchTerm)
         );
 
         if (currenciesMatchingTheSearchTerm.IsEmpty())

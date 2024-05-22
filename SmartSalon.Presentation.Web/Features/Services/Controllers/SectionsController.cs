@@ -55,18 +55,6 @@ public class SectionsController(ISender _mediator, IMapper _mapper) : V1ApiContr
         return ProblemDetailsOr<OkResult>(result);
     }
 
-    [HttpPatch(IdRoute)]
-    [SuccessResponse(Status200OK)]
-    [FailureResponse(Status404NotFound)]
-    [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]
-    public async Task<IActionResult> MoveSection(MoveSectionRequest request)
-    {
-        var command = _mapper.Map<MoveSectionCommand>(request);
-        var result = await _mediator.Send(command);
-
-        return ProblemDetailsOr<OkResult>(result);
-    }
-
     [HttpDelete(IdRoute)]
     [SuccessResponse(Status204NoContent)]
     [FailureResponse(Status404NotFound)]

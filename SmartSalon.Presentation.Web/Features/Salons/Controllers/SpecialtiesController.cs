@@ -9,6 +9,7 @@ using SmartSalon.Presentation.Web.Attributes;
 using SmartSalon.Presentation.Web.Controllers;
 using SmartSalon.Presentation.Web.Features.Salons.Requests;
 using SmartSalon.Presentation.Web.Features.Salons.Responses;
+using SmartSalon.Presentation.Web.Salons.Requests;
 
 namespace SmartSalon.Presentation.Web.Features.Salons.Controllers;
 
@@ -17,9 +18,9 @@ public class SpecialtiesController(ISender _mediator, IMapper _mapper) : V1ApiCo
     [HttpPost]
     [SuccessResponse(Status201Created)]
     [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]
-    public async Task<IActionResult> AddSpecialty(AddSpecialtyRequest request)
+    public async Task<IActionResult> CreateSpecialty(CreateSpecialtyRequest request)
     {
-        var command = _mapper.Map<AddSpecialtyCommand>(request);
+        var command = _mapper.Map<CreateSpecialtyCommand>(request);
         var result = await _mediator.Send(command);
 
         return ProblemDetailsOr(result =>
@@ -57,9 +58,10 @@ public class SpecialtiesController(ISender _mediator, IMapper _mapper) : V1ApiCo
     [HttpDelete(IdRoute)]
     [SuccessResponse(Status204NoContent)]
     [FailureResponse(Status404NotFound)]
-    public async Task<IActionResult> DeleteSpecialty(Id specialtyId)
+    [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]
+    public async Task<IActionResult> DeleteSpecialty(DeleteSpecialtyRequest request)
     {
-        var command = new DeleteSpecialtyCommand(specialtyId);
+        var command = _mapper.Map<DeleteSpecialtyCommand>(request);
         var result = await _mediator.Send(command);
 
         return ProblemDetailsOr<NoContentResult>(result);

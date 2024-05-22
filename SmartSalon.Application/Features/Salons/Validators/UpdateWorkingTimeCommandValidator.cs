@@ -9,9 +9,9 @@ internal class UpdateWorkingTimeCommandValidator : AbstractValidator<UpdateWorki
 {
     public UpdateWorkingTimeCommandValidator()
     {
-        RuleFor(command => command.WorkingTimeId).MustBeValidGuid();
+        RuleFor(command => command.SalonId).MustBeValidGuid();
         RuleFor(command => command.DayOfWeek).NotNull();
-        RuleFor(command => command.From).NotNull();
-        RuleFor(command => command.To).NotNull();
+        RuleFor(command => command.OpeningTime).NotNull();
+        RuleFor(command => command.ClosingTime).NotNull();
     }
 }

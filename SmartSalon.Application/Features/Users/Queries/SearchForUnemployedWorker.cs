@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Domain.Users;
@@ -21,18 +22,22 @@ internal class SearchForUnemployedWorkerQueryHandler(IEfRepository<Worker> _work
         CancellationToken cancellationToken
     )
     {
-        var matchingUnemployedWorkers = await _workers.All
-            .Where(worker => worker.SalonId == null && (
+        var queryResponse = await _workers.All
+            .Include(worker => worker.JobTitles)
+            .Include(worker => worker.Salons)
+            .Where(worker => worker.Salons!.IsEmpty() && (
                 worker.NormalizedEmail!.Contains(query.SearchTerm.ToUpper()) ||
                 worker.PhoneNumber!.Contains(query.SearchTerm) ||
                 (worker.FirstName.ToUpper() + " " + worker.LastName.ToUpper()).Contains(query.SearchTerm.ToUpper()))
-            ).ToListAsync();
+            )
+            .ProjectTo<GetWorkerByIdQueryResponse>(_mapper.ConfigurationProvider)
+            .ToListAsync();
 
-        if (matchingUnemployedWorkers.IsEmpty())
+        if (queryResponse.IsEmpty())
         {
             return Error.NotFound;
         }
 
-        return matchingUnemployedWorkers.ToListOf<GetWorkerByIdQueryResponse>(_mapper);
+        return queryResponse;
     }
 }

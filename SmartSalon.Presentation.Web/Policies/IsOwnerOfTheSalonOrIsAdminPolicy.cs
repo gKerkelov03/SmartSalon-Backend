@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.Lifetime;
 using SmartSalon.Application.Domain.Salons;
-using SmartSalon.Application.Extensions;
 
 namespace SmartSalon.Presentation.Web.Policies;
 
@@ -18,49 +17,56 @@ internal class IsOwnerOfTheSalonOrIsAdminHandler(
 {
     public async Task HandleAsync(AuthorizationHandlerContext context)
     {
-        var requirement = GetRequirement<IsOwnerOfTheSalonOrIsAdminRequirement>(context);
-        var passedIdRouteParameter = _httpContextAccessor.HttpContext?.Request.RouteValues[IdRouteParameterName]?.ToString();
-        var salonIdPropertyName = "salonId";
+        try
+        {
+            var requirement = GetRequirement<IsOwnerOfTheSalonOrIsAdminRequirement>(context);
+            var requestedIdRouteParameter = _httpContextAccessor.HttpContext?.Request.RouteValues[IdRouteParameterName]?.ToString();
+            var salonIdPropertyName = "salonId";
 
-        if (requirement is null)
+            if (requirement is null)
+            {
+                return;
+            }
+
+            var requestBodyMap = await GetRequestBodyMapAsync(_httpContextAccessor);
+
+            if (requestBodyMap is null)
+            {
+                return;
+            }
+
+            var requestedSalonId = requestedIdRouteParameter;
+
+            if (requestBodyMap.ContainsKey(salonIdPropertyName))
+            {
+                requestedSalonId = requestBodyMap[salonIdPropertyName].ToString();
+            }
+            else if (requestedIdRouteParameter is null)
+            {
+                return;
+            }
+
+            var requestedSalonIdNotValid = !Id.TryParse(requestedSalonId, out var salonId);
+
+            if (requestedSalonIdNotValid)
+            {
+                return;
+            }
+
+            var isOwnerOfTheSalon = _salons
+                .All
+                .Include(salon => salon.Owners)
+                .Where(salon => salon.Id == salonId)
+                .Any(salon => salon.Owners!.Any(owner => owner.Id == _currentUser.Id));
+
+            if (_currentUser.IsAdmin || isOwnerOfTheSalon)
+            {
+                context.Succeed(requirement);
+            }
+        }
+        catch
         {
             return;
-        }
-
-        var requestBodyMap = await GetRequestBodyMapAsync(_httpContextAccessor);
-
-        if (requestBodyMap is null)
-        {
-            return;
-        }
-
-        var requestedSalonId = passedIdRouteParameter;
-
-        if (requestBodyMap.ContainsKey(salonIdPropertyName))
-        {
-            requestedSalonId = requestBodyMap[salonIdPropertyName];
-        }
-        else if (passedIdRouteParameter is null)
-        {
-            return;
-        }
-
-        var requestedSalonIdNotValid = !Id.TryParse(requestedSalonId, out var salonId);
-
-        if (requestedSalonIdNotValid)
-        {
-            return;
-        }
-
-        var isOwnerOfTheSalon = _salons
-            .All
-            .Include(salon => salon.Owners)
-            .Where(salon => salon.Id == salonId)
-            .Any(salon => salon.Owners!.Any(owner => owner.Id == _currentUser.Id));
-
-        if (_currentUser.IsAdmin || isOwnerOfTheSalon)
-        {
-            context.Succeed(requirement);
         }
     }
 }

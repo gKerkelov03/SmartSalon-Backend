@@ -16,9 +16,9 @@ public class ImagesController(ISender _mediator, IMapper _mapper) : V1ApiControl
     [HttpPost]
     [SuccessResponse(Status200OK)]
     [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]
-    public async Task<IActionResult> AddImage(AddImageRequest request)
+    public async Task<IActionResult> CreateImage(CreateImageRequest request)
     {
-        var command = _mapper.Map<AddImageCommand>(request);
+        var command = _mapper.Map<CreateImageCommand>(request);
         var result = await _mediator.Send(command);
 
         return ProblemDetailsOr(result =>
@@ -41,7 +41,7 @@ public class ImagesController(ISender _mediator, IMapper _mapper) : V1ApiControl
         );
     }
 
-    [HttpDelete]
+    [HttpDelete(IdRoute)]
     [SuccessResponse(Status200OK)]
     [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]
     public async Task<IActionResult> DeleteImage(DeleteImageRequest request)

@@ -40,7 +40,7 @@ internal class RegisterCommandHandler(UsersManager _users, IMapper _mapper, IEma
         var newCustomer = _mapper.Map<Customer>(command);
         newCustomer.UserName = command.Email;
 
-        var identityResultForCreation = await _users.CreateAsync(newCustomer);
+        var identityResultForCreation = await _users.CreateAsync(newCustomer, command.Password);
         var identityResultForAddingToRole = await _users.AddToRoleAsync(newCustomer, CustomerRoleName);
 
         if (identityResultForCreation.Failure())

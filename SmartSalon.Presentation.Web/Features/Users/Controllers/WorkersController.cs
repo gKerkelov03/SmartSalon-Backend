@@ -59,21 +59,33 @@ public class WorkersController(ISender _mediator, IMapper _mapper) : V1ApiContro
         );
     }
 
-    [HttpPatch(IdRoute)]
+    [HttpPatch($"UpdateNickname/{IdRoute}")]
     [SuccessResponse(Status200OK)]
     [FailureResponse(Status409Conflict)]
-    [Authorize(Policy = IsOwnerOfTheSalonOfTheWorkerOrIsAdminPolicy)]
-    public async Task<IActionResult> UpdateWorker(UpdateWorkerRequest request)
+    [Authorize(Policy = IsTheSameUserOrIsAdminPolicy)]
+    public async Task<IActionResult> UpdateWorkerNickname(UpdateWorkerNicknameRequest request)
     {
-        var command = _mapper.Map<UpdateWorkerCommand>(request);
+        var command = _mapper.Map<UpdateWorkerNicknameCommand>(request);
         var result = await _mediator.Send(command);
 
         return ProblemDetailsOr<OkResult>(result);
     }
 
-    [HttpPatch($"{IdRoute}/RemoveFromSalon")]
-    [SuccessResponse(Status204NoContent)]
+    [HttpPatch($"UpdateJobTitles/{IdRoute}")]
+    [SuccessResponse(Status200OK)]
+    [FailureResponse(Status409Conflict)]
     [Authorize(Policy = IsOwnerOfTheSalonOfTheWorkerOrIsAdminPolicy)]
+    public async Task<IActionResult> UpdateWorkerJobTitles(UpdateWorkerJobTitlesRequest request)
+    {
+        var command = _mapper.Map<UpdateWorkerNicknameCommand>(request);
+        var result = await _mediator.Send(command);
+
+        return ProblemDetailsOr<OkResult>(result);
+    }
+
+    [HttpPatch($"RemoveFromSalon/{IdRoute}")]
+    [SuccessResponse(Status204NoContent)]
+    [Authorize(Policy = IsOwnerOfTheSalonOfTheWorkerOrIsTheWorkerOrIsAdminPolicy)]
     public async Task<IActionResult> RemoveWorkerFromSalon(Id workerId)
     {
         var command = new RemoveWorkerFromSalonCommand(workerId);

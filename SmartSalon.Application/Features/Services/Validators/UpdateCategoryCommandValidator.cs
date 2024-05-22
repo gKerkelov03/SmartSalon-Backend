@@ -12,5 +12,6 @@ internal class UpdateCategoryCommandValidator : AbstractValidator<UpdateCategory
     {
         RuleFor(command => command.CategoryId).MustBeValidGuid();
         RuleFor(command => command.Name).MaximumLength(MaxNameLength);
+        RuleFor(command => command.Order).NotEmpty();
     }
 }

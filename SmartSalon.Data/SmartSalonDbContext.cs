@@ -20,6 +20,7 @@ public class SmartSalonDbContext : IdentityDbContext<User, Role, Id>
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+        base.OnConfiguring(optionsBuilder);
         optionsBuilder.UseSqlServer("Server=.,1433;Database=SmartSalon;TrustServerCertificate=True;User Id=sa;Password=P@ssw0rd123");
     }
 
@@ -40,9 +41,8 @@ public class SmartSalonDbContext : IdentityDbContext<User, Role, Id>
     }
 
     private static void SetDeleteBehaviorToRestrict(IEnumerable<IMutableEntityType> entityTypes)
-        => entityTypes.SelectMany(entity =>
-                entity.GetForeignKeys().Where(foreignKey => foreignKey.DeleteBehavior is not DeleteBehavior.Restrict)
-            )
+        => entityTypes
+            .SelectMany(entity => entity.GetForeignKeys())
             .ForEach(foreignKey => foreignKey.DeleteBehavior = DeleteBehavior.Restrict);
 
     private static void DontShowIfDeleted<TEntity>(ModelBuilder builder) where TEntity : class, IDeletableEntity
@@ -50,6 +50,7 @@ public class SmartSalonDbContext : IdentityDbContext<User, Role, Id>
 
     private static void SetupDeletedQueryFilter(ModelBuilder builder, IEnumerable<IMutableEntityType> entities)
     {
+
         var dontShowIfDeleted = typeof(SmartSalonDbContext).GetMethod(
             nameof(DontShowIfDeleted),
             BindingFlags.NonPublic | BindingFlags.Static
@@ -62,8 +63,7 @@ public class SmartSalonDbContext : IdentityDbContext<User, Role, Id>
                 entity.ClrType.BaseType != typeof(User)
             )
             .ForEach(deletableEntityType =>
-                //TODO: debug why dontShowIfDeleted is null sometimes
-                dontShowIfDeleted?.MakeGenericMethod(deletableEntityType.ClrType).Invoke(null, [builder])
+                dontShowIfDeleted!.MakeGenericMethod(deletableEntityType.ClrType).Invoke(null, [builder])
             );
     }
 
@@ -83,4 +83,5 @@ public class SmartSalonDbContext : IdentityDbContext<User, Role, Id>
     public DbSet<Section> Sections { get; set; }
     public DbSet<WorkingTime> WorkingTimes { get; set; }
     public DbSet<Currency> Currencies { get; set; }
+    public DbSet<JobTitle> JobTitles { get; set; }
 }

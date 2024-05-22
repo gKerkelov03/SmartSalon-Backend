@@ -36,9 +36,8 @@ internal class AddWorkerToSalonCommandHandler(
 
         var worker = await _workers.GetByIdAsync(decryptedToken.WorkerId);
         var salon = await _salons.All
-            .Where(salon => salon.Id == decryptedToken.SalonId)
             .Include(salon => salon.Workers)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(salon => salon.Id == decryptedToken.SalonId);
 
         if (worker is null || salon is null)
         {

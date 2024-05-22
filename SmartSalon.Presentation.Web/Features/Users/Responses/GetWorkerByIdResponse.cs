@@ -7,13 +7,13 @@ namespace SmartSalon.Presentation.Web.Features.Users.Responses;
 public class GetWorkerByIdResponse : IMapFrom<GetWorkerByIdQueryResponse>
 {
     public Id Id { get; set; }
-    public required string JobTitle { get; set; }
     public required string Nickname { get; set; }
     public required string FirstName { get; set; }
     public required string LastName { get; set; }
     public required string Email { get; set; }
-    public bool IsEmailConfirmed { get; set; }
+    public bool EmailConfirmed { get; set; }
     public required string ProfilePictureUrl { get; set; }
     public required string PhoneNumber { get; set; }
-    public string? SalonId { get; set; }
+    public required IEnumerable<Id> JobTitles { get; set; }
+    public required IEnumerable<Id> Salons { get; set; }
 }

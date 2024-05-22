@@ -5,6 +5,6 @@ namespace SmartSalon.Presentation.Web.Features.Salons.Responses;
 
 public class GetSpecialtyByIdResponse : IMapFrom<GetSpecialtyByIdQueryResponse>
 {
+    public Id Id { get; set; }
     public required string Text { get; set; }
-    public Id SalonId { get; set; }
 }

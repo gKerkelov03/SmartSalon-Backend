@@ -1,4 +1,5 @@
-﻿using SmartSalon.Application.Abstractions.Mapping;
+﻿using Microsoft.AspNetCore.Mvc;
+using SmartSalon.Application.Abstractions.Mapping;
 using SmartSalon.Application.Features.Users.Commands;
 using SmartSalon.Presentation.Web.Attributes;
 
@@ -6,7 +7,7 @@ namespace SmartSalon.Presentation.Web.Features.Users.Requests;
 
 public class UpdateUserRequest : IMapTo<UpdateUserCommand>
 {
-    [IdRouteParameter]
+    [ComesFromRoute(IdRouteParameterName)]
     public Id UserId { get; set; }
     public required string FirstName { get; set; }
     public required string LastName { get; set; }

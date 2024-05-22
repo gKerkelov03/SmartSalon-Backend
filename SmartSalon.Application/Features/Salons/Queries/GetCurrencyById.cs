@@ -18,6 +18,7 @@ public class GetCurrencyByIdQueryResponse : IMapFrom<Currency>
     public required string Code { get; set; }
     public required string Name { get; set; }
     public required string Country { get; set; }
+    public required string LogoUrl { get; set; }
 }
 
 internal class GetCurrencyByIdQueryHandler(IEfRepository<Currency> _currencies, IMapper _mapper)

@@ -1,4 +1,5 @@
 using MediatR;
+using SmartSalon.Application.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using SmartSalon.Presentation.Web.Features.Salons.Requests;
 using SmartSalon.Application.Features.Salons.Commands;
@@ -43,6 +44,20 @@ public class SalonsController(ISender _mediator, IMapper _mapper) : V1ApiControl
         );
     }
 
+    [HttpGet]
+    [SuccessResponse<GetSalonByIdResponse>(Status200OK)]
+    [FailureResponse(Status404NotFound)]
+    public async Task<IActionResult> GetAllSalonsInCountry(string country)
+    {
+        var query = new GetAllSalonsInCountryQuery(country);
+        var result = await _mediator.Send(query);
+
+        return ProblemDetailsOr((result) =>
+            Ok(result.Value.ToListOf<GetSalonByIdResponse>(_mapper)),
+            result
+        );
+    }
+
     [HttpPatch(IdRoute)]
     [SuccessResponse(Status200OK)]
     [FailureResponse(Status404NotFound)]
@@ -81,7 +96,7 @@ public class SalonsController(ISender _mediator, IMapper _mapper) : V1ApiControl
     [HttpPost($"InviteOwner")]
     [SuccessResponse(Status200OK)]
     [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]
-    public async Task<IActionResult> InvitateOwner(InviteOwnerRequest request)
+    public async Task<IActionResult> InviteOwner(InviteOwnerRequest request)
     {
         var command = _mapper.Map<InviteOwnerCommand>(request);
         var result = await _mediator.Send(command);

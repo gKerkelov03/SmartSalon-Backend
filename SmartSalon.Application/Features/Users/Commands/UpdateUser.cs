@@ -1,5 +1,4 @@
 ﻿using SmartSalon.Application.Abstractions;
-using SmartSalon.Application.Abstractions.Mapping;
 using SmartSalon.Application.Abstractions.MediatR;
 using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Errors;

@@ -14,6 +14,7 @@ internal static class WebConstants
         public const string IsOwnerOrIsAdminPolicy = nameof(IsOwnerOrIsAdminPolicy);
         public const string IsTheSameUserOrIsAdminPolicy = nameof(IsTheSameUserOrIsAdminPolicy);
         public const string IsOwnerOfTheSalonOfTheWorkerOrIsAdminPolicy = nameof(IsOwnerOfTheSalonOfTheWorkerOrIsAdminPolicy);
+        public const string IsOwnerOfTheSalonOfTheWorkerOrIsTheWorkerOrIsAdminPolicy = nameof(IsOwnerOfTheSalonOfTheWorkerOrIsTheWorkerOrIsAdminPolicy);
         public const string IsOwnerOfTheSalonOrIsAdminPolicy = nameof(IsOwnerOfTheSalonOrIsAdminPolicy);
     }
 }

@@ -2,9 +2,9 @@
 using Microsoft.Extensions.Options;
 using SmartSalon.Application.Abstractions.Lifetime;
 
-namespace SmartSalon.Presentation.Web.Options.Versioning;
+namespace SmartSalon.Presentation.Web.OptionsConfigurators.Versioning;
 
-public class ApiVersioningOptionsConfigurator : IConfigureOptions<ApiVersioningOptions>, ITransientLifetime
+public class ApiVersioningConfigurator : IConfigureOptions<ApiVersioningOptions>, ITransientLifetime
 {
     public void Configure(ApiVersioningOptions options)
     {

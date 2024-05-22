@@ -44,9 +44,8 @@ internal class CreateOwnerCommandHandler(
         }
 
         var salon = await _salons.All
-            .Where(salon => salon.Id == command.SalonId)
             .Include(salon => salon.Owners)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(salon => salon.Id == command.SalonId);
 
         if (salon is null)
         {
@@ -58,7 +57,7 @@ internal class CreateOwnerCommandHandler(
 
         salon.Owners!.Add(newOwner);
 
-        var identityResultForCreation = await _users.CreateAsync(newOwner);
+        var identityResultForCreation = await _users.CreateAsync(newOwner, command.Password);
         var identityResultForAddingToRole = await _users.AddToRoleAsync(newOwner, OwnerRoleName);
 
         if (identityResultForCreation.Failure())

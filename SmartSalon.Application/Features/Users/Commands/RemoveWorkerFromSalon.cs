@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.MediatR;
-using SmartSalon.Application.Domain.Salons;
 using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Errors;
 using SmartSalon.Application.ResultObject;
@@ -13,29 +12,24 @@ public class RemoveWorkerFromSalonCommand(Id workerId) : ICommand
     public Id WorkerId => workerId;
 }
 
-internal class RemoveWorkerFromSalonCommandHandler(IEfRepository<Worker> _workers, IEfRepository<Salon> _salons, IUnitOfWork _unitOfWork)
+internal class RemoveWorkerFromSalonCommandHandler(IEfRepository<Worker> _workers, IUnitOfWork _unitOfWork)
     : ICommandHandler<RemoveWorkerFromSalonCommand>
 {
     public async Task<Result> Handle(RemoveWorkerFromSalonCommand command, CancellationToken cancellationToken)
     {
-        var worker = await _workers.GetByIdAsync(command.WorkerId);
+        var worker = await _workers.All
+            .Include(worker => worker.JobTitles)
+            .Include(worker => worker.Salons)
+            .FirstOrDefaultAsync(worker => worker.Id == command.WorkerId);
 
         if (worker is null)
         {
             return Error.NotFound;
         }
 
-        var salon = await _salons.All
-            .Where(salon => salon.Id == worker.SalonId)
-            .Include(salon => salon.Workers)
-            .FirstOrDefaultAsync();
+        worker.JobTitles = null;
+        worker.Salons = null;
 
-        if (salon is null)
-        {
-            return Error.NotFound;
-        }
-
-        salon.Workers!.Remove(worker);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

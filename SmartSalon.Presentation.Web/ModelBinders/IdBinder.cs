@@ -1,19 +1,19 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-public class IdBinder : BaseBinder, IModelBinder, IModelBinderProvider
+internal class IdBinder(IdConverter _idConverter) : IModelBinder, IModelBinderProvider
 {
-    public Task BindModelAsync(ModelBindingContext context)
+    public Task BindModelAsync(ModelBindingContext bindingContext)
     {
-        var passedValueForId = GetTheIdRouteParameter(context);
-        var id = ConvertToId(context, IdRouteParameterName, passedValueForId);
+        var passedValueForId = bindingContext.ActionContext.RouteData.Values[IdRouteParameterName]?.ToString();
+        var id = _idConverter.Convert(bindingContext, IdRouteParameterName, passedValueForId);
 
-        if (!context.ModelState.IsValid)
+        if (!bindingContext.ModelState.IsValid)
         {
             return Task.CompletedTask;
         }
 
-        context.Result = ModelBindingResult.Success(id);
+        bindingContext.Result = ModelBindingResult.Success(id);
         return Task.CompletedTask;
     }
 

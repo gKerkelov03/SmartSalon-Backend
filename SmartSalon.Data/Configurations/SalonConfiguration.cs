@@ -21,7 +21,7 @@ public class SalonConfiguration : IEntityTypeConfiguration<Salon>
             .HasForeignKey(bs => bs.MainCurrencyId);
 
         builder
-            .HasMany(salon => salon.AcceptedCurrencies)
+            .HasMany(salon => salon.OtherAcceptedCurrencies)
             .WithMany(currency => currency.Salons);
 
         builder.HasData(SalonsSeedingData.Data);
@@ -35,16 +35,16 @@ public class SalonConfiguration : IEntityTypeConfiguration<Salon>
             .HasMaxLength(MaxDescriptionLength);
 
         builder
-            .Property(salon => salon.Location)
-            .HasMaxLength(MaxLocationLength);
+            .Property(salon => salon.GoogleMapsLocation)
+            .HasMaxLength(MaxGoogleMapsLocationLength);
 
         builder
-            .Property(salon => salon.DefaultTimePenalty)
-            .HasMaxLength(MaxDefaultTimePenalty);
+            .Property(salon => salon.TimePenalty)
+            .HasMaxLength(MaxTimePenalty);
 
         builder
-            .Property(salon => salon.DefaultBookingsInAdvance)
-            .HasMaxLength(MaxDefaultBookingsInAdvance);
+            .Property(salon => salon.BookingsInAdvance)
+            .HasMaxLength(MaxBookingsInAdvance);
 
         builder
             .Property(salon => salon.WorkersCanMoveBookings)

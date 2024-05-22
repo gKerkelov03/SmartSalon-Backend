@@ -10,12 +10,15 @@ namespace SmartSalon.Application.Features.Salons.Commands;
 public class UpdateSalonCommand : ICommand
 {
     public required Id SalonId { get; set; }
+    public required Id MainCurrencyId { get; set; }
     public required string Name { get; set; }
+    public required string GoogleMapsLocation { get; set; }
+    public required string Latitude { get; set; }
+    public required string Longitude { get; set; }
     public required string Description { get; set; }
-    public required string Location { get; set; }
     public string? ProfilePictureUrl { get; set; }
-    public required int DefaultTimePenalty { get; set; }
-    public required int DefaultBookingsInAdvance { get; set; }
+    public required int TimePenalty { get; set; }
+    public required int BookingsInAdvance { get; set; }
     public bool SubscriptionsEnabled { get; set; }
     public bool SectionsEnabled { get; set; }
     public bool WorkersCanMoveBookings { get; set; }

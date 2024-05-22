@@ -13,7 +13,18 @@ public class UnitOfWork(SmartSalonDbContext _dbContext, ICurrentUserAccessor _cu
 
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        ApplySoftDelete(_dbContext.ChangeTracker, _currentUser.Id);
+        var entriesForSoftDelete = _dbContext
+            .ChangeTracker
+            .Entries()
+            .Where(entry => 
+                entry.Entity is IDeletableEntity &&
+                entry.State is EntityState.Deleted
+            );
+
+        if (entriesForSoftDelete.Any())
+        {
+            ApplySoftDelete(entriesForSoftDelete);
+        }
 
         return await _dbContext.SaveChangesAsync(cancellationToken);
     }
@@ -44,25 +55,15 @@ public class UnitOfWork(SmartSalonDbContext _dbContext, ICurrentUserAccessor _cu
         _transaction.Rollback();
     }
 
-    public void ApplySoftDelete(ChangeTracker changeTracker, Id currentUserId)
-        => changeTracker
-            .Entries()
-            .ForEach(entry =>
-            {
-                var isNotDeletableEntity = entry.Entity is not IDeletableEntity;
-                var isNotInDeletedState = entry.State is not EntityState.Deleted;
+    public void ApplySoftDelete(IEnumerable<EntityEntry> entries)
+        => entries.ForEach(entry =>
+        {
+            var deletableEntity = entry.Entity.CastTo<IDeletableEntity>();
 
-                if (isNotDeletableEntity || isNotInDeletedState)
-                {
-                    return;
-                }
+            deletableEntity.IsDeleted = true;
+            deletableEntity.DeletedBy = _currentUser.Id;
+            deletableEntity.DeletedOn = _timeProvider.GetUtcNow().LocalDateTime;
 
-                var deletableEntity = entry.Entity.CastTo<IDeletableEntity>();
-
-                deletableEntity.IsDeleted = true;
-                deletableEntity.DeletedBy = currentUserId;
-                deletableEntity.DeletedOn = _timeProvider.GetUtcNow();
-
-                entry.State = EntityState.Modified;
-            });
+            entry.State = EntityState.Modified;
+        });
 }

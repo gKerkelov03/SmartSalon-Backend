@@ -9,6 +9,7 @@ public class UpdateServiceRequest : IMapTo<UpdateServiceCommand>
     public Id SalonId { get; set; }
     public required string Name { get; set; }
     public required string Description { get; set; }
-    public required double Price { get; set; }
-    public required int DurationInMinutes { get; set; }
+    public double Price { get; set; }
+    public int DurationInMinutes { get; set; }
+    public int Order { get; set; }
 }

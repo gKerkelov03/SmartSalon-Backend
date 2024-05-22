@@ -36,7 +36,7 @@ internal class RestorePasswordCommandHandler(
         }
 
         var resetToken = await _usersManager.GeneratePasswordResetTokenAsync(user);
-        var identityResult = await _usersManager.ChangePasswordAsync(user, resetToken, command.NewPassword);
+        var identityResult = await _usersManager.ResetPasswordAsync(user, resetToken, command.NewPassword);
 
         if (identityResult.Failure())
         {

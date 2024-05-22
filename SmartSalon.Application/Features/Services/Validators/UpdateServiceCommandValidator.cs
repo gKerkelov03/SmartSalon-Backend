@@ -15,5 +15,6 @@ internal class UpdateServiceCommandValidator : AbstractValidator<UpdateServiceCo
         RuleFor(command => command.ServiceId).MustBeValidGuid();
         RuleFor(command => command.Price).NotEmpty();
         RuleFor(command => command.DurationInMinutes).NotEmpty();
+        RuleFor(command => command.Order).NotEmpty();
     }
 }

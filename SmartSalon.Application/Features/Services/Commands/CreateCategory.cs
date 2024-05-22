@@ -14,6 +14,7 @@ public class CreateCategoryCommand : ICommand<CreateCategoryCommandResponse>, IM
 {
     public required string Name { get; set; }
     public Id SectionId { get; set; }
+    public Id SalonId { get; set; }
 }
 
 public class CreateCategoryCommandResponse(Id id)
@@ -32,21 +33,19 @@ internal class CreateCategoryCommandHandler(
 {
     public async Task<Result<CreateCategoryCommandResponse>> Handle(CreateCategoryCommand command, CancellationToken cancellationToken)
     {
-        var newCategory = _mapper.Map<Category>(command);
+        var salonDoesntExist = await _salons.GetByIdAsync(command.SalonId) is null;
 
-        var section = await _sections.All
-            .Include(section => section.Categories)
-            .Where(section => section.Id == command.SectionId)
-            .FirstOrDefaultAsync();
-
-        if (section is null)
+        if (salonDoesntExist)
         {
             return Error.NotFound;
         }
 
-        var salon = await _salons.GetByIdAsync(section.SalonId);
+        var newCategory = _mapper.Map<Category>(command);
+        var section = await _sections.All
+            .Include(section => section.Categories)
+            .FirstOrDefaultAsync(section => section.Id == command.SectionId);
 
-        if (salon is null)
+        if (section is null)
         {
             return Error.NotFound;
         }
@@ -58,11 +57,12 @@ internal class CreateCategoryCommandHandler(
             return Error.Conflict;
         }
 
-        var atTheEndOfTheList = salon.Categories!.MaxBy(category => category.Order)!.Order + 1;
-        newCategory.Order = atTheEndOfTheList;
+        var orderAtTheEndOfTheList = section.Categories!.Any()
+            ? section.Categories!.Max(category => category.Order) + 1
+            : 1;
 
-        //TODO: debug why this throws error, expected one row to be added but 0 were added
-        //salon.Categories!.Add(newService);
+        newCategory.Order = orderAtTheEndOfTheList;
+
         await _categories.AddAsync(newCategory);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 

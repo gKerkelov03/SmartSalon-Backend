@@ -26,9 +26,8 @@ internal class RemoveOwnerFromSalonCommandHandler(
     {
         var owner = await _owners.GetByIdAsync(command.OwnerId);
         var salon = await _salons.All
-            .Where(salon => salon.Id == command.SalonId)
             .Include(salon => salon.Owners)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(salon => salon.Id == command.SalonId);
 
         if (owner is null || salon is null)
         {

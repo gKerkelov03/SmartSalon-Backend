@@ -15,7 +15,7 @@ public class GetSpecialtyByIdQuery(Id id) : IQuery<GetSpecialtyByIdQueryResponse
 public class GetSpecialtyByIdQueryResponse : IMapFrom<Specialty>
 {
     public required string Text { get; set; }
-    public Id SalonId { get; set; }
+    public Id Id { get; set; }
 }
 
 internal class GetSpecialtyByIdQueryHandler(IEfRepository<Specialty> _specialties, IMapper _mapper)

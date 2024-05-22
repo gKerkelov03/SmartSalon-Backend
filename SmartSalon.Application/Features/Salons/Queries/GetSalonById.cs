@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using SmartSalon.Application.Abstractions;
+using SmartSalon.Application.Abstractions.Mapping;
 using SmartSalon.Application.Domain.Salons;
 using SmartSalon.Application.Errors;
 using SmartSalon.Application.ResultObject;
@@ -12,70 +14,64 @@ public class GetSalonByIdQuery(Id id) : IQuery<GetSalonByIdQueryResponse>
     public Id SalonId => id;
 }
 
-public class GetSalonByIdQueryResponse
+public class GetSalonByIdQueryResponse : IHaveCustomMapping
 {
     public Id Id { get; set; }
     public required string Name { get; set; }
     public required string Description { get; set; }
-    public required string Location { get; set; }
+    public required string GoogleMapsLocation { get; set; }
+    public required string Latitude { get; set; }
+    public required string Longitude { get; set; }
+    public required string Country { get; set; }
     public string? ProfilePictureUrl { get; set; }
-    public required int DefaultTimePenalty { get; set; }
-    public required int DefaultBookingsInAdvance { get; set; }
+    public required int TimePenalty { get; set; }
+    public required int BookingsInAdvance { get; set; }
     public bool SubscriptionsEnabled { get; set; }
     public bool SectionsEnabled { get; set; }
     public bool WorkersCanMoveBookings { get; set; }
     public bool WorkersCanSetNonWorkingPeriods { get; set; }
     public Id WorkingTimeId { get; set; }
-    public Id MainCurrencyId { get; set; }
-    public required IEnumerable<Id> Currencies { get; set; }
     public required IEnumerable<Id> Owners { get; set; }
     public required IEnumerable<Id> Workers { get; set; }
-    public required IEnumerable<Id> Specialties { get; set; }
     public required IEnumerable<Id> Sections { get; set; }
-    public required IEnumerable<Id> Categories { get; set; }
-    public required IEnumerable<Id> Services { get; set; }
-    public required IEnumerable<Id> Images { get; set; }
+    public required GetCurrencyByIdQueryResponse MainCurrency { get; set; }
+    public required IEnumerable<GetCurrencyByIdQueryResponse> OtherAcceptedCurrencies { get; set; }
+    public required IEnumerable<GetSpecialtyByIdQueryResponse> Specialties { get; set; }
+    public required IEnumerable<GetImageByIdQueryResponse> Images { get; set; }
+    public required IEnumerable<GetJobTitleByIdQueryResponse> JobTitles { get; set; }
+
+    public void CreateMapping(IProfileExpression config)
+        => config
+            .CreateMap<Salon, GetSalonByIdQueryResponse>()
+            .ForMember(
+                destination => destination.Owners,
+                options => options.MapFrom(source => source.Owners!.Select(owners => owners.Id))
+            )
+            .ForMember(
+                destination => destination.Workers,
+                options => options.MapFrom(source => source.Workers!.Select(workers => workers.Id))
+            )
+            .ForMember(
+                destination => destination.Sections,
+                options => options.MapFrom(source => source.Sections!.Select(section => section.Id))
+            );
 }
 
-internal class GetSalonByIdQueryHandler(IEfRepository<Salon> _salons)
-    : IQueryHandler<GetSalonByIdQuery, GetSalonByIdQueryResponse>
+internal class GetSalonByIdQueryHandler(IEfRepository<Salon> _salons, IMapper _mapper) : IQueryHandler<GetSalonByIdQuery, GetSalonByIdQueryResponse>
 {
     public async Task<Result<GetSalonByIdQueryResponse>> Handle(GetSalonByIdQuery query, CancellationToken cancellationToken)
     {
         var queryResponse = await _salons.All
             .Include(salon => salon.Workers)
+            .Include(salon => salon.MainCurrency)
             .Include(salon => salon.Owners)
-            .Include(salon => salon.AcceptedCurrencies)
-            .Include(salon => salon.Categories)
+            .Include(salon => salon.OtherAcceptedCurrencies)
             .Include(salon => salon.Sections)
-            .Include(salon => salon.Services)
             .Include(salon => salon.Images)
             .Include(salon => salon.Specialties)
-            .Where(salon => salon.Id == query.SalonId)
-            .Select(salon => new GetSalonByIdQueryResponse
-            {
-                Id = salon.Id,
-                Name = salon.Name,
-                Description = salon.Description,
-                Location = salon.Location,
-                ProfilePictureUrl = salon.ProfilePictureUrl,
-                DefaultTimePenalty = salon.DefaultTimePenalty,
-                DefaultBookingsInAdvance = salon.DefaultBookingsInAdvance,
-                SubscriptionsEnabled = salon.SubscriptionsEnabled,
-                WorkersCanMoveBookings = salon.WorkersCanMoveBookings,
-                WorkersCanSetNonWorkingPeriods = salon.WorkersCanSetNonWorkingPeriods,
-                WorkingTimeId = salon.WorkingTimeId,
-                MainCurrencyId = salon.MainCurrencyId,
-                Currencies = salon.AcceptedCurrencies!.Select(currency => currency.Id),
-                Owners = salon.Owners!.Select(owners => owners.Id),
-                Workers = salon.Workers!.Select(workers => workers.Id),
-                Specialties = salon.Specialties!.Select(specialty => specialty.Id),
-                Sections = salon.Sections!.Select(section => section.Id),
-                Categories = salon.Categories!.Select(category => category.Id),
-                Services = salon.Services!.Select(service => service.Id),
-                Images = salon.Images!.Select(image => image.Id)
-            })
-            .FirstOrDefaultAsync();
+            .Include(salon => salon.JobTitles)
+            .ProjectTo<GetSalonByIdQueryResponse>(_mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync(salon => salon.Id == query.SalonId);
 
         if (queryResponse is null)
         {

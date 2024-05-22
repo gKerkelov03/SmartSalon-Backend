@@ -12,9 +12,7 @@ namespace SmartSalon.Application.Features.Salons.Commands;
 public class CreateSalonCommand : ICommand<CreateSalonCommandResponse>, IMapTo<Salon>
 {
     public required string Name { get; set; }
-    public required string Description { get; set; }
-    public required string Location { get; set; }
-    public string? ProfilePictureUrl { get; set; }
+    public required string GoogleMapsLocation { get; set; }
 }
 
 public class CreateSalonCommandResponse(Id id)
@@ -24,19 +22,23 @@ public class CreateSalonCommandResponse(Id id)
 
 internal class CreateSalonCommandHandler(
     IEfRepository<Salon> _salons,
+    IEfRepository<WorkingTime> _workingTimes,
+    IEfRepository<Currency> _currencies,
     IUnitOfWork _unitOfWork,
-    IMapper _mapper
+    IMapper _mapper,
+    IGeolocator _geolocator
 ) : ICommandHandler<CreateSalonCommand, CreateSalonCommandResponse>
 {
     private static object _defaultSalonSettings = new
     {
-        WorkingTimeId = CreateDefaultWorkingTime().Id,
-        DefaultBookingsInAdvance = 5,
-        DefaultTimePenalty = 5,
+        BookingsInAdvance = 5,
+        TimePenalty = 5,
         SubscriptionsEnabled = true,
         SectionsEnabled = true,
         WorkersCanMoveBookings = true,
         WorkersCanSetNonWorkingPeriods = true,
+        WorkersCanDeleteBookings = true,
+        Description = ""
     };
 
     private static WorkingTime CreateDefaultWorkingTime()
@@ -46,38 +48,64 @@ internal class CreateSalonCommandHandler(
 
         var workingTime = new WorkingTime()
         {
-            MondayFrom = startTime,
-            MondayTo = endTime,
+            MondayIsWorking = true,
+            MondayOpeningTime = startTime,
+            MondayClosingTime = endTime,
 
-            TuesdayFrom = startTime,
-            TuesdayTo = endTime,
+            TuesdayIsWorking = true,
+            TuesdayOpeningTime = startTime,
+            TuesdayClosingTime = endTime,
 
-            WednesdayFrom = startTime,
-            WednesdayTo = endTime,
+            WednesdayIsWorking = true,
+            WednesdayOpeningTime = startTime,
+            WednesdayClosingTime = endTime,
 
-            ThursdayFrom = startTime,
-            ThursdayTo = endTime,
+            ThursdayIsWorking = true,
+            ThursdayOpeningTime = startTime,
+            ThursdayClosingTime = endTime,
 
-            FridayFrom = startTime,
-            FridayTo = endTime,
+            FridayIsWorking = true,
+            FridayOpeningTime = startTime,
+            FridayClosingTime = endTime,
 
-            SaturdayFrom = startTime,
-            SaturdayTo = endTime,
+            SaturdayIsWorking = true,
+            SaturdayOpeningTime = startTime,
+            SaturdayClosingTime = endTime,
 
-            SundayFrom = startTime,
-            SundayTo = endTime
+            SundayIsWorking = true,
+            SundayOpeningTime = startTime,
+            SundayClosingTime = endTime
         };
 
         return workingTime;
     }
 
-    public async Task<Result<CreateSalonCommandResponse>> Handle(CreateSalonCommand command, CancellationToken cancellationToken)
+    public async Task<Result<CreateSalonCommandResponse>> Handle(CreateSalonCommand command, CancellationToken cancellationClosingTimeken)
     {
+        var coordinatesResult = await _geolocator.GetCoordinatesAsync(command.GoogleMapsLocation);
+
+        if (coordinatesResult.IsFailure)
+        {
+            return coordinatesResult.Errors!.First();
+        }
+
+        var defaultCurrency = _currencies.FirstOrDefault(currency => currency.Code == "BGN");
+        var newWorkingTime = CreateDefaultWorkingTime();
+
         var newSalon = _mapper.Map<Salon>(command);
         newSalon.MapAgainst(_defaultSalonSettings);
 
+        newSalon.MainCurrency = defaultCurrency;
+        newSalon.WorkingTimeId = newWorkingTime.Id;
+        newSalon.Latitude = coordinatesResult.Value.Latitude;
+        newSalon.Longitude = coordinatesResult.Value.Longitude;
+        newSalon.Country = coordinatesResult.Value.Country.ToUpper();
+
+        newWorkingTime.SalonId = newSalon.Id;
+
         await _salons.AddAsync(newSalon);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await _workingTimes.AddAsync(newWorkingTime);
+        await _unitOfWork.SaveChangesAsync(cancellationClosingTimeken);
 
         return new CreateSalonCommandResponse(newSalon.Id);
     }

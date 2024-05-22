@@ -6,46 +6,47 @@ using Newtonsoft.Json;
 using SmartSalon.Application.Extensions;
 using SmartSalon.Presentation.Web.Attributes;
 
-public class ObjectBinder : BaseBinder, IModelBinder, IModelBinderProvider
+internal class ObjectBinder(IdConverter _idConverter) : IModelBinder, IModelBinderProvider
 {
-    public async Task BindModelAsync(ModelBindingContext context)
+    public async Task BindModelAsync(ModelBindingContext bindingContext)
     {
-        var requestBodyMap = await GetRequestBodyMapAsync(context);
+        var requestBodyMap = await GetRequestBodyMapAsync(bindingContext);
 
         if (requestBodyMap is null)
         {
             return;
         }
 
-        var IdRouteParameterPassed = GetTheIdRouteParameter(context);
-        var requestModel = Activator.CreateInstance(context.ModelType)!;
+        var requestedIdRouteParameter = bindingContext.ActionContext.RouteData.Values[IdRouteParameterName]?.ToString();
+        var requestModel = Activator.CreateInstance(bindingContext.ModelType)!;
 
         foreach (var property in requestModel.GetType().GetProperties())
         {
             var jsonPropertyName = property.Name.WithFirstLetterToLower();
-            var hasIdRouteParameterAttribute = property.GetCustomAttributes(typeof(IdRouteParameterAttribute)).Any();
+            var comesFromRouteAttribute = property.GetCustomAttribute<ComesFromRouteAttribute>(inherit: false);
 
-            if (hasIdRouteParameterAttribute)
+            if (comesFromRouteAttribute is not null && comesFromRouteAttribute.Name == IdRouteParameterName)
             {
-                if (IdRouteParameterPassed is null)
+                if (requestedIdRouteParameter is null)
                 {
-                    context.ModelState.AddModelError(jsonPropertyName, $"No route value passed for parameter {jsonPropertyName}");
+                    bindingContext.ModelState.AddModelError(jsonPropertyName, $"No route value passed for parameter {jsonPropertyName}");
                     return;
                 }
 
-                var id = ConvertToId(context, jsonPropertyName, IdRouteParameterPassed);
+                var id = _idConverter.Convert(bindingContext, jsonPropertyName, requestedIdRouteParameter);
                 requestModel!.GetType().GetProperty(property.Name)!.SetValue(requestModel, id);
             }
             else if (!requestBodyMap.ContainsKey(jsonPropertyName))
             {
-                context.ModelState.AddModelError(jsonPropertyName, $"Property {jsonPropertyName} is required");
+                bindingContext.ModelState.AddModelError(jsonPropertyName, $"Property {jsonPropertyName} is required");
                 return;
             }
             else
             {
-                object convertedValue = ConvertToType(property.PropertyType, context, jsonPropertyName, requestBodyMap[jsonPropertyName]);
+                object convertedValue = new ObjectConverter(property.PropertyType)
+                    .Convert(bindingContext, jsonPropertyName, requestBodyMap[jsonPropertyName]);
 
-                if (!context.ModelState.IsValid)
+                if (!bindingContext.ModelState.IsValid)
                 {
                     return;
                 }
@@ -54,10 +55,10 @@ public class ObjectBinder : BaseBinder, IModelBinder, IModelBinderProvider
             }
         }
 
-        context.Result = ModelBindingResult.Success(requestModel);
+        bindingContext.Result = ModelBindingResult.Success(requestModel);
     }
 
-    private static async Task<IDictionary<string, string>?> GetRequestBodyMapAsync(ModelBindingContext bindingContext)
+    private static async Task<IDictionary<string, object>?> GetRequestBodyMapAsync(ModelBindingContext bindingContext)
     {
         try
         {
@@ -66,97 +67,16 @@ public class ObjectBinder : BaseBinder, IModelBinder, IModelBinderProvider
 
             using var requestBodyReader = new StreamReader(request.Body, Encoding.UTF8, leaveOpen: true);
             var bodyAsText = await requestBodyReader.ReadToEndAsync();
+
             request.Body.Position = 0;
 
-            return JsonConvert.DeserializeObject<Dictionary<string, string>>(bodyAsText)!;
+            return JsonConvert.DeserializeObject<Dictionary<string, object>>(bodyAsText)!;
         }
         catch (Exception ex)
         {
             bindingContext.ModelState.AddModelError("$", ex.Message);
             return null;
         }
-    }
-
-    private static object ConvertToType(Type targetType, ModelBindingContext bindingContext, string propertyName, string propertyValue)
-    {
-        object convertedValue;
-
-        if (targetType == typeof(Id))
-        {
-            convertedValue = ConvertToId(bindingContext, propertyName, propertyValue);
-        }
-        else if (targetType == typeof(DateTimeOffset))
-        {
-            convertedValue = ConvertToDateTimeOffset(bindingContext, propertyName, propertyValue);
-        }
-        else if (targetType == typeof(DateTime))
-        {
-            convertedValue = ConvertToDateTime(bindingContext, propertyName, propertyValue); ;
-        }
-        else if (targetType.IsAssignableTo(typeof(Enum)))
-        {
-            convertedValue = ConvertToEnum(bindingContext, targetType, propertyName, propertyValue);
-        }
-        else if (targetType == typeof(TimeOnly))
-        {
-            convertedValue = ConvertToTimeOnly(bindingContext, propertyName, propertyValue);
-        }
-        else
-        {
-            convertedValue = Convert.ChangeType(propertyValue, targetType);
-        }
-
-        return convertedValue;
-    }
-
-    private static DateTimeOffset ConvertToDateTimeOffset(ModelBindingContext bindingContext, string propertyName, string propertyValue)
-    {
-        var isNotValidDateTimeOffset = !DateTimeOffset.TryParse(propertyValue, out var dateTimeOffset);
-
-        if (isNotValidDateTimeOffset)
-        {
-            bindingContext.ModelState.TryAddModelError(propertyName, "Invalid format");
-        }
-
-        return dateTimeOffset;
-    }
-
-    private static DateTimeOffset ConvertToDateTime(ModelBindingContext bindingContext, string propertyName, string propertyValue)
-    {
-        var isNotValidDateTime = !DateTime.TryParse(propertyValue, out var dateTime);
-
-        if (isNotValidDateTime)
-        {
-            bindingContext.ModelState.TryAddModelError(propertyName, "Invalid format");
-        }
-
-        return dateTime;
-    }
-
-    private static TimeOnly ConvertToTimeOnly(ModelBindingContext bindingContext, string propertyName, string propertyValue)
-    {
-        var isNotValidTime = !TimeOnly.TryParse(propertyValue, out var timeOnly);
-
-        if (isNotValidTime)
-        {
-            bindingContext.ModelState.TryAddModelError(propertyName, "Invalid format");
-        }
-
-        return timeOnly;
-    }
-
-    private static object ConvertToEnum(ModelBindingContext bindingContext, Type enumType, string propertyName, string propertyValue)
-    {
-        var isNumber = int.TryParse(propertyValue, out var _);
-
-        if (isNumber)
-        {
-            bindingContext.ModelState.TryAddModelError(propertyName, "Invalid format");
-        }
-
-        var convertedValue = Enum.Parse(enumType, propertyValue);
-
-        return convertedValue;
     }
 
     public IModelBinder? GetBinder(ModelBinderProviderContext context)

@@ -30,8 +30,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\SmartSalon.Application\SmartSalon.Application.csproj" />
-        <ProjectReference
-            Include="..\..\SmartSalon.Presentation.Web\SmartSalon.Presentation.Web.csproj" />
+        <ProjectReference Include="..\..\SmartSalon.Presentation.Web\SmartSalon.Presentation.Web.csproj" />
     </ItemGroup>
 
 </Project>
