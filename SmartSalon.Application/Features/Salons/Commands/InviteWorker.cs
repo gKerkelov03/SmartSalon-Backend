@@ -10,22 +10,22 @@ using SmartSalon.Application.Errors;
 using SmartSalon.Application.Models.Emails;
 using SmartSalon.Application.ResultObject;
 
-namespace SmartSalon.Application.Features.Users.Commands;
+namespace SmartSalon.Application.Features.Salons.Commands;
 
-public class SendWorkerInvitationEmailCommand : ICommand, IMapTo<WorkerInvitationEncryptionModel>
+public class InviteWorkerCommand : ICommand, IMapTo<WorkerInvitationEncryptionModel>
 {
     public Id WorkerId { get; set; }
     public Id SalonId { get; set; }
 }
 
-public class SendWorkerInvitationEmailHandler(
+public class InviteWorkerHandler(
     IEfRepository<Worker> _workers,
     IEfRepository<Salon> _salons,
     IEmailsManager _emailsManager,
     IMapper _mapper
-) : ICommandHandler<SendWorkerInvitationEmailCommand>
+) : ICommandHandler<InviteWorkerCommand>
 {
-    public async Task<Result> Handle(SendWorkerInvitationEmailCommand command, CancellationToken cancellationToken)
+    public async Task<Result> Handle(InviteWorkerCommand command, CancellationToken cancellationToken)
     {
         var invitedWorker = await _workers.GetByIdAsync(command.WorkerId);
 

@@ -43,23 +43,23 @@ internal class CreateOwnerCommandHandler(
             return Error.Conflict;
         }
 
-        var salonWithThisId = await _salons.All
+        var salon = await _salons.All
             .Where(salon => salon.Id == command.SalonId)
             .Include(salon => salon.Owners)
             .FirstOrDefaultAsync();
 
-        if (salonWithThisId is null)
+        if (salon is null)
         {
             return Error.NotFound;
         }
 
-        var owner = _mapper.Map<Owner>(command);
-        owner.UserName = command.Email;
+        var newOwner = _mapper.Map<Owner>(command);
+        newOwner.UserName = command.Email;
 
-        salonWithThisId.Owners!.Add(owner);
+        salon.Owners!.Add(newOwner);
 
-        var identityResultForCreation = await _users.CreateAsync(owner);
-        var identityResultForAddingToRole = await _users.AddToRoleAsync(owner, OwnerRoleName);
+        var identityResultForCreation = await _users.CreateAsync(newOwner);
+        var identityResultForAddingToRole = await _users.AddToRoleAsync(newOwner, OwnerRoleName);
 
         if (identityResultForCreation.Failure())
         {
@@ -73,6 +73,6 @@ internal class CreateOwnerCommandHandler(
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return new CreateOwnerCommandResponse { CreatedOwnerId = owner.Id };
+        return new CreateOwnerCommandResponse { CreatedOwnerId = newOwner.Id };
     }
 }

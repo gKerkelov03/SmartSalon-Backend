@@ -2,7 +2,7 @@ using FluentValidation;
 using SmartSalon.Application.Extensions;
 using SmartSalon.Application.Features.Users.Commands;
 
-namespace SmartSalon.Application.Validators;
+namespace SmartSalon.Application.Features.Users.Validators;
 
 internal class SendEmailConfirmationEmailCommandValidator : AbstractValidator<SendEmailConfirmationEmailCommand>
 {

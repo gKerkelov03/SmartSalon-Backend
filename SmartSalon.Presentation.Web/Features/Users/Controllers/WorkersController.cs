@@ -82,17 +82,6 @@ public class WorkersController(ISender _mediator, IMapper _mapper) : V1ApiContro
         return ProblemDetailsOr<NoContentResult>(result);
     }
 
-    [HttpPost($"SendWorkerInvitationEmail")]
-    [SuccessResponse(Status200OK)]
-    [Authorize(Policy = IsOwnerOrIsAdminPolicy)]
-    public async Task<IActionResult> SendWorkerInvitationEmail(SendWorkerInvitationEmailRequest request)
-    {
-        var command = _mapper.Map<SendWorkerInvitationEmailCommand>(request);
-        var result = await _mediator.Send(command);
-
-        return ProblemDetailsOr<OkResult>(result);
-    }
-
     [HttpPatch("AddToSalon")]
     [SuccessResponse(Status200OK)]
     [Authorize(Policy = IsOwnerOrIsAdminPolicy)]

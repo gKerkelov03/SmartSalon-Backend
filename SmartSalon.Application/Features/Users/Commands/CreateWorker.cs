@@ -38,18 +38,18 @@ internal class CreateWorkerCommandHandler(UsersManager _users, IEfRepository<Sal
             return Error.Conflict;
         }
 
-        var salonWithThisId = await _salons.GetByIdAsync(command.SalonId);
+        var salon = await _salons.GetByIdAsync(command.SalonId);
 
-        if (salonWithThisId is null)
+        if (salon is null)
         {
             return Error.NotFound;
         }
 
-        var worker = _mapper.Map<Worker>(command);
-        worker.UserName = command.Email;
+        var newWorker = _mapper.Map<Worker>(command);
+        newWorker.UserName = command.Email;
 
-        var identityResultForCreation = await _users.CreateAsync(worker);
-        var identityResultForAddingToRole = await _users.AddToRoleAsync(worker, WorkerRoleName);
+        var identityResultForCreation = await _users.CreateAsync(newWorker);
+        var identityResultForAddingToRole = await _users.AddToRoleAsync(newWorker, WorkerRoleName);
 
         if (identityResultForCreation.Failure())
         {
@@ -61,6 +61,6 @@ internal class CreateWorkerCommandHandler(UsersManager _users, IEfRepository<Sal
             return new Error(identityResultForAddingToRole.ErrorDescription());
         }
 
-        return new CreateWorkerCommandResponse(worker.Id);
+        return new CreateWorkerCommandResponse(newWorker.Id);
     }
 }

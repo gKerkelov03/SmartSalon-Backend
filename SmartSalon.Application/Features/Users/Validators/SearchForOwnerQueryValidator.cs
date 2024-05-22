@@ -1,7 +1,7 @@
 using FluentValidation;
 using SmartSalon.Application.Features.Users.Queries;
 
-namespace SmartSalon.Application.Validators;
+namespace SmartSalon.Application.Features.Users.Validators;
 
 internal class SearchForOwnerQueryValidator : AbstractValidator<SearchForOwnerQuery>
 {

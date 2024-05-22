@@ -3,7 +3,7 @@ using FluentValidation;
 using SmartSalon.Application.Extensions;
 using SmartWorkingTime.Application.Features.Salons.Commands;
 
-namespace SmartSalon.Application.Validators;
+namespace SmartSalon.Application.Features.Salons.Validators;
 
 internal class UpdateWorkingTimeCommandValidator : AbstractValidator<UpdateWorkingTimeCommand>
 {

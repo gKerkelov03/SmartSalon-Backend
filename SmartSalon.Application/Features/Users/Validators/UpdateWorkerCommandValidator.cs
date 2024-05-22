@@ -3,7 +3,7 @@ using SmartSalon.Application.Extensions;
 using SmartSalon.Application.Features.Users.Commands;
 using static SmartSalon.Application.ApplicationConstants.Validation.Worker;
 
-namespace SmartSalon.Application.Validators;
+namespace SmartSalon.Application.Features.Users.Validators;
 
 internal class UpdateWorkerCommandValidator : AbstractValidator<UpdateWorkerCommand>
 {

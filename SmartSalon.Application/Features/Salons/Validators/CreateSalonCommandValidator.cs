@@ -3,7 +3,7 @@ using FluentValidation;
 using SmartSalon.Application.Features.Salons.Commands;
 using static SmartSalon.Application.ApplicationConstants.Validation.Salon;
 
-namespace SmartSalon.Application.Validators;
+namespace SmartSalon.Application.Features.Salons.Validators;
 
 internal class CreateSalonCommandValidator : AbstractValidator<CreateSalonCommand>
 {

@@ -76,12 +76,12 @@ public static class ApplicationConstants
             public const int MaxPrice = 100_000;
         }
 
-        public static class ServiceCategory
+        public static class Category
         {
             public const int MaxNameLength = 50;
         }
 
-        public static class ServiceSection
+        public static class Section
         {
             public const int MaxNameLength = 50;
         }

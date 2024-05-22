@@ -13,12 +13,13 @@ public class Salon : DeletableEntity
     public int DefaultTimePenalty { get; set; }
     public int DefaultBookingsInAdvance { get; set; }
     public bool SubscriptionsEnabled { get; set; }
-    public bool SectionsEnabled { get; set; }
     public bool WorkersCanMoveBookings { get; set; }
     public bool WorkersCanSetNonWorkingPeriods { get; set; }
     public Id WorkingTimeId { get; set; }
     public WorkingTime? WorkingTime { get; set; }
-    public ICollection<Currency>? Currencies { get; set; }
+    public Id MainCurrencyId { get; set; }
+    public Currency? MainCurrency { get; set; }
+    public ICollection<Currency>? AcceptedCurrencies { get; set; }
     public virtual ICollection<Owner>? Owners { get; set; }
     public virtual ICollection<Worker>? Workers { get; set; }
     public virtual ICollection<Specialty>? Specialties { get; set; }

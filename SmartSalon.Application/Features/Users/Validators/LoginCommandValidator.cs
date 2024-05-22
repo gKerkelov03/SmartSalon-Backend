@@ -3,7 +3,7 @@ using SmartSalon.Application.Extensions;
 using SmartSalon.Application.Features.Users.Commands;
 using static SmartSalon.Application.ApplicationConstants.Validation.User;
 
-namespace SmartSalon.Application.Validators;
+namespace SmartSalon.Application.Features.Users.Validators;
 
 internal class LoginCommandValidator : AbstractValidator<LoginCommand>
 {

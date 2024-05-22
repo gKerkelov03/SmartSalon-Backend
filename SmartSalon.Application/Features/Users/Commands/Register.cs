@@ -37,11 +37,11 @@ internal class RegisterCommandHandler(UsersManager _users, IMapper _mapper, IEma
             return Error.Conflict;
         }
 
-        var customer = _mapper.Map<Customer>(command);
-        customer.UserName = command.Email;
+        var newCustomer = _mapper.Map<Customer>(command);
+        newCustomer.UserName = command.Email;
 
-        var identityResultForCreation = await _users.CreateAsync(customer);
-        var identityResultForAddingToRole = await _users.AddToRoleAsync(customer, CustomerRoleName);
+        var identityResultForCreation = await _users.CreateAsync(newCustomer);
+        var identityResultForAddingToRole = await _users.AddToRoleAsync(newCustomer, CustomerRoleName);
 
         if (identityResultForCreation.Failure())
         {
@@ -55,18 +55,18 @@ internal class RegisterCommandHandler(UsersManager _users, IMapper _mapper, IEma
 
         var encryptionModel = new EmailConfirmationEncryptionModel
         {
-            UserId = customer.Id,
+            UserId = newCustomer.Id,
             EmailToBeConfirmed = command.Email,
             Password = command.Password
         };
 
         var viewModel = new EmailConfirmationViewModel
         {
-            UserFirstName = customer.FirstName
+            UserFirstName = newCustomer.FirstName
         };
 
-        await _emailsManager.SendEmailConfirmationEmailAsync(customer.Email, encryptionModel, viewModel);
+        await _emailsManager.SendEmailConfirmationEmailAsync(newCustomer.Email, encryptionModel, viewModel);
 
-        return new RegisterCommandResponse(customer.Id);
+        return new RegisterCommandResponse(newCustomer.Id);
     }
 }
