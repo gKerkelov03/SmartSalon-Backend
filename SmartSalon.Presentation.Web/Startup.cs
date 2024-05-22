@@ -51,7 +51,7 @@ app
 app.MapControllers();
 
 app
-    .SeedTheDatabase(app.Services)
+    .MigrateTheDatabase(app.Services)
     .OpenSwaggerOnStartup();
 
 Console.WriteLine($"Running on: http://localhost:5054");

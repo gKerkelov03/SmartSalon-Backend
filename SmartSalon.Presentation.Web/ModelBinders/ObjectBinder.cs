@@ -93,6 +93,14 @@ public class ObjectBinder : BaseBinder, IModelBinder, IModelBinderProvider
         {
             convertedValue = ConvertToDateTime(bindingContext, propertyName, propertyValue); ;
         }
+        else if (targetType.IsAssignableTo(typeof(Enum)))
+        {
+            convertedValue = ConvertToEnum(bindingContext, targetType, propertyName, propertyValue);
+        }
+        else if (targetType == typeof(TimeOnly))
+        {
+            convertedValue = ConvertToTimeOnly(bindingContext, propertyName, propertyValue);
+        }
         else
         {
             convertedValue = Convert.ChangeType(propertyValue, targetType);
@@ -103,9 +111,9 @@ public class ObjectBinder : BaseBinder, IModelBinder, IModelBinderProvider
 
     private static DateTimeOffset ConvertToDateTimeOffset(ModelBindingContext bindingContext, string propertyName, string propertyValue)
     {
-        var isValidDateTimeOffset = DateTimeOffset.TryParse(propertyValue, out var dateTimeOffset);
+        var isNotValidDateTimeOffset = !DateTimeOffset.TryParse(propertyValue, out var dateTimeOffset);
 
-        if (!isValidDateTimeOffset)
+        if (isNotValidDateTimeOffset)
         {
             bindingContext.ModelState.TryAddModelError(propertyName, "Invalid format");
         }
@@ -115,14 +123,40 @@ public class ObjectBinder : BaseBinder, IModelBinder, IModelBinderProvider
 
     private static DateTimeOffset ConvertToDateTime(ModelBindingContext bindingContext, string propertyName, string propertyValue)
     {
-        var isValidDateTime = DateTime.TryParse(propertyValue, out var dateTime);
+        var isNotValidDateTime = !DateTime.TryParse(propertyValue, out var dateTime);
 
-        if (!isValidDateTime)
+        if (isNotValidDateTime)
         {
             bindingContext.ModelState.TryAddModelError(propertyName, "Invalid format");
         }
 
         return dateTime;
+    }
+
+    private static TimeOnly ConvertToTimeOnly(ModelBindingContext bindingContext, string propertyName, string propertyValue)
+    {
+        var isNotValidTime = !TimeOnly.TryParse(propertyValue, out var timeOnly);
+
+        if (isNotValidTime)
+        {
+            bindingContext.ModelState.TryAddModelError(propertyName, "Invalid format");
+        }
+
+        return timeOnly;
+    }
+
+    private static object ConvertToEnum(ModelBindingContext bindingContext, Type enumType, string propertyName, string propertyValue)
+    {
+        var isNumber = int.TryParse(propertyValue, out var _);
+
+        if (isNumber)
+        {
+            bindingContext.ModelState.TryAddModelError(propertyName, "Invalid format");
+        }
+
+        var convertedValue = Enum.Parse(enumType, propertyValue);
+
+        return convertedValue;
     }
 
     public IModelBinder? GetBinder(ModelBinderProviderContext context)

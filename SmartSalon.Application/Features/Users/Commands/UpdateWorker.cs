@@ -9,7 +9,7 @@ using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Users.Commands;
 
-public class UpdateWorkerCommand : ICommand, IMapTo<Worker>
+public class UpdateWorkerCommand : ICommand
 {
     public Id WorkerId { get; set; }
     public required string JobTitle { get; set; }

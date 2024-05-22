@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SmartSalon.Application.Domain.Users;
+using SmartSalon.Data.SeedingData;
 using static SmartSalon.Application.ApplicationConstants.Validation.Role;
 
 namespace SmartSalon.Data.Configurations.Users;
@@ -20,5 +21,7 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
             .Property(role => role.NormalizedName)
             .HasMaxLength(MaxNameLength)
             .IsRequired();
+
+        builder.HasData(RolesSeedingData.Data);
     }
 }

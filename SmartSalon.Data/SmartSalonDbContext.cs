@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using SmartSalon.Application.Domain;
 using Microsoft.EntityFrameworkCore.Metadata;
 using SmartSalon.Application.Domain.Base;
 using System.Reflection;
@@ -9,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Domain.Salons;
 using SmartSalon.Application.Domain.Services;
+using SmartSalon.Application.Domain.Bookings;
 
 namespace SmartSalon.Data;
 
@@ -22,7 +22,6 @@ public class SmartSalonDbContext : IdentityDbContext<User, Role, Id>
     {
         optionsBuilder.UseSqlServer("Server=.,1433;Database=SmartSalon;TrustServerCertificate=True;User Id=sa;Password=P@ssw0rd123");
     }
-
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

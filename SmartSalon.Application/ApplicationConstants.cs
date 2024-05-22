@@ -46,11 +46,6 @@ public static class ApplicationConstants
             public const int MaxNicknameLength = 50;
         }
 
-        public static class Image
-        {
-            public const int MaxUrlLength = 200;
-        }
-
         public static class Salon
         {
             public const int MaxNameLength = 50;

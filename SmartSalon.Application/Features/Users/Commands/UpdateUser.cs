@@ -8,7 +8,7 @@ using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Users.Commands;
 
-public class UpdateUserCommand : ICommand, IMapTo<User>
+public class UpdateUserCommand : ICommand
 {
     public Id UserId { get; set; }
     public required string FirstName { get; set; }
@@ -17,7 +17,7 @@ public class UpdateUserCommand : ICommand, IMapTo<User>
     public required string PhoneNumber { get; set; }
 }
 
-internal class UpdateCommandHandler(IEfRepository<User> users, IUnitOfWork unitOfWork)
+internal class UpdateCommandHandler(IEfRepository<User> users, IUnitOfWork _unitOfWork)
     : ICommandHandler<UpdateUserCommand>
 {
     public async Task<Result> Handle(UpdateUserCommand command, CancellationToken cancellationToken)
@@ -32,7 +32,7 @@ internal class UpdateCommandHandler(IEfRepository<User> users, IUnitOfWork unitO
         user.MapAgainst(command);
         users.Update(user);
 
-        await unitOfWork.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
     }

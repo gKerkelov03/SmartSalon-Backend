@@ -1,5 +1,6 @@
 ﻿
 using SmartSalon.Application.Domain.Base;
+using SmartSalon.Application.Domain.Bookings;
 
 namespace SmartSalon.Application.Domain.Users;
 

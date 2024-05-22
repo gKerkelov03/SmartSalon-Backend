@@ -1,0 +1,15 @@
+﻿
+using FluentValidation;
+using SmartSalon.Application.Extensions;
+using SmartSalon.Application.Features.Salons.Commands;
+
+namespace SmartSalon.Application.Validators;
+
+internal class AddImageCommandValidator : AbstractValidator<AddImageCommand>
+{
+    public AddImageCommandValidator()
+    {
+        RuleFor(command => command.Url).NotEmpty();
+        RuleFor(command => command.SalonId).MustBeValidGuid();
+    }
+}

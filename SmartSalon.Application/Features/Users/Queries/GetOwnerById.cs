@@ -14,6 +14,7 @@ public class GetOwnerByIdQuery(Id ownerId) : IQuery<GetOwnerByIdQueryResponse>
 
 public class GetOwnerByIdQueryResponse : IMapFrom<Owner>
 {
+    public Id OwnerId { get; set; }
     public required string FirstName { get; set; }
     public required string LastName { get; set; }
     public required string Email { get; set; }

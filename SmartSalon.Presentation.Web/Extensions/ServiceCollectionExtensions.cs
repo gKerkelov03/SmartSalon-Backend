@@ -9,7 +9,6 @@ using SmartSalon.Application.Abstractions.Mapping;
 using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Extensions;
 using SmartSalon.Data;
-using SmartSalon.Data.Seeding;
 using SmartSalon.Application.Options;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
@@ -178,7 +177,5 @@ public static partial class ServiceCollectionExtensions
         });
 
     public static IServiceCollection RegisterUnconventionalServices(this IServiceCollection services)
-        => services
-            .AddSingleton<ISeeder, DatabaseSeeder>()
-            .AddSingleton<JwtSecurityTokenHandler>();
+        => services.AddSingleton<JwtSecurityTokenHandler>();
 }
