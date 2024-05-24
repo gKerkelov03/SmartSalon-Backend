@@ -6,6 +6,12 @@ namespace SmartSalon.Application.Abstractions.Services;
 
 public interface IEmailsManager : ITransientLifetime
 {
+
+    Task SendBookingCancellationEmailAsync(
+        string recipientEmail,
+        BookingCancellationViewModel viewModel
+    );
+
     Task SendEmailConfirmationEmailAsync(
         string recipientEmail,
         EmailConfirmationEncryptionModel encryptionModel,

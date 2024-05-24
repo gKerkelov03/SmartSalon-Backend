@@ -100,6 +100,15 @@ public class EmailsManager(
         await SendEmailAsync(recipientEmail, subject, template, viewModelWithFrontendUrl);
     }
 
+    public async Task SendBookingCancellationEmailAsync(string recipientEmail, BookingCancellationViewModel viewModel)
+    {
+        var templateName = "booking-cancellation.html";
+        var template = File.ReadAllText(Path.Combine(_templatesFolder, templateName));
+        var subject = "Your booking was cancelled";
+
+        await SendEmailAsync(recipientEmail, subject, template, viewModel);
+    }
+
     private string GetFrontendUrl(string token, EmailType emailType)
         => $"{_hostingOptions.Value.FrontendUrl}/public/emails-handler?token={token}&email-type={emailType.CastTo<int>()}";
 
@@ -109,4 +118,5 @@ public class EmailsManager(
             .Subject(subject)
             .UsingTemplate(template, viewModel)
             .SendAsync();
+
 }
