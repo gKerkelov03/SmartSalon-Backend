@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.MediatR;
-using SmartSalon.Application.Domain.Salons;
 using SmartSalon.Application.Domain.Services;
 using SmartSalon.Application.Errors;
 using SmartSalon.Application.Extensions;

@@ -47,10 +47,10 @@ public static class ApplicationConstants
 
         public static class Salon
         {
-            public const int MaxNameLength = 50;
+            public const int MaxNameLength = 100;
             public const int MaxDescriptionLength = 1000;
             public const int MaxGoogleMapsLocationLength = 500;
-            public const int MaxTimePenalty = 20;
+            public const int MaxTimePenalty = 30;
             public const int MaxBookingsInAdvance = 20;
         }
 
@@ -74,7 +74,7 @@ public static class ApplicationConstants
         public static class Service
         {
             public const int MaxNameLength = 50;
-            public const int MaxDescriptionLength = 50;
+            public const int MaxDescriptionLength = 500;
             public const int MaxDuration = 500;
             public const int MinPrice = 0;
             public const int MaxPrice = 100_000;
@@ -82,12 +82,12 @@ public static class ApplicationConstants
 
         public static class Category
         {
-            public const int MaxNameLength = 50;
+            public const int MaxNameLength = 100;
         }
 
         public static class Section
         {
-            public const int MaxNameLength = 50;
+            public const int MaxNameLength = 100;
         }
     }
 }

@@ -6,6 +6,7 @@ namespace SmartSalon.Presentation.Web.Features.Services.Responses;
 
 public class GetServiceByIdResponse : IMapFrom<GetServiceByIdQueryResponse>
 {
+    public required Id Id { get; set; }
     public required string Name { get; set; }
     public required string Description { get; set; }
     public required double Price { get; set; }

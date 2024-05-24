@@ -17,12 +17,13 @@ public class GetServiceByIdQuery(Id id) : IQuery<GetServiceByIdQueryResponse>
 
 public class GetServiceByIdQueryResponse : IMapFrom<Service>
 {
-    public Id Id { get; set; }
-    public required string PictureUrl { get; set; }
+    public required Id Id { get; set; }
     public required string Name { get; set; }
-    public int Order { get; set; }
-    public Id SalonId { get; set; }
-    public required IEnumerable<GetCategoryByIdQueryResponse> Categories { get; set; }
+    public required string Description { get; set; }
+    public required double Price { get; set; }
+    public required int DurationInMinutes { get; set; }
+    public required int Order { get; set; }
+    public required ICollection<GetJobTitleByIdQueryResponse>? JobTitles { get; set; }
 }
 
 internal class GetServiceByIdQueryHandler(IEfRepository<Service> _services, IMapper _mapper)

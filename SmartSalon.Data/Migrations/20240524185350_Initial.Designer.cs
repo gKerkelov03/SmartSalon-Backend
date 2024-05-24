@@ -12,7 +12,7 @@ using SmartSalon.Data;
 namespace SmartSalon.Data.Migrations
 {
     [DbContext(typeof(SmartSalonDbContext))]
-    [Migration("20240519130638_Initial")]
+    [Migration("20240524185350_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -123,23 +123,23 @@ namespace SmartSalon.Data.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = new Guid("99aebbfd-56b5-4bb7-bfc3-d258edbd7a10"),
-                            RoleId = new Guid("095728b6-906f-4139-b72d-9cf2c9b2a081")
+                            UserId = new Guid("38490ebb-52c8-4911-8acd-fd335e668edf"),
+                            RoleId = new Guid("ca21a688-3ef1-498b-addc-2e255d38eb1f")
                         },
                         new
                         {
-                            UserId = new Guid("99aebbfd-56b5-4bb7-bfc3-d258edbd7a10"),
-                            RoleId = new Guid("7d63bf28-e9a1-4a9e-b2af-afaad758dc43")
+                            UserId = new Guid("38490ebb-52c8-4911-8acd-fd335e668edf"),
+                            RoleId = new Guid("12d31164-6c2e-4519-a113-df379f237ba2")
                         },
                         new
                         {
-                            UserId = new Guid("b8c22ce7-1048-450f-95a9-3d524a27bcaa"),
-                            RoleId = new Guid("095728b6-906f-4139-b72d-9cf2c9b2a081")
+                            UserId = new Guid("0731cdd2-8e4a-4087-b3bf-57da03d57d0c"),
+                            RoleId = new Guid("ca21a688-3ef1-498b-addc-2e255d38eb1f")
                         },
                         new
                         {
-                            UserId = new Guid("b8c22ce7-1048-450f-95a9-3d524a27bcaa"),
-                            RoleId = new Guid("7d63bf28-e9a1-4a9e-b2af-afaad758dc43")
+                            UserId = new Guid("0731cdd2-8e4a-4087-b3bf-57da03d57d0c"),
+                            RoleId = new Guid("12d31164-6c2e-4519-a113-df379f237ba2")
                         });
                 });
 
@@ -321,21 +321,21 @@ namespace SmartSalon.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("31d35ea1-9c50-4c22-be06-982b16902d0f"),
+                            Id = new Guid("9aee95f4-bbc1-4648-a54d-57105519fe55"),
                             Code = "BTC",
                             LogoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/2048px-Bitcoin.svg.png",
                             Name = "Bitcoin"
                         },
                         new
                         {
-                            Id = new Guid("90a932c8-20d4-4e05-a012-ec6a7cca0576"),
+                            Id = new Guid("132d8526-11f9-4f81-a903-2dfdeb712a44"),
                             Code = "ETH",
                             LogoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Ethereum_logo_2014.svg/1257px-Ethereum_logo_2014.svg.png",
                             Name = "Ethereum"
                         },
                         new
                         {
-                            Id = new Guid("18c9d20f-eb19-4dc3-9bd3-676b8d6c1897"),
+                            Id = new Guid("fec232e5-41ec-4cf8-8abc-9a2cd623b57d"),
                             Code = "USD",
                             Country = "United States",
                             LogoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg/255px-Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg.png",
@@ -343,7 +343,7 @@ namespace SmartSalon.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("dca9fbca-6b89-4336-ac3f-b90e9d399f3b"),
+                            Id = new Guid("b1b23596-736f-46c1-9b57-f926759ac031"),
                             Code = "EUR",
                             Country = "Eurozone",
                             LogoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Flag_of_Europe.svg/255px-Flag_of_Europe.svg.png",
@@ -351,7 +351,7 @@ namespace SmartSalon.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("e0786d90-115e-4b53-8717-f860696dfc26"),
+                            Id = new Guid("6f5d3779-4ad5-4be9-b0e8-b9fee207bab2"),
                             Code = "BGN",
                             Country = "Bulgaria",
                             LogoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Flag_of_Bulgaria.svg/255px-Flag_of_Bulgaria.svg.png",
@@ -463,8 +463,8 @@ namespace SmartSalon.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("ProfilePictureUrl")
                         .HasColumnType("nvarchar(max)");
@@ -475,7 +475,7 @@ namespace SmartSalon.Data.Migrations
                         .HasDefaultValue(true);
 
                     b.Property<int>("TimePenalty")
-                        .HasMaxLength(20)
+                        .HasMaxLength(30)
                         .HasColumnType("int");
 
                     b.Property<bool>("WorkersCanDeleteBookings")
@@ -503,7 +503,7 @@ namespace SmartSalon.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("83bc5d48-ea1b-4a96-9a7d-1d0ce2c72fb7"),
+                            Id = new Guid("0f752938-0223-4ef6-b196-e6b6cb1a7ca5"),
                             BookingsInAdvance = 5,
                             Country = "BULGARIA",
                             Description = "Description",
@@ -511,33 +511,33 @@ namespace SmartSalon.Data.Migrations
                             IsDeleted = false,
                             Latitude = "42.698529",
                             Longitude = "23.328659",
-                            MainCurrencyId = new Guid("e0786d90-115e-4b53-8717-f860696dfc26"),
+                            MainCurrencyId = new Guid("6f5d3779-4ad5-4be9-b0e8-b9fee207bab2"),
                             Name = "Cosa Nostra",
                             SubscriptionsEnabled = true,
                             TimePenalty = 5,
                             WorkersCanDeleteBookings = false,
                             WorkersCanMoveBookings = true,
                             WorkersCanSetNonWorkingPeriods = true,
-                            WorkingTimeId = new Guid("8ca7b85f-9ee4-4e9e-890c-8b29e364da7b")
+                            WorkingTimeId = new Guid("0d1fd500-be49-4b72-bbb0-82407a9f20db")
                         },
                         new
                         {
-                            Id = new Guid("13dbc57a-cfdf-4229-8fa5-be7aba0e16e8"),
+                            Id = new Guid("e33ee5e0-609c-497e-96da-1ace7a37a1de"),
                             BookingsInAdvance = 5,
                             Country = "BULGARIA",
                             Description = "Description",
                             GoogleMapsLocation = "Студентски Комплекс, 1700 София",
                             IsDeleted = false,
-                            Latitude = "42.698529",
-                            Longitude = "23.328659",
-                            MainCurrencyId = new Guid("e0786d90-115e-4b53-8717-f860696dfc26"),
+                            Latitude = "42",
+                            Longitude = "23",
+                            MainCurrencyId = new Guid("6f5d3779-4ad5-4be9-b0e8-b9fee207bab2"),
                             Name = "Gosho shop",
                             SubscriptionsEnabled = true,
                             TimePenalty = 5,
                             WorkersCanDeleteBookings = false,
                             WorkersCanMoveBookings = true,
                             WorkersCanSetNonWorkingPeriods = true,
-                            WorkingTimeId = new Guid("8041bfe3-78b7-406c-91ef-647b066a0b28")
+                            WorkingTimeId = new Guid("9a7359dc-b566-4ffe-a89d-01ed58143e82")
                         });
                 });
 
@@ -653,14 +653,14 @@ namespace SmartSalon.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("8ca7b85f-9ee4-4e9e-890c-8b29e364da7b"),
+                            Id = new Guid("0d1fd500-be49-4b72-bbb0-82407a9f20db"),
                             FridayClosingTime = new TimeOnly(19, 0, 0),
                             FridayIsWorking = false,
                             FridayOpeningTime = new TimeOnly(7, 0, 0),
                             MondayClosingTime = new TimeOnly(19, 0, 0),
                             MondayIsWorking = false,
                             MondayOpeningTime = new TimeOnly(7, 0, 0),
-                            SalonId = new Guid("83bc5d48-ea1b-4a96-9a7d-1d0ce2c72fb7"),
+                            SalonId = new Guid("0f752938-0223-4ef6-b196-e6b6cb1a7ca5"),
                             SaturdayClosingTime = new TimeOnly(19, 0, 0),
                             SaturdayIsWorking = false,
                             SaturdayOpeningTime = new TimeOnly(7, 0, 0),
@@ -679,14 +679,14 @@ namespace SmartSalon.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("8041bfe3-78b7-406c-91ef-647b066a0b28"),
+                            Id = new Guid("9a7359dc-b566-4ffe-a89d-01ed58143e82"),
                             FridayClosingTime = new TimeOnly(19, 0, 0),
                             FridayIsWorking = false,
                             FridayOpeningTime = new TimeOnly(7, 0, 0),
                             MondayClosingTime = new TimeOnly(19, 0, 0),
                             MondayIsWorking = false,
                             MondayOpeningTime = new TimeOnly(7, 0, 0),
-                            SalonId = new Guid("13dbc57a-cfdf-4229-8fa5-be7aba0e16e8"),
+                            SalonId = new Guid("e33ee5e0-609c-497e-96da-1ace7a37a1de"),
                             SaturdayClosingTime = new TimeOnly(19, 0, 0),
                             SaturdayIsWorking = false,
                             SaturdayOpeningTime = new TimeOnly(7, 0, 0),
@@ -795,8 +795,8 @@ namespace SmartSalon.Data.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<int>("DurationInMinutes")
                         .HasColumnType("int");
@@ -863,29 +863,29 @@ namespace SmartSalon.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("7d63bf28-e9a1-4a9e-b2af-afaad758dc43"),
-                            ConcurrencyStamp = "588b968f-3fa6-4802-a7c8-5d91eae4eaf2",
+                            Id = new Guid("12d31164-6c2e-4519-a113-df379f237ba2"),
+                            ConcurrencyStamp = "f0090505-7f0c-49aa-8361-b347ab48c7c7",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = new Guid("711b3c40-484b-4458-959c-46f36fc5d0cb"),
-                            ConcurrencyStamp = "867bac41-df3c-49de-97a1-eeb330b930eb",
+                            Id = new Guid("17937950-caa2-43c1-94a9-34561db426fd"),
+                            ConcurrencyStamp = "7d48cce5-92fb-47ae-a051-804e043ac7c2",
                             Name = "Owner",
                             NormalizedName = "OWNER"
                         },
                         new
                         {
-                            Id = new Guid("840f77c7-db29-4019-b6f6-88c948913945"),
-                            ConcurrencyStamp = "4988a881-4017-4d78-8d0e-1b14f2883c65",
+                            Id = new Guid("c43891a4-affd-4a2e-a006-a54f5a56279f"),
+                            ConcurrencyStamp = "c7db6173-9908-424c-807b-2116c633dbd4",
                             Name = "Worker",
                             NormalizedName = "WORKER"
                         },
                         new
                         {
-                            Id = new Guid("095728b6-906f-4139-b72d-9cf2c9b2a081"),
-                            ConcurrencyStamp = "14044e58-decc-4a57-a755-92a06acf9b57",
+                            Id = new Guid("ca21a688-3ef1-498b-addc-2e255d38eb1f"),
+                            ConcurrencyStamp = "6e4f541e-cedb-4d67-b9b4-2978ddf66fe9",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -989,9 +989,9 @@ namespace SmartSalon.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("99aebbfd-56b5-4bb7-bfc3-d258edbd7a10"),
+                            Id = new Guid("38490ebb-52c8-4911-8acd-fd335e668edf"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "998b2932-7ae3-434f-b553-1b1ee46155fe",
+                            ConcurrencyStamp = "55c71eb2-f0af-4862-a88c-af44e2768475",
                             Email = "gkerkelov03@abv.bg",
                             EmailConfirmed = true,
                             FirstName = "Georgi",
@@ -999,19 +999,19 @@ namespace SmartSalon.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "GKERKELOV03@ABV.BG",
                             NormalizedUserName = "GKERKELOV03@ABV.BG",
-                            PasswordHash = "AQAAAAIAAYagAAAAEPpFGW1ooFKngjgsbf9Iz5fvKDFn3JvhVuCYaBIHFMDaQCndZsQvg/8aS9GcAEwRFw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENkX21BjuNADedwvL/fWqFRSjdlTm+QHlOG4D54OlNrAOINqsK1N8ejiQC5QDQjiwQ==",
                             PhoneNumber = "0895105609",
                             PhoneNumberConfirmed = false,
                             ProfilePictureUrl = "https://res.cloudinary.com/donhvedgr/image/upload/v1662969813/blank-profile-picture_cqowyq.webp",
-                            SecurityStamp = "6388d550-2641-45e5-ace6-16953081f4f4",
+                            SecurityStamp = "d0fbafe2-d85b-472c-9c00-2c369d1b33c0",
                             TwoFactorEnabled = false,
                             UserName = "gkerkelov03@abv.bg"
                         },
                         new
                         {
-                            Id = new Guid("b8c22ce7-1048-450f-95a9-3d524a27bcaa"),
+                            Id = new Guid("0731cdd2-8e4a-4087-b3bf-57da03d57d0c"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c68474a7-64a5-4224-b273-33331c810f72",
+                            ConcurrencyStamp = "6d57b7d6-eb7e-4dd6-bec6-021bb6d7e1bb",
                             Email = "pivanov03@abv.bg",
                             EmailConfirmed = true,
                             FirstName = "Petar",
@@ -1019,11 +1019,11 @@ namespace SmartSalon.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "PIVANOV03@ABV.BG",
                             NormalizedUserName = "PIVANOV03@ABV.BG",
-                            PasswordHash = "AQAAAAIAAYagAAAAEF1z57UyrAsk7Ihzi7vA/EmNDHWvCqydNxZ0jNOnLKeNd5lZe8DmNXrC6qTJWJCQMQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJjROxpcQ1Z26VwwoVpZFoKxnr1/jm46iYngsCyWfDBFyPOwrHU42rvh/S/ymtezUw==",
                             PhoneNumber = "0899829897",
                             PhoneNumberConfirmed = false,
                             ProfilePictureUrl = "https://res.cloudinary.com/donhvedgr/image/upload/v1662969813/blank-profile-picture_cqowyq.webp",
-                            SecurityStamp = "8a2d2e35-8561-427f-a27f-55a77c246950",
+                            SecurityStamp = "2389e0e5-d796-4547-b521-c51f95b4fa96",
                             TwoFactorEnabled = false,
                             UserName = "pivanov03@abv.bg"
                         });

@@ -11,5 +11,6 @@ public class UpdateServiceRequest : IMapTo<UpdateServiceCommand>
     public required string Description { get; set; }
     public double Price { get; set; }
     public int DurationInMinutes { get; set; }
+    public required IEnumerable<Id> JobTitlesIds { get; set; }
     public int Order { get; set; }
 }
