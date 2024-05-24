@@ -7,6 +7,8 @@ using SmartSalon.Presentation.Web.Controllers;
 using SmartSalon.Presentation.Web.Features.Services.Requests;
 using SmartSalon.Application.Features.Services.Commands;
 using SmartService.Application.Features.Services.Commands;
+using SmartSalon.Application.Features.Services.Queries;
+using SmartSalon.Presentation.Web.Features.Services.Responses;
 
 namespace SmartSalon.Presentation.Web.Features.Services.Controllers;
 
@@ -22,6 +24,20 @@ public class ServicesController(ISender _mediator, IMapper _mapper) : V1ApiContr
         var result = await _mediator.Send(command);
 
         return ProblemDetailsOr(result => Created(result.Value.CreatedServiceId), result);
+    }
+
+    [HttpGet(IdRoute)]
+    [SuccessResponse(Status200OK)]
+    [FailureResponse(Status404NotFound)]
+    public async Task<IActionResult> GetServiceById(Id serviceId)
+    {
+        var command = new GetServiceByIdQuery(serviceId);
+        var result = await _mediator.Send(command);
+
+        return ProblemDetailsOr(result =>
+            Ok(_mapper.Map<GetServiceByIdResponse>(result.Value)),
+            result
+        );
     }
 
     [HttpPatch(IdRoute)]

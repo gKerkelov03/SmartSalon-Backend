@@ -16,7 +16,7 @@ public class SectionsController(ISender _mediator, IMapper _mapper) : V1ApiContr
 {
     [HttpPost]
     [SuccessResponse(Status201Created)]
-    [Authorize(Policy = IsAdminPolicy)]
+    [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]
     public async Task<IActionResult> CreateSection(CreateSectionRequest request)
     {
         var command = _mapper.Map<CreateSectionCommand>(request);
@@ -58,7 +58,7 @@ public class SectionsController(ISender _mediator, IMapper _mapper) : V1ApiContr
     [HttpDelete(IdRoute)]
     [SuccessResponse(Status204NoContent)]
     [FailureResponse(Status404NotFound)]
-    [Authorize(Policy = IsAdminPolicy)]
+    [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]
     public async Task<IActionResult> DeleteSection(Id sectionId)
     {
         var command = new DeleteSectionCommand(sectionId);

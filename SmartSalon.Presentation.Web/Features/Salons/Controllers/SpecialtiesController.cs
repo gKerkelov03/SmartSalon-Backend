@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartSalon.Application.Features.Salons.Commands;
 using SmartSalon.Application.Features.Salons.Queries;
-using SmartSalon.Application.Features.Users.Commands;
 using SmartSalon.Presentation.Web.Attributes;
 using SmartSalon.Presentation.Web.Controllers;
 using SmartSalon.Presentation.Web.Features.Salons.Requests;

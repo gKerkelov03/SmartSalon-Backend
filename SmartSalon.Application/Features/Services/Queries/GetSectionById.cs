@@ -5,7 +5,6 @@ using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.Mapping;
 using SmartSalon.Application.Domain.Services;
 using SmartSalon.Application.Errors;
-using SmartSalon.Application.Features.Salons.Queries;
 using SmartSalon.Application.ResultObject;
 
 namespace SmartSalon.Application.Features.Services.Queries;
@@ -22,24 +21,7 @@ public class GetSectionByIdQueryResponse : IMapFrom<Section>
     public required string Name { get; set; }
     public int Order { get; set; }
     public Id SalonId { get; set; }
-    public required IEnumerable<CategoryQueryResponse> Categories { get; set; }
-}
-
-public class CategoryQueryResponse : IMapFrom<Category>
-{
-    public required string Name { get; set; }
-    public required int Order { get; set; }
-    public required IEnumerable<ServiceQueryResponse> Services { get; set; }
-}
-
-public class ServiceQueryResponse : IMapFrom<Service>
-{
-    public required string Name { get; set; }
-    public required string Description { get; set; }
-    public required double Price { get; set; }
-    public required int DurationInMinutes { get; set; }
-    public required int Order { get; set; }
-    public required ICollection<GetJobTitleByIdQueryResponse>? JobTitles { get; set; }
+    public required IEnumerable<GetCategoryByIdQueryResponse> Categories { get; set; }
 }
 
 internal class GetSectionByIdQueryHandler(IEfRepository<Section> _sections, IMapper _mapper)
