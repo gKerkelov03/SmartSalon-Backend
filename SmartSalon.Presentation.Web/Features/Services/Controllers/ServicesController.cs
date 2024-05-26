@@ -52,7 +52,7 @@ public class ServicesController(ISender _mediator, IMapper _mapper) : V1ApiContr
         return ProblemDetailsOr<OkResult>(result);
     }
 
-    [HttpDelete]
+    [HttpDelete(IdRoute)]
     [SuccessResponse(Status200OK)]
     [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]
     public async Task<IActionResult> DeleteService(DeleteServiceRequest request)

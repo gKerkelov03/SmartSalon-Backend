@@ -30,11 +30,15 @@ internal class UpdateCategoryCommandHandler(IEfRepository<Category> _categories,
             return Error.NotFound;
         }
 
-        var sectionAlreadyContainsCategory = category.Section!.Categories!.Any(category => category.Name == command.Name);
-
-        if (sectionAlreadyContainsCategory)
+        if (category.Name != command.Name)
         {
-            return Error.Conflict;
+
+            var sectionAlreadyContainsCategory = category.Section!.Categories!.Any(category => category.Name == command.Name);
+
+            if (sectionAlreadyContainsCategory)
+            {
+                return Error.Conflict;
+            }
         }
 
         category.MapAgainst(command);

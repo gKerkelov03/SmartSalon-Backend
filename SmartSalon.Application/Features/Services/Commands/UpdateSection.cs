@@ -43,11 +43,16 @@ internal class UpdateSectionCommandHandler(
             return Error.NotFound;
         }
 
-        var salonAlreadyContainsSection = salon.Sections!.Any(existingSection => existingSection.Name == section.Name);
-
-        if (salonAlreadyContainsSection)
+        if (section.Name != command.Name)
         {
-            return Error.Conflict;
+            var salonAlreadyContainsSection = salon.Sections!
+                .Any(existingSection => existingSection.Name == command.Name);
+
+            if (salonAlreadyContainsSection)
+            {
+                return Error.Conflict;
+            }
+
         }
 
         section.MapAgainst(command);

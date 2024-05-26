@@ -1,10 +1,12 @@
 ﻿using SmartSalon.Application.Abstractions.Mapping;
+using SmartSalon.Presentation.Web.Attributes;
 using SmartService.Application.Features.Services.Commands;
 
 namespace SmartSalon.Presentation.Web.Features.Services.Requests;
 
 public class UpdateServiceRequest : IMapTo<UpdateServiceCommand>
 {
+    [ComesFromRoute(IdRouteParameterName)]
     public Id ServiceId { get; set; }
     public Id SalonId { get; set; }
     public required string Name { get; set; }

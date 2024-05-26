@@ -30,6 +30,7 @@ internal class UpdateServiceCommandHandler(
     public async Task<Result> Handle(UpdateServiceCommand command, CancellationToken cancellationToken)
     {
         var service = await _services.All
+            .Include(service => service.JobTitles)
             .Include(service => service.Category)
             .ThenInclude(category => category!.Services)
             .FirstOrDefaultAsync(service => service.Id == command.ServiceId);
@@ -39,11 +40,16 @@ internal class UpdateServiceCommandHandler(
             return Error.NotFound;
         }
 
-        var categoryAlreadyContainsService = service.Category!.Services!.Any(service => service.Name == command.Name);
-
-        if (categoryAlreadyContainsService)
+        if (service.Name != command.Name)
         {
-            return Error.Conflict;
+
+            var categoryAlreadyContainsService = service.Category!.Services!.Any(service => service.Name == command.Name);
+
+            if (categoryAlreadyContainsService)
+            {
+                return Error.Conflict;
+            }
+
         }
 
         var jobTitlesResult = _jobTitles.GetJobTitlesInSalon(command.SalonId, command.JobTitlesIds);
