@@ -11,6 +11,7 @@ using SmartSalon.Presentation.Web.Controllers;
 using SmartSalon.Presentation.Web.Features.Bookings.Requests;
 using SmartSalon.Presentation.Web.Features.Services.Requests;
 using SmartSalon.Presentation.Web.Features.Services.Responses;
+using SmartSalon.Application.Extensions;
 
 namespace SmartSalon.Presentation.Web.Features.Services.Controllers;
 
@@ -43,6 +44,48 @@ public class BookingsController(ISender _mediator, IMapper _mapper) : V1ApiContr
         );
     }
 
+    [HttpGet($"GetCustomerBookings/{IdRoute}")]
+    [SuccessResponse(Status200OK)]
+    [FailureResponse(Status404NotFound)]
+    public async Task<IActionResult> GetBookingsOfCustomer(Id customerId)
+    {
+        var command = new GetCustomerBookingsQuery(customerId);
+        var result = await _mediator.Send(command);
+
+        return ProblemDetailsOr(result =>
+            Ok(result.Value.ToListOf<GetBookingByIdResponse>(_mapper)),
+            result
+        );
+    }
+
+    [HttpGet($"GetWorkerBookings/{IdRoute}")]
+    [SuccessResponse(Status200OK)]
+    [FailureResponse(Status404NotFound)]
+    public async Task<IActionResult> GetWorkerBookings(Id workerId)
+    {
+        var command = new GetBookingByIdQuery(workerId);
+        var result = await _mediator.Send(command);
+
+        return ProblemDetailsOr(result =>
+            Ok(_mapper.Map<GetBookingByIdResponse>(result.Value)),
+            result
+        );
+    }
+
+    [HttpPost("GetAvailableTimeSlots")]
+    [SuccessResponse(Status200OK)]
+    [FailureResponse(Status404NotFound)]
+    public async Task<IActionResult> GetAvailableSlotsForBooking(GetAvailableSlotsForBookingRequest request)
+    {
+        var command = _mapper.Map<GetAvailableSlotsForBookingQuery>(request);
+        var result = await _mediator.Send(command);
+
+        return ProblemDetailsOr(result =>
+            Ok(result.Value),
+            result
+        );
+    }
+
     [HttpPatch(IdRoute)]
     [SuccessResponse(Status200OK)]
     [FailureResponse(Status404NotFound)]
@@ -55,9 +98,9 @@ public class BookingsController(ISender _mediator, IMapper _mapper) : V1ApiContr
         return ProblemDetailsOr<OkResult>(result);
     }
 
-    [HttpDelete]
+    [HttpDelete(IdRoute)]
     [SuccessResponse(Status200OK)]
-    [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]
+    [Authorize(Policy = IsOwnerOfTheSalonOrIsTheCustomerOrIsTheWorkerOrIsAdminPolicy)]
     public async Task<IActionResult> DeleteBooking(DeleteBookingRequest request)
     {
         var command = _mapper.Map<DeleteBookingCommand>(request);

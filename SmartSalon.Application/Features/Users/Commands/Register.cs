@@ -65,7 +65,7 @@ internal class RegisterCommandHandler(UsersManager _users, IMapper _mapper, IEma
             UserFirstName = newCustomer.FirstName
         };
 
-        await _emailsManager.SendEmailConfirmationEmailAsync(newCustomer.Email, encryptionModel, viewModel);
+        _emailsManager.SendEmailConfirmationEmailAsync(newCustomer.Email, encryptionModel, viewModel);
 
         return new RegisterCommandResponse(newCustomer.Id);
     }

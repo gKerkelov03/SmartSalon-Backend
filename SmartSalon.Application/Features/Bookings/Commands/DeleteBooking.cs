@@ -17,7 +17,7 @@ public class DeleteBookingCommand : ICommand
     public Id BookingId { get; set; }
 }
 
-internal class BookingDatabaseQueryResponse : IMapFrom<Booking>
+public class BookingDatabaseQueryResponse : IMapFrom<Booking>
 {
     public Id Id { get; set; }
     public DateOnly Date { get; set; }
@@ -42,6 +42,7 @@ internal class DeleteBookingCommandHandler(
         var booking = await _bookings.All
             .Include(booking => booking.Salon)
             .Include(booking => booking.Service)
+            .Include(booking => booking.Customer)
             .ProjectTo<BookingDatabaseQueryResponse>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(booking => booking.Id == command.BookingId);
 

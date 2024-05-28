@@ -102,7 +102,7 @@ public class EmailsManager(
 
     public async Task SendBookingCancellationEmailAsync(string recipientEmail, BookingCancellationViewModel viewModel)
     {
-        var templateName = "booking-cancellation.html";
+        var templateName = "cancel-booking.html";
         var template = File.ReadAllText(Path.Combine(_templatesFolder, templateName));
         var subject = "Your booking was cancelled";
 

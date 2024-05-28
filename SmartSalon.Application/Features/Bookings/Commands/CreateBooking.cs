@@ -41,14 +41,14 @@ internal class CreateBookingCommandHandler(
 {
     public async Task<Result<CreateBookingCommandResponse>> Handle(CreateBookingCommand command, CancellationToken cancellationToken)
     {
-        var customerDoesntExist = await _customers.GetByIdAsync(command.ServiceId) is null;
+        var customerDoesntExist = await _customers.GetByIdAsync(command.CustomerId) is null;
 
         if (customerDoesntExist)
         {
             return Error.NotFound;
         }
 
-        var salonDoesntExist = await _salons.GetByIdAsync(command.ServiceId) is null;
+        var salonDoesntExist = await _salons.GetByIdAsync(command.SalonId) is null;
 
         if (salonDoesntExist)
         {
@@ -66,7 +66,7 @@ internal class CreateBookingCommandHandler(
 
         var worker = await _workers.All
             .Include(worker => worker.JobTitles)
-            .FirstOrDefaultAsync(worker => worker.Id == command.ServiceId);
+            .FirstOrDefaultAsync(worker => worker.Id == command.WorkerId);
 
         if (worker is null)
         {

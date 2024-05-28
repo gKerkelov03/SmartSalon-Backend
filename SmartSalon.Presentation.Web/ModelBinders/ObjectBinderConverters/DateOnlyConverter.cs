@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using SmartSalon.Application.Extensions;
 
 internal class DateOnlyConverter(Type _targetType) : IModelConverter
 {
@@ -7,7 +6,7 @@ internal class DateOnlyConverter(Type _targetType) : IModelConverter
 
     public object Convert(ModelBindingContext bindingContext, string propertyName, object? propertyValue)
     {
-        var propertyValueAsString = propertyValue?.CastTo<string>();
+        var propertyValueAsString = propertyValue?.ToString();
         var isNotValidDate = !DateOnly.TryParse(propertyValueAsString, out var timeOnly);
 
         if (isNotValidDate)
