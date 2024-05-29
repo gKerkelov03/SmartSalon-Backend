@@ -17,18 +17,8 @@ internal static class UserRolesSeedingData
         },
         new()
         {
-            UserId = FirstAdminId,
-            RoleId = CustomerRoleId,
-        },
-        new()
-        {
             UserId = SecondAdminId,
             RoleId = AdminRoleId,
-        },
-        new()
-        {
-            UserId = SecondAdminId,
-            RoleId = CustomerRoleId,
         },
     ];
 }

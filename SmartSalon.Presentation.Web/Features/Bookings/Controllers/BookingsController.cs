@@ -63,11 +63,11 @@ public class BookingsController(ISender _mediator, IMapper _mapper) : V1ApiContr
     [FailureResponse(Status404NotFound)]
     public async Task<IActionResult> GetWorkerBookings(Id workerId)
     {
-        var command = new GetBookingByIdQuery(workerId);
+        var command = new GetWorkerBookingsQuery(workerId);
         var result = await _mediator.Send(command);
 
         return ProblemDetailsOr(result =>
-            Ok(_mapper.Map<GetBookingByIdResponse>(result.Value)),
+            Ok(result.Value.ToListOf<GetBookingByIdResponse>(_mapper)),
             result
         );
     }
