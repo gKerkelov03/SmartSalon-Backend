@@ -13,4 +13,5 @@ public class GetOwnerByIdResponse : IMapFrom<GetOwnerByIdQueryResponse>
     public required string ProfilePictureUrl { get; set; }
     public required string PhoneNumber { get; set; }
     public required IEnumerable<Id> Salons { get; set; }
+    public required IEnumerable<string> Roles { get; set; }
 }

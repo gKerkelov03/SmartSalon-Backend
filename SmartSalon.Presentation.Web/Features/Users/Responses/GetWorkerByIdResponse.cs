@@ -16,4 +16,5 @@ public class GetWorkerByIdResponse : IMapFrom<GetWorkerByIdQueryResponse>
     public required string PhoneNumber { get; set; }
     public required IEnumerable<Id> JobTitles { get; set; }
     public required IEnumerable<Id> Salons { get; set; }
+    public required IEnumerable<string> Roles { get; set; }
 }

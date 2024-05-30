@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.Mapping;
@@ -27,6 +28,7 @@ public class GetWorkerByIdQueryResponse : IHaveCustomMapping
     public Id? SalonId { get; set; }
     public required IEnumerable<Id> JobTitles { get; set; }
     public required IEnumerable<Id> Salons { get; set; }
+    public required IEnumerable<string> Roles { get; set; }
 
     public void CreateMapping(IProfileExpression config)
         => config
@@ -41,21 +43,25 @@ public class GetWorkerByIdQueryResponse : IHaveCustomMapping
             );
 }
 
-internal class GetWorkerByIdQueryHandler(IEfRepository<Worker> _workers, IMapper _mapper)
+internal class GetWorkerByIdQueryHandler(IEfRepository<Worker> _workers, UsersManager _users, IMapper _mapper)
     : IQueryHandler<GetWorkerByIdQuery, GetWorkerByIdQueryResponse>
 {
     public async Task<Result<GetWorkerByIdQueryResponse>> Handle(GetWorkerByIdQuery query, CancellationToken cancellationToken)
     {
+        var worker = await _workers.GetByIdAsync(query.WorkerId);
+
+        if (worker is null)
+        {
+            return Error.NotFound;
+        }
+
         var queryResponse = await _workers.All
             .Include(worker => worker.JobTitles)
             .Include(worker => worker.Salons)
             .ProjectTo<GetWorkerByIdQueryResponse>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(worker => worker.Id == query.WorkerId);
 
-        if (queryResponse is null)
-        {
-            return Error.NotFound;
-        }
+        queryResponse!.Roles = await _users.GetRolesAsync(worker);
 
         return queryResponse;
     }

@@ -24,6 +24,7 @@ public class GetOwnerByIdQueryResponse : IHaveCustomMapping
     public required string PhoneNumber { get; set; }
     public string? ProfilePictureUrl { get; set; }
     public required IEnumerable<Id> Salons { get; set; }
+    public required IEnumerable<string> Roles { get; set; }
 
     public void CreateMapping(IProfileExpression config)
         => config
@@ -34,20 +35,24 @@ public class GetOwnerByIdQueryResponse : IHaveCustomMapping
             );
 }
 
-internal class GetOwnerByIdQueryHandler(IEfRepository<Owner> _owners, IMapper _mapper)
+internal class GetOwnerByIdQueryHandler(IEfRepository<Owner> _owners, UsersManager _users, IMapper _mapper)
     : IQueryHandler<GetOwnerByIdQuery, GetOwnerByIdQueryResponse>
 {
     public async Task<Result<GetOwnerByIdQueryResponse>> Handle(GetOwnerByIdQuery query, CancellationToken cancellationToken)
     {
+        var owner = await _owners.GetByIdAsync(query.OwnerId);
+
+        if (owner is null)
+        {
+            return Error.NotFound;
+        }
+
         var queryResponse = await _owners.All
             .Include(owner => owner.Salons)
             .ProjectTo<GetOwnerByIdQueryResponse>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(owner => owner.Id == query.OwnerId);
 
-        if (queryResponse is null)
-        {
-            return Error.NotFound;
-        }
+        queryResponse!.Roles = await _users.GetRolesAsync(owner);
 
         return queryResponse;
     }
