@@ -27,6 +27,7 @@ internal class AddWorkerToSalonCommandHandler(
 {
     public async Task<Result> Handle(AddWorkerToSalonCommand command, CancellationToken cancellationToken)
     {
+
         var decryptedToken = _decryptor.DecryptTo<WorkerInvitationEncryptionModel>(command.Token, _emailOptions.Value.EncryptionKey);
 
         if (decryptedToken is null)
@@ -44,8 +45,13 @@ internal class AddWorkerToSalonCommandHandler(
             return Error.NotFound;
         }
 
-        salon!.Workers!.Add(worker);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        //TODO: this check is actually unneeded because of how EF core works
+        var workerIsNotAlreadyInTheSalon = !salon.Workers!.Any(worker => worker.Id == decryptedToken.WorkerId);
+        if (workerIsNotAlreadyInTheSalon)
+        {
+            salon!.Workers!.Add(worker);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+        }
 
         return Result.Success();
     }

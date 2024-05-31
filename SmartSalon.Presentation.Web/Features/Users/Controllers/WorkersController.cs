@@ -96,7 +96,6 @@ public class WorkersController(ISender _mediator, IMapper _mapper) : V1ApiContro
 
     [HttpPatch("AddToSalon")]
     [SuccessResponse(Status200OK)]
-    [Authorize(Policy = IsOwnerOrIsAdminPolicy)]
     public async Task<IActionResult> AddWorkerToSalon(string token)
     {
         var command = new AddWorkerToSalonCommand(token);
