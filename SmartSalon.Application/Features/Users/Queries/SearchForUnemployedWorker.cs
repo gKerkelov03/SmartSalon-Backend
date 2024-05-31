@@ -25,7 +25,7 @@ internal class SearchForUnemployedWorkerQueryHandler(IEfRepository<Worker> _work
         var queryResponse = await _workers.All
             .Include(worker => worker.JobTitles)
             .Include(worker => worker.Salons)
-            .Where(worker => worker.Salons!.IsEmpty() && (
+            .Where(worker => !worker.Salons!.Any() && (
                 worker.NormalizedEmail!.Contains(query.SearchTerm.ToUpper()) ||
                 worker.PhoneNumber!.Contains(query.SearchTerm) ||
                 (worker.FirstName.ToUpper() + " " + worker.LastName.ToUpper()).Contains(query.SearchTerm.ToUpper()))

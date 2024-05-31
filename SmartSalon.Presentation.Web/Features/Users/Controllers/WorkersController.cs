@@ -86,9 +86,9 @@ public class WorkersController(ISender _mediator, IMapper _mapper) : V1ApiContro
     [HttpPatch($"RemoveFromSalon/{IdRoute}")]
     [SuccessResponse(Status204NoContent)]
     [Authorize(Policy = IsOwnerOfTheSalonOfTheWorkerOrIsTheWorkerOrIsAdminPolicy)]
-    public async Task<IActionResult> RemoveWorkerFromSalon(Id workerId)
+    public async Task<IActionResult> RemoveWorkerFromSalon(RemoveWorkerFromSalonRequest request)
     {
-        var command = new RemoveWorkerFromSalonCommand(workerId);
+        var command = _mapper.Map<RemoveWorkerFromSalonCommand>(request);
         var result = await _mediator.Send(command);
 
         return ProblemDetailsOr<NoContentResult>(result);
