@@ -40,6 +40,9 @@ builder
 
 var app = builder.Build();
 
+//TODO: this middleware exists only because of an assignment
+app.UseMiddleware<RequestTimingMiddleware>();
+
 app
     .UseExceptionHandling(app.Environment)
     .UseCors(AngularLocalhostCorsPolicy)
