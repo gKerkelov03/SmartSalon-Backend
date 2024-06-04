@@ -71,13 +71,13 @@ public class WorkersController(ISender _mediator, IMapper _mapper) : V1ApiContro
         return ProblemDetailsOr<OkResult>(result);
     }
 
-    [HttpPatch($"UpdateJobTitles/{IdRoute}")]
+    [HttpPatch($"UpdateJobTitles/")]
     [SuccessResponse(Status200OK)]
     [FailureResponse(Status409Conflict)]
     [Authorize(Policy = IsOwnerOfTheSalonOfTheWorkerOrIsAdminPolicy)]
     public async Task<IActionResult> UpdateWorkerJobTitles(UpdateWorkerJobTitlesRequest request)
     {
-        var command = _mapper.Map<UpdateWorkerNicknameCommand>(request);
+        var command = _mapper.Map<UpdateWorkerJobTitlesCommand>(request);
         var result = await _mediator.Send(command);
 
         return ProblemDetailsOr<OkResult>(result);

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Domain.Users;
 using SmartSalon.Application.Errors;
@@ -17,11 +18,14 @@ internal class SearchForOwnerQueryHandler(IEfRepository<Owner> _owners, IMapper 
 {
     public async Task<Result<IEnumerable<GetOwnerByIdQueryResponse>>> Handle(SearchForOwnerQuery query, CancellationToken cancellationToken)
     {
-        var ownersMatchingTheSearchTerm = await _owners.FindAllAsync(owner =>
-            owner.Email!.Contains(query.SearchTerm) ||
-            owner.PhoneNumber!.Contains(query.SearchTerm) ||
-            (owner.FirstName + " " + owner.LastName).Contains(query.SearchTerm)
-        );
+        var ownersMatchingTheSearchTerm = await _owners.All
+            .Include(owner => owner.Salons)
+            .Where(owner =>
+                owner.NormalizedEmail!.Contains(query.SearchTerm.ToUpper()) ||
+                owner.PhoneNumber!.Contains(query.SearchTerm) ||
+                (owner.FirstName.ToUpper() + " " + owner.LastName.ToUpper()).Contains(query.SearchTerm.ToUpper())
+            )
+            .ToListAsync();
 
         if (ownersMatchingTheSearchTerm.IsEmpty())
         {

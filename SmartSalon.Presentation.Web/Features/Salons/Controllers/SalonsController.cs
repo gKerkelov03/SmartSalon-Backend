@@ -10,6 +10,7 @@ using AutoMapper;
 using SmartSalon.Presentation.Web.Controllers;
 using SmartSalon.Presentation.Web.Salons.Requests;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace SmartSalon.Presentation.Web.Features.Salons.Controllers;
 
@@ -98,6 +99,7 @@ public class SalonsController(ISender _mediator, IMapper _mapper) : V1ApiControl
     [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]
     public async Task<IActionResult> InviteOwner(InviteOwnerRequest request)
     {
+
         var command = _mapper.Map<InviteOwnerCommand>(request);
         var result = await _mediator.Send(command);
 

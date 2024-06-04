@@ -1,10 +1,11 @@
-using SmartSalon.Presentation.Web.Attributes;
+
+using SmartSalon.Application.Abstractions.Mapping;
+using SmartSalon.Application.Features.Users.Commands;
 
 namespace SmartSalon.Presentation.Web.Users.Requests;
 
-public class UpdateWorkerJobTitlesRequest
+public class UpdateWorkerJobTitlesRequest : IMapTo<UpdateWorkerJobTitlesCommand>
 {
-    [ComesFromRoute(IdRoute)]
     public required Id WorkerId { get; set; }
     public required Id SalonId { get; set; }
     public required IEnumerable<Id> JobTitlesIds { get; set; }
