@@ -3,7 +3,7 @@ namespace SmartSalon.Presentation.Web;
 internal static class WebConstants
 {
 
-    public const string AngularLocalhostCorsPolicy = "Angular-Localhost-Cors-Policy";
+    public const string ReactAndAngularLocalhostCorsPolicy = "Angular-Localhost-Cors-Policy";
     public const string IdRoute = "{Id}";
     public const string IdRouteParameterName = "Id";
     public const string SettingsFilesFolderName = "Settings";

@@ -45,7 +45,7 @@ app.UseMiddleware<RequestTimingMiddleware>();
 
 app
     .UseExceptionHandling(app.Environment)
-    .UseCors(AngularLocalhostCorsPolicy)
+    .UseCors(ReactAndAngularLocalhostCorsPolicy)
     .UseSwagger(app.Environment, app.Services)
     .UseAuthentication()
     .UseAuthorization()
