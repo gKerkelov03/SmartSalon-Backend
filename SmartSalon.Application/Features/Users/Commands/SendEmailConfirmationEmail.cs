@@ -17,25 +17,32 @@ public class SendEmailConfirmationEmailCommand : ICommand, IMapTo<EmailConfirmat
 }
 
 public class SendEmailConfirmationEmailHandler(
-    IEfRepository<User> _users,
+    UsersManager _users,
     IEmailsManager _emailsManager,
     IMapper _mapper
 ) : ICommandHandler<SendEmailConfirmationEmailCommand>
 {
     public async Task<Result> Handle(SendEmailConfirmationEmailCommand command, CancellationToken cancellationToken)
     {
-        var userWithTheSameEmail = await _users.FirstOrDefaultAsync(user => user.Email == command.EmailToBeConfirmed);
+        var userWithTheSameEmail = await _users.FindByEmailAsync(command.EmailToBeConfirmed);
 
         if (userWithTheSameEmail is not null)
         {
             return Error.Conflict;
         }
 
-        var user = await _users.FirstOrDefaultAsync(user => user.Id == command.UserId);
+        var user = await _users.FindByIdAsync(command.UserId.ToString());
 
         if (user is null)
         {
             return Error.NotFound;
+        }
+
+        var passwordIsNotCorrect = !await _users.CheckPasswordAsync(user, command.Password);
+
+        if (passwordIsNotCorrect)
+        {
+            return Error.Unauthorized;
         }
 
         if (user.Email == command.EmailToBeConfirmed && user.EmailConfirmed)

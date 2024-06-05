@@ -57,7 +57,6 @@ internal class RegisterCommandHandler(UsersManager _users, IMapper _mapper, IEma
         {
             UserId = newCustomer.Id,
             EmailToBeConfirmed = command.Email,
-            Password = command.Password
         };
 
         var viewModel = new EmailConfirmationViewModel

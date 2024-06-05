@@ -1,4 +1,8 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using NSubstitute;
 using SmartSalon.Application.Domain.Salons;
 using SmartSalon.Application.Domain.Services;
 using SmartSalon.Application.Domain.Users;
@@ -52,6 +56,27 @@ public abstract class TestsClass
             SecurityStamp = "",
         };
 
+    protected User CreateUserWithId(Id id)
+    {
+        var user = CreateUser();
+        user.Id = id;
+        return user;
+    }
+
+    protected User CreateUser()
+        => new()
+        {
+            FirstName = "",
+            LastName = "",
+            Email = "",
+            ProfilePictureUrl = "",
+            PhoneNumber = "",
+            UserName = "",
+            NormalizedEmail = "",
+            NormalizedUserName = "",
+            SecurityStamp = "",
+        };
+
     protected Salon CreateSalonWithId(Id id)
     {
         var salon = CreateSalon();
@@ -81,7 +106,7 @@ public abstract class TestsClass
     protected EmailOptions CreateEmailOptions()
         => new()
         {
-            EncryptionKey = "test-key",
+            EncryptionKey = "",
             Email = "",
             Password = "",
             Host = "",
@@ -95,5 +120,32 @@ public abstract class TestsClass
             .Options;
 
         return new SmartSalonDbContext(options);
+    }
+
+    protected UsersManager CreateUsersManager()
+    {
+        var userStore = Substitute.For<IUserStore<User>>();
+        var identityOptions = Substitute.For<IOptions<IdentityOptions>>();
+        identityOptions.Value.Returns(new IdentityOptions());
+        var passwordHasher = new PasswordHasher<User>();
+        var userValidators = new List<IUserValidator<User>> { new UserValidator<User>() };
+        var passwordValidators = new List<IPasswordValidator<User>> { new PasswordValidator<User>() };
+        var keyNormalizer = Substitute.For<ILookupNormalizer>();
+        var errors = new IdentityErrorDescriber();
+        var services = Substitute.For<IServiceProvider>();
+        var logger = Substitute.For<ILogger<UsersManager>>();
+
+        var userManager = new UsersManager(
+            userStore,
+            identityOptions,
+            passwordHasher,
+            userValidators,
+            passwordValidators,
+            keyNormalizer,
+            errors,
+            services,
+            logger);
+
+        return userManager;
     }
 }
