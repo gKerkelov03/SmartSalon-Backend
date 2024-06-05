@@ -23,7 +23,10 @@ public abstract class TestsClass
             Email = "",
             ProfilePictureUrl = "",
             PhoneNumber = "",
-            UserName = ""
+            UserName = "",
+            NormalizedEmail = "",
+            NormalizedUserName = "",
+            SecurityStamp = "",
         };
 
     protected Worker CreateWorkerWithId(Id id)
@@ -43,7 +46,10 @@ public abstract class TestsClass
             ProfilePictureUrl = "",
             PhoneNumber = "",
             UserName = "",
-            Nickname = ""
+            Nickname = "",
+            NormalizedEmail = "",
+            NormalizedUserName = "",
+            SecurityStamp = "",
         };
 
     protected Salon CreateSalonWithId(Id id)

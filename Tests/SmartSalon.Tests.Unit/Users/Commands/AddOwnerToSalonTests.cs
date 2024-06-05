@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using NSubstitute;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.Services;
@@ -45,7 +44,7 @@ public class AddOwnerToSalonTests : TestsClass
     }
 
     [Fact]
-    public async Task Handle_ShouldReturnError_WhenDecryptedTokenIsNull()
+    public async Task ShouldReturnError_WhenDecryptedTokenIsNull()
     {
         // Arrange
         var command = new AddOwnerToSalonCommand(Arg.Any<string>());
@@ -61,7 +60,7 @@ public class AddOwnerToSalonTests : TestsClass
     }
 
     [Fact]
-    public async Task Handle_ShouldReturnNotFound_WhenOwnerOrSalonDoesNotExist()
+    public async Task ShouldReturnNotFound_WhenOwnerOrSalonDoesNotExist()
     {
         // Arrange
         var command = new AddOwnerToSalonCommand(Arg.Any<string>());
@@ -79,11 +78,9 @@ public class AddOwnerToSalonTests : TestsClass
             .Returns(decryptedToken);
 
         _owners.GetByIdAsync(decryptedToken.OwnerId).Returns((Owner?)null);
-        _salons.All.Returns(new List<Salon>().AsQueryable());
-
-        // Act
         _salons.All.Returns(_dbContext.Salons);
 
+        // Act
         var result = await _handler.Handle(command, CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -91,10 +88,10 @@ public class AddOwnerToSalonTests : TestsClass
     }
 
     [Fact]
-    public async Task Handle_ShouldAddOwnerToSalon_WhenOwnerAndSalonExist()
+    public async Task ShouldAddOwnerToSalon_WhenOwnerAndSalonExist()
     {
         // Arrange
-        var command = new AddOwnerToSalonCommand("valid-token");
+        var command = new AddOwnerToSalonCommand(Arg.Any<string>());
         var ownerId = Guid.NewGuid();
         var salonId = Guid.NewGuid();
         var decryptedToken = new OwnerInvitationEncryptionModel { OwnerId = ownerId, SalonId = salonId };
@@ -105,8 +102,11 @@ public class AddOwnerToSalonTests : TestsClass
             .DecryptTo<OwnerInvitationEncryptionModel>(command.Token, _emailOptions.Value.EncryptionKey)
             .Returns(decryptedToken);
 
+        _dbContext.Salons.Add(salon);
+        _dbContext.SaveChanges();
+
         _owners.GetByIdAsync(decryptedToken.OwnerId).Returns(owner);
-        _salons.All.Returns(new List<Salon> { salon }.AsQueryable());
+        _salons.All.Returns(_dbContext.Salons);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);

@@ -18,12 +18,6 @@ public class SmartSalonDbContext : IdentityDbContext<User, Role, Id>
 
     public SmartSalonDbContext(DbContextOptions<SmartSalonDbContext> options) : base(options) { }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        base.OnConfiguring(optionsBuilder);
-        optionsBuilder.UseSqlServer("Server=.,1433;Database=SmartSalon;TrustServerCertificate=True;User Id=sa;Password=P@ssw0rd123");
-    }
-
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);

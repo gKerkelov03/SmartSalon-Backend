@@ -8,39 +8,44 @@ using SmartSalon.Application.Errors;
 using SmartSalon.Application.Features.Users.Commands;
 using SmartSalon.Application.Models.Emails;
 using SmartSalon.Application.Options;
+using SmartSalon.Data;
 using Xunit;
 
 namespace SmartSalon.Tests.Unit.Users;
 
 public class AddWorkerToSalonTests : TestsClass
 {
-    private readonly IEfRepository<Worker> _workersRepository;
-    private readonly IEfRepository<Salon> _salonsRepository;
+    private readonly IEfRepository<Worker> _workers;
+    private readonly IEfRepository<Salon> _salons;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IOptions<EmailOptions> _emailOptions;
     private readonly IDecryptor _decryptor;
     private readonly AddWorkerToSalonCommandHandler _handler;
+    private readonly SmartSalonDbContext _dbContext;
 
     public AddWorkerToSalonTests()
     {
-        _workersRepository = Substitute.For<IEfRepository<Worker>>();
-        _salonsRepository = Substitute.For<IEfRepository<Salon>>();
+        _workers = Substitute.For<IEfRepository<Worker>>();
+        _salons = Substitute.For<IEfRepository<Salon>>();
         _unitOfWork = Substitute.For<IUnitOfWork>();
         _emailOptions = Substitute.For<IOptions<EmailOptions>>();
         _decryptor = Substitute.For<IDecryptor>();
         _handler = new AddWorkerToSalonCommandHandler(
-            _workersRepository,
-            _salonsRepository,
+            _workers,
+            _salons,
             _unitOfWork,
             _emailOptions,
             _decryptor
         );
 
+        _dbContext = CreateDbContext();
         _emailOptions.Value.Returns(CreateEmailOptions());
+
+        _salons.All.Returns(_dbContext.Salons);
     }
 
     [Fact]
-    public async Task Handle_ShouldReturnError_WhenDecryptedTokenIsNull()
+    public async Task ShouldReturnError_WhenDecryptedTokenIsNull()
     {
         // Arrange
         var command = new AddWorkerToSalonCommand(Arg.Any<string>());
@@ -58,7 +63,7 @@ public class AddWorkerToSalonTests : TestsClass
     }
 
     [Fact]
-    public async Task Handle_ShouldReturnError_WhenWorkerIsNotFound()
+    public async Task ShouldReturnError_WhenWorkerIsNotFound()
     {
         // Arrange
         var command = new AddWorkerToSalonCommand(Arg.Any<string>());
@@ -72,7 +77,7 @@ public class AddWorkerToSalonTests : TestsClass
             .DecryptTo<WorkerInvitationEncryptionModel>(command.Token, _emailOptions.Value.EncryptionKey)
             .Returns(decryptedToken);
 
-        _workersRepository.GetByIdAsync(decryptedToken.WorkerId).Returns((Worker?)null);
+        _workers.GetByIdAsync(decryptedToken.WorkerId).Returns((Worker?)null);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -83,7 +88,7 @@ public class AddWorkerToSalonTests : TestsClass
     }
 
     [Fact]
-    public async Task Handle_ShouldReturnError_WhenSalonIsNotFound()
+    public async Task ShouldReturnError_WhenSalonIsNotFound()
     {
         // Arrange
         var command = new AddWorkerToSalonCommand(Arg.Any<string>());
@@ -99,8 +104,8 @@ public class AddWorkerToSalonTests : TestsClass
 
         var worker = CreateWorkerWithId(decryptedToken.WorkerId);
 
-        _workersRepository.GetByIdAsync(decryptedToken.WorkerId).Returns(worker);
-        _salonsRepository.All.Returns(Enumerable.Empty<Salon>().AsQueryable());
+        _workers.GetByIdAsync(decryptedToken.WorkerId).Returns(worker);
+        _salons.All.Returns(_dbContext.Salons);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -111,16 +116,28 @@ public class AddWorkerToSalonTests : TestsClass
     }
 
     [Fact]
-    public async Task Handle_ShouldAddWorkerToSalon_WhenWorkerIsNotAlreadyInSalon()
+    public async Task ShouldAddWorkerToSalon_WhenWorkerIsNotAlreadyInSalon()
     {
         // Arrange
-        var command = new AddWorkerToSalonCommand("valid-token");
-        var decryptedToken = new WorkerInvitationEncryptionModel { WorkerId = Guid.NewGuid(), SalonId = Guid.NewGuid() };
-        _decryptor.DecryptTo<WorkerInvitationEncryptionModel>(command.Token, _emailOptions.Value.EncryptionKey).Returns(decryptedToken);
+        var command = new AddWorkerToSalonCommand(Arg.Any<string>());
+        var decryptedToken = new WorkerInvitationEncryptionModel
+        {
+            WorkerId = Guid.NewGuid(),
+            SalonId = Guid.NewGuid()
+        };
+
+        _decryptor
+            .DecryptTo<WorkerInvitationEncryptionModel>(command.Token, _emailOptions.Value.EncryptionKey)
+            .Returns(decryptedToken);
+
         var worker = CreateWorkerWithId(decryptedToken.WorkerId);
         var salon = CreateSalonWithId(decryptedToken.SalonId);
-        _workersRepository.GetByIdAsync(decryptedToken.WorkerId).Returns(worker);
-        _salonsRepository.All.Returns(new List<Salon> { salon }.AsQueryable());
+
+        _dbContext.Salons.Add(salon);
+        _dbContext.SaveChanges();
+
+        _workers.GetByIdAsync(decryptedToken.WorkerId).Returns(worker);
+        _salons.All.Returns(_dbContext.Salons);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -132,7 +149,7 @@ public class AddWorkerToSalonTests : TestsClass
     }
 
     [Fact]
-    public async Task Handle_ShouldNotAddWorkerToSalon_WhenWorkerIsAlreadyInSalon()
+    public async Task ShouldNotAddWorkerToSalon_WhenWorkerIsAlreadyInSalon()
     {
         // Arrange
         var command = new AddWorkerToSalonCommand(Arg.Any<string>());
@@ -149,11 +166,13 @@ public class AddWorkerToSalonTests : TestsClass
         var worker = CreateWorkerWithId(decryptedToken.WorkerId);
         var salon = CreateSalonWithId(decryptedToken.SalonId);
 
-
         salon.Workers = new List<Worker> { worker };
 
-        _workersRepository.GetByIdAsync(decryptedToken.WorkerId).Returns(worker);
-        _salonsRepository.All.Returns(new List<Salon> { salon }.AsQueryable());
+        _dbContext.Salons.Add(salon);
+        _dbContext.SaveChanges();
+
+        _workers.GetByIdAsync(decryptedToken.WorkerId).Returns(worker);
+        _salons.All.Returns(_dbContext.Salons);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
