@@ -58,4 +58,5 @@ app
     .MigrateTheDatabase(app.Services)
     .OpenSwaggerOnStartup();
 
+Console.WriteLine("Running on http://localhost:5054");
 app.Run();
