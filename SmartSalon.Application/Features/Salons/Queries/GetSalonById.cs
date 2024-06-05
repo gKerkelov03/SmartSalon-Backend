@@ -29,6 +29,7 @@ public class GetSalonByIdQueryResponse : IHaveCustomMapping
     public bool SubscriptionsEnabled { get; set; }
     public bool SectionsEnabled { get; set; }
     public bool WorkersCanMoveBookings { get; set; }
+    public bool WorkersCanDeleteBookings { get; set; }
     public bool WorkersCanSetNonWorkingPeriods { get; set; }
     public Id WorkingTimeId { get; set; }
     public required IEnumerable<Id> Owners { get; set; }

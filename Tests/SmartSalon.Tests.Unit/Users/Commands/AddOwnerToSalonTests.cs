@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using NSubstitute;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Abstractions.Services;
@@ -8,6 +9,7 @@ using SmartSalon.Application.Errors;
 using SmartSalon.Application.Features.Users.Commands;
 using SmartSalon.Application.Models.Emails;
 using SmartSalon.Application.Options;
+using SmartSalon.Data;
 using Xunit;
 
 namespace SmartSalon.Tests.Unit.Users;
@@ -20,15 +22,16 @@ public class AddOwnerToSalonTests : TestsClass
     private readonly IOptions<EmailOptions> _emailOptions;
     private readonly IDecryptor _decryptor;
     private readonly AddOwnerToSalonCommandHandler _handler;
+    private readonly SmartSalonDbContext _dbContext;
 
     public AddOwnerToSalonTests()
     {
-
         _owners = Substitute.For<IEfRepository<Owner>>();
         _salons = Substitute.For<IEfRepository<Salon>>();
         _unitOfWork = Substitute.For<IUnitOfWork>();
         _emailOptions = Substitute.For<IOptions<EmailOptions>>();
         _decryptor = Substitute.For<IDecryptor>();
+        _dbContext = CreateDbContext();
 
         _emailOptions.Value.Returns(CreateEmailOptions());
 
@@ -79,9 +82,10 @@ public class AddOwnerToSalonTests : TestsClass
         _salons.All.Returns(new List<Salon>().AsQueryable());
 
         // Act
+        _salons.All.Returns(_dbContext.Salons);
+
         var result = await _handler.Handle(command, CancellationToken.None);
 
-        // Assert
         Assert.True(result.IsFailure);
         Assert.Single(result.Errors!, e => e == Error.NotFound);
     }

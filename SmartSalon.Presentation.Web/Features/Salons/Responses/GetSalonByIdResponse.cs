@@ -18,6 +18,8 @@ public class GetSalonByIdResponse : IMapFrom<GetSalonByIdQueryResponse>
     public required int BookingsInAdvance { get; set; }
     public bool SubscriptionsEnabled { get; set; }
     public bool WorkersCanMoveBookings { get; set; }
+
+    public bool WorkersCanDeleteBookings { get; set; }
     public bool WorkersCanSetNonWorkingPeriods { get; set; }
     public Id WorkingTimeId { get; set; }
 

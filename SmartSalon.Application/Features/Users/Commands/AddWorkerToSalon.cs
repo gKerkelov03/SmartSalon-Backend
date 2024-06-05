@@ -27,7 +27,6 @@ internal class AddWorkerToSalonCommandHandler(
 {
     public async Task<Result> Handle(AddWorkerToSalonCommand command, CancellationToken cancellationToken)
     {
-
         var decryptedToken = _decryptor.DecryptTo<WorkerInvitationEncryptionModel>(command.Token, _emailOptions.Value.EncryptionKey);
 
         if (decryptedToken is null)
