@@ -89,6 +89,7 @@ public class ChangeEmailTests : TestsClass
         _decryptor.DecryptTo<EmailConfirmationEncryptionModel>(command.Token, _emailOptions.Value.EncryptionKey)
             .Returns(decryptedToken);
 
+        _usersManager.GenerateChangeEmailTokenAsync(user, newEmail).Returns(changeEmailToken);
         _usersManager.FindByIdAsync(decryptedToken.UserId.ToString()).Returns(user);
         _usersManager.ChangeEmailAsync(user, decryptedToken.EmailToBeConfirmed, changeEmailToken)
             .Returns(IdentityResult.Failed(new IdentityError { Description = "Change email failed" }));
@@ -115,9 +116,11 @@ public class ChangeEmailTests : TestsClass
 
         var user = CreateUserWithId(decryptedToken.UserId);
 
-        _decryptor.DecryptTo<EmailConfirmationEncryptionModel>(command.Token, _emailOptions.Value.EncryptionKey)
+        _decryptor
+            .DecryptTo<EmailConfirmationEncryptionModel>(command.Token, _emailOptions.Value.EncryptionKey)
             .Returns(decryptedToken);
 
+        _usersManager.GenerateChangeEmailTokenAsync(user, newEmail).Returns(changeEmailToken);
         _usersManager.FindByIdAsync(decryptedToken.UserId.ToString()).Returns(user);
         _usersManager.ChangeEmailAsync(user, decryptedToken.EmailToBeConfirmed, changeEmailToken).Returns(IdentityResult.Success);
         _usersManager.SetUserNameAsync(user, decryptedToken.EmailToBeConfirmed).Returns(IdentityResult.Success);

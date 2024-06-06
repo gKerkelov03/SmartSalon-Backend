@@ -1,5 +1,4 @@
-﻿using SmartSalon.Application.Abstractions;
-using SmartSalon.Application.Abstractions.MediatR;
+﻿using SmartSalon.Application.Abstractions.MediatR;
 using SmartSalon.Application.Abstractions.Services;
 using SmartSalon.Application.Errors;
 using SmartSalon.Application.Extensions;

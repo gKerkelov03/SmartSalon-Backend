@@ -126,7 +126,6 @@ public abstract class TestsClass
     {
         var userStore = Substitute.For<IUserStore<User>>();
         var identityOptions = Substitute.For<IOptions<IdentityOptions>>();
-        identityOptions.Value.Returns(new IdentityOptions());
         var passwordHasher = new PasswordHasher<User>();
         var userValidators = new List<IUserValidator<User>> { new UserValidator<User>() };
         var passwordValidators = new List<IPasswordValidator<User>> { new PasswordValidator<User>() };
@@ -135,7 +134,9 @@ public abstract class TestsClass
         var services = Substitute.For<IServiceProvider>();
         var logger = Substitute.For<ILogger<UsersManager>>();
 
-        var userManager = new UsersManager(
+        identityOptions.Value.Returns(new IdentityOptions());
+
+        var userManager = Substitute.For<UsersManager>(
             userStore,
             identityOptions,
             passwordHasher,
