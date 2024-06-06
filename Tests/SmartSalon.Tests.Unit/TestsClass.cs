@@ -1,13 +1,20 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NSubstitute;
+using SmartSalon.Application;
 using SmartSalon.Application.Domain.Salons;
 using SmartSalon.Application.Domain.Services;
 using SmartSalon.Application.Domain.Users;
+using SmartSalon.Application.Extensions;
+using SmartSalon.Application.Features.Users.Commands;
 using SmartSalon.Application.Options;
 using SmartSalon.Data;
+using SmartSalon.Integrations.Emails;
+using SmartSalon.Presentation.Web;
 
 public abstract class TestsClass
 {
@@ -148,5 +155,19 @@ public abstract class TestsClass
             logger);
 
         return userManager;
+    }
+
+    protected IMapper CreateMapper()
+    {
+        var dataLayer = typeof(SmartSalonDbContext).Assembly;
+        var applicationLayer = typeof(ApplicationConstants).Assembly;
+        var presentationLayer = typeof(WebConstants).Assembly;
+        var integrationsLayer = typeof(EmailsManager).Assembly;
+
+        var services = new ServiceCollection();
+
+        services.RegisterMapper(dataLayer, applicationLayer, presentationLayer, integrationsLayer);
+        var serviceProvider = services.BuildServiceProvider();
+        return serviceProvider.GetRequiredService<IMapper>();
     }
 }
