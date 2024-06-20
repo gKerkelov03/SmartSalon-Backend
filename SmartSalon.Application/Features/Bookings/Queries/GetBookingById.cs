@@ -24,8 +24,10 @@ public class GetBookingByIdQueryResponse : IMapFrom<Booking>
     public TimeOnly EndTime { get; set; }
 
     public required string ServiceName { get; set; }
+    public required string ServiceDurationInMinutes { get; set; }
     public required string CustomerFirstName { get; set; }
     public required string CustomerLastName { get; set; }
+    public required string CustomerProfilePictureUrl { get; set; }
     public required string WorkerNickname { get; set; }
     public required string SalonName { get; set; }
     public required string SalonProfilePictureUrl { get; set; }
