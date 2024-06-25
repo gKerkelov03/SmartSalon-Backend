@@ -1,7 +1,4 @@
-﻿using System.Security.Cryptography;
-using System.Security.Principal;
-using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SmartSalon.Application.Abstractions;
 using SmartSalon.Application.Domain.Bookings;
 using SmartSalon.Application.Domain.Salons;
@@ -37,6 +34,7 @@ internal class GetAvailableSlotsForBookingQueryHandler(
 {
     public async Task<Result<IEnumerable<Slot>>> Handle(GetAvailableSlotsForBookingQuery query, CancellationToken cancellationToken)
     {
+        var minimumAmountOfMinutesFromNowToMakeBooking = 15;
         var worker = await _workers.GetByIdAsync(query.WorkerId);
         if (worker is null)
         {
@@ -79,7 +77,8 @@ internal class GetAvailableSlotsForBookingQueryHandler(
         .ToList()
         .Select(booking => new Slot(booking.StartTime, booking.EndTime));
 
-        var cursor = openingTime;
+        var now = TimeOnly.FromTimeSpan(DateTime.Now.TimeOfDay.Add(TimeSpan.FromMinutes(minimumAmountOfMinutesFromNowToMakeBooking)));
+        var cursor = now.IsBetween(openingTime, closingTime) ? now : openingTime;
         var availableSlots = new List<Slot>();
 
         while (cursor.IsBetween(openingTime, closingTime))

@@ -30,7 +30,7 @@ internal class ChangePasswordCommandHandler(UsersManager _usersManager, IEmailsM
 
         if (identityResult.Failure())
         {
-            return new Error(identityResult.ErrorDescription());
+            return new UnauthorizedError(identityResult.ErrorDescription());
         }
 
         var encryptionModel = new RestorePasswordEncryptionModel

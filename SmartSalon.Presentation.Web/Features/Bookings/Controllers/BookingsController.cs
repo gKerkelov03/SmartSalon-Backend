@@ -89,7 +89,7 @@ public class BookingsController(ISender _mediator, IMapper _mapper) : V1ApiContr
     [HttpPatch(IdRoute)]
     [SuccessResponse(Status200OK)]
     [FailureResponse(Status404NotFound)]
-    [Authorize(Policy = IsOwnerOfTheSalonOrIsAdminPolicy)]
+    [Authorize(Policy = IsOwnerOfTheSalonOfTheWorkerOrIsTheWorkerOrIsAdminPolicy)]
     public async Task<IActionResult> UpdateBooking(UpdateBookingRequest request)
     {
         var command = _mapper.Map<UpdateBookingCommand>(request);

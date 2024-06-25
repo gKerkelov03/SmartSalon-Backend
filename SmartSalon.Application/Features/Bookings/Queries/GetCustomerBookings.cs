@@ -22,7 +22,7 @@ internal class GetCustomerBookingsQueryHandler(IEfRepository<Booking> _bookings,
             .Include(booking => booking.Salon)
             .Include(booking => booking.Worker)
             .Include(booking => booking.Customer)
-            .Where(booking => booking.CustomerId == query.CustomerId && !booking.Done)
+            .Where(booking => booking.CustomerId == query.CustomerId)
             .ProjectTo<GetBookingByIdQueryResponse>(_mapper.ConfigurationProvider)
             .ToListAsync();
 
